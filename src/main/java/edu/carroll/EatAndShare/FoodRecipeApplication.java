@@ -1,13 +1,13 @@
-package edu.carroll.finalproject;
+package edu.carroll.EatAndShare;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FoodrecipeApplication {
+public class FoodRecipeApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(FoodrecipeApplication.class, args);
+		SpringApplication.run(FoodRecipeApplication.class, args);
 	}
 
 }
