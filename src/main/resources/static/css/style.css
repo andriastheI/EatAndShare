@@ -194,7 +194,7 @@ header {
 }
 .input-box input:focus~label,
 .input-box input:valid~label {
-    top: -5px;
+    top: -9px;
 }
 
 .input-box input {
@@ -203,9 +203,9 @@ header {
     background: transparent;
     border: none;
     outline: none;
-    font-size: 0.8em;
+    font-size: 0.9em;
     color:#000;
-    font-weight: 400;
+    font-weight: 600;
     padding: 0 35px 0 5px;
 }
 .input-box .icon {
@@ -223,7 +223,15 @@ header {
     font-weight: 500;
     margin: -15px 0 15px;
     display: flex;
-    justify-content: space-between;
+    justify-content: right;
+}
+.term-agree{
+    font-size: .9em;
+    color: #000;
+    font-weight: 500;
+    margin: -15px 0 15px;
+    display: flex;
+    justify-content: left;
 }
 
 .remember-forgot label input {
@@ -244,7 +252,7 @@ header {
     width: 100%;
     height: 45px;
     color: #ffffff;
-    background-color: #534d4d;
+    background-color: #000000;
     border: none;
     outline: none;
     border-radius: 6px;
