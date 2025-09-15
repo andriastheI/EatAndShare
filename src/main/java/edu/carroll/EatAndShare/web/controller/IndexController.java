@@ -39,7 +39,8 @@ public class IndexController {
     }
 
     @GetMapping("/loginSuccess")
-    public String loginSuccess() {
+    public String loginSuccess(String username, Model model) {
+        model.addAttribute("username", username);
         return "loginSuccess";
     }
 

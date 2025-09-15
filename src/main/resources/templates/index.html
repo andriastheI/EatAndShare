@@ -26,6 +26,7 @@
       <div class="form-box Login">
         <h2>Login</h2>
         <form action="#" th:action="@{/}" th:object="${loginForm}" method="post">
+            <span th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}">Global error</span><br/>
           <div class="input-box"><span class="icon"><ion-icon name="person"></ion-icon></span>
             <input type="text" required th:field="*{username}"/>
             <label>Username</label>
