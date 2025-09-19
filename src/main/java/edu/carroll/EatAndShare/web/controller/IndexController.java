@@ -18,7 +18,7 @@ public class IndexController {
         return "index";
     }
 
-<<<<<<< HEAD
+
     private final LoginService loginService;
     public IndexController(LoginService loginService) {
         this.loginService = loginService;
@@ -50,10 +50,10 @@ public class IndexController {
         return "loginFailure";
     }
 
-=======
+
     @GetMapping("/services")
     public String services() {
         return "services";  // loads services.html
     }
->>>>>>> designingUploadPage
+
 }
