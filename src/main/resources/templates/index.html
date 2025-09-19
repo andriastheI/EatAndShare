@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EatandShare</title>
 
-    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="css/style.css" />
   </head>
 
   <body>
@@ -20,70 +20,85 @@
       </nav>
     </header>
 
-    <div class="wrapper">
-      <span class="icon-close"><ion-icon name="close"></ion-icon></span>
+    <div class="main-content">
+      <div class="wrapper">
+        <span class="icon-close"><ion-icon name="close"></ion-icon></span>
 
-      <div class="form-box Login">
-        <h2>Login</h2>
-        <form action="#" th:action="@{/}" th:object="${loginForm}" method="post">
-            <span th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}">Global error</span><br/>
-          <div class="input-box"><span class="icon"><ion-icon name="person"></ion-icon></span>
-            <input type="text" required th:field="*{username}"/>
-            <label>Username</label>
-          </div>
-          <div class="input-box">
-            <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-            <input type="password" required th:field="*{password}"/>
-            <label class="password-align">Password</label>
-          </div>
-          <div class="remember-forgot">
-            <a href="#">Forgot Password?</a>
-          </div>
-          <button type="submit" class="btn">Login</button>
-          <div class="login-register">
-            <p>
-              Don't have an account?
-              <a href="#" class="register-link">Register</a>
-            </p>
-          </div>
-        </form>
+        <div class="form-box Login">
+          <h2>Login</h2>
+          <form
+            action="#"
+            th:action="@{/}"
+            th:object="${loginForm}"
+            method="post"
+          >
+            ><br />
+            <div class="input-box">
+              <span class="icon"><ion-icon name="person"></ion-icon></span>
+              <input type="text" required th:field="*{username}" />
+              <label class="user-align">Username</label>
+            </div>
+            <div class="input-box">
+              <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+              <input type="password" required th:field="*{password}" />
+              <label class="password-align">Password</label>
+            </div>
+            <div class="remember-forgot">
+              <a href="#">Forgot Password?</a>
+            </div>
+            <button type="submit" class="btn">Login</button>
+            <div class="login-register">
+              <p>
+                Don't have an account?
+                <a href="#" class="register-link">Register</a>
+              </p>
+            </div>
+          </form>
+        </div>
+
+        <div class="form-box register">
+          <h2>Registration</h2>
+          <form action="#">
+            <div class="input-box">
+              <span class="icon"><ion-icon name="person"></ion-icon></span>
+              <input type="text" required />
+              <label class="user-align">Username</label>
+            </div>
+            <div class="input-box">
+              <span class="icon"><ion-icon name="mail"></ion-icon></span>
+              <input type="email" required />
+              <label>Email</label>
+            </div>
+            <div class="input-box">
+              <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+              <input type="password" required />
+              <label class="password-align">Password</label>
+            </div>
+            <div class="term-agree">
+              <label
+                ><input type="checkbox" /> I agree to terms & conditions</label
+              >
+            </div>
+            <button type="submit" class="btn">Register</button>
+            <div class="login-register">
+              <p>
+                Already have an account?
+                <a href="#" class="login-link">Login</a>
+              </p>
+            </div>
+          </form>
+        </div>
       </div>
-
-
-      <div class="form-box register">
-        <h2>Registration</h2>
-        <form action="#" >
-          <div class="input-box">
-            <span class="icon"><ion-icon name="person"></ion-icon></span>
-            <input type="text" required/>
-            <label class="user-align">Username</label>
-          </div>
-          <div class="input-box">
-            <span class="icon"><ion-icon name="mail"></ion-icon></span>
-            <input type="email" required/>
-            <label>Email</label>
-          </div>
-          <div class="input-box">
-            <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-            <input type="password" required/>
-            <label class="password-align">Password</label>
-          </div>
-          <div class="term-agree">
-            <label><input type="checkbox" /> I agree to terms & conditions</label>
-          </div>
-          <button type="submit" class="btn">Register</button>
-          <div class="login-register">
-            <p>
-              Already have an account?
-              <a href="#" class="login-link">Login</a>
-            </p>
-          </div>
-        </form>
+      <div class="tile-catagory">
+        <div class="button-tile">
+          <a href="#" class="catbtn1">Breakfast</a>
+          <a href="#" class="catbtn2">Lunch</a>
+          <a href="#" class="catbtn3">Dinner</a>
+          <a href="#" class="catbtn4">Salad</a>
+          <a href="#" class="catbtn5">Dessert</a>
+        </div>
       </div>
-
-
     </div>
-
     <script
       type="module"
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
@@ -92,6 +107,6 @@
       nomodule
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
     ></script>
-    <script src="/js/script.js"></script>
+    <script src="js/script.js"></script>
   </body>
 </html>
