@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Share Your Recipe</title>
+    <link rel="stylesheet" href="/css/uploadPage.css" />
+</head>
+<body>
+
+<form id="recipeForm">
+    <h2>Share Your Recipe 🍽️</h2>
+
+    <div class="form-group">
+        <label for="title">Recipe Title *</label>
+        <input type="text" id="title" name="title" required />
+    </div>
+
+    <div class="form-group">
+        <label for="description">Short Description *</label>
+        <textarea id="description" name="description" rows="3" required></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="prepTime">Preparation Time (mins) *</label>
+        <input type="number" id="prepTime" name="prepTime" min="1" required />
+    </div>
+
+    <div class="form-group">
+        <label for="difficulty">Difficulty *</label>
+        <select id="difficulty" name="difficulty" required>
+            <option value="">--Choose--</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+        </select>
+    </div>
+
+    <div class="form-group ingredients-container" id="ingredientsList">
+        <label>Ingredients *</label>
+        <input type="text" name="ingredient[]" placeholder="e.g. 1 cup sugar" required />
+    </div>
+
+    <button type="button" onclick="addIngredient()">+ Add Ingredient</button>
+
+    <div class="form-group">
+        <label for="instructions">Instructions *</label>
+        <textarea id="instructions" name="instructions" rows="5" required></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="image">Upload Image</label>
+        <input type="file" id="image" name="image" accept="image/*" />
+    </div>
+
+    <button type="submit">Submit Recipe</button>
+    <div id="errorMsg" class="error"></div>
+</form>
+
+<script src="/js/script.js"></script>
+</body>
+</html>
