@@ -10,4 +10,9 @@ public class IndexController {
     public String index() {
         return "index";
     }
+
+    @GetMapping("/services")
+    public String services() {
+        return "services";  // loads services.html
+    }
 }
