@@ -58,20 +58,24 @@
 
         <div class="form-box register">
           <h2>Registration</h2>
-          <form action="#">
+          <form action="#"
+                th:action="@{/}"
+                th:object="${registerForm}"
+                method="post"
+          >
             <div class="input-box">
               <span class="icon"><ion-icon name="person"></ion-icon></span>
-              <input type="text" required />
+              <input type="text" required th:field="*{username}"/>
               <label class="user-align">Username</label>
             </div>
             <div class="input-box">
               <span class="icon"><ion-icon name="mail"></ion-icon></span>
-              <input type="email" required />
+              <input type="email" required th:field="*{email}" />
               <label>Email</label>
             </div>
             <div class="input-box">
               <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-              <input type="password" required />
+              <input type="password" required th:field="*{password}" />
               <label class="password-align">Password</label>
             </div>
             <div class="term-agree">

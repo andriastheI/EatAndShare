@@ -1,6 +1,7 @@
 package edu.carroll.EatAndShare.web.controller;
 
 import edu.carroll.EatAndShare.web.form.LoginForm;
+import edu.carroll.EatAndShare.web.form.RegisterForm;
 import edu.carroll.EatAndShare.web.service.LoginService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,6 +37,20 @@ public class IndexController {
             return "index";
         }
         attrs.addAttribute("username", loginForm.getUsername());
+        return "redirect:/loginSuccess";
+    }
+
+    @PostMapping("/")
+    public String registerPost(@Validated @ModelAttribute RegisterForm registerForm, BindingResult result, RedirectAttributes attrs) {
+        if (result.hasErrors()) {
+            return "index";
+        }
+
+        if (!loginService.validateUser(registerForm)) {
+            result.addError(new ObjectError("globalError", "Username and password do not match known users"));
+            return "index";
+        }
+        attrs.addAttribute("username", registerForm.getUsername());
         return "redirect:/loginSuccess";
     }
     
