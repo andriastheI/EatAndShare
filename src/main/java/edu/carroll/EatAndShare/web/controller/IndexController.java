@@ -38,6 +38,7 @@ public class IndexController {
         attrs.addAttribute("username", loginForm.getUsername());
         return "redirect:/loginSuccess";
     }
+    
 
     @GetMapping("/loginSuccess")
     public String loginSuccess(String username, Model model) {
