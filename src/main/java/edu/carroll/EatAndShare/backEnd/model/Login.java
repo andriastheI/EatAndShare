@@ -21,7 +21,7 @@ public class Login {
     private String username;
 
     @Column(name = "password", nullable = false)
-    private String hashedPassword;
+    private String password;
 
     @Column(name = "email", nullable = false)
     private String email;
@@ -42,12 +42,12 @@ public class Login {
         this.username = username;
     }
 
-    public String getHashedPassword() {
-        return hashedPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {
@@ -80,11 +80,11 @@ public class Login {
             return false;
 
         final Login login = (Login)o;
-        return username.equals(login.username) && hashedPassword.equals(login.hashedPassword);
+        return username.equals(login.username) && password.equals(login.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, hashedPassword);
+        return Objects.hash(username, password);
     }
 }

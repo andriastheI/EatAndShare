@@ -21,7 +21,7 @@
     </header>
 
     <div class="main-content">
-      <div class="wrapper">
+      <div class="wrapper" th:classappend="${showRegister} ? 'active active-popup' : 'active-popup'">
         <span class="icon-close"><ion-icon name="close"></ion-icon></span>
 
         <div class="form-box Login">
@@ -59,7 +59,7 @@
         <div class="form-box register">
           <h2>Registration</h2>
           <form action="#"
-                th:action="@{/}"
+                th:action="@{/register}"
                 th:object="${registerForm}"
                 method="post"
           >
@@ -84,6 +84,9 @@
               >
             </div>
             <button type="submit" class="btn">Register</button>
+              <div th:if="${error}" class="error-message">
+                  <p th:text="${error}" style="color:red;"></p>
+              </div>
             <div class="login-register">
               <p>
                 Already have an account?

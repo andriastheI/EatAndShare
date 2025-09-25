@@ -5,7 +5,6 @@ import java.util.List;
 import edu.carroll.EatAndShare.backEnd.model.Login;
 import edu.carroll.EatAndShare.backEnd.repo.LoginRepository;
 import edu.carroll.EatAndShare.web.form.LoginForm;
-import edu.carroll.EatAndShare.web.form.RegisterForm;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,40 +23,28 @@ public class LoginServiceImpl implements LoginService {
      */
     @Override
     public boolean validateUser(LoginForm loginForm) {
-        // Always do the lookup in a case-insensitive manner (lower-casing the data).
         List<Login> users = loginRepo.findByUsernameIgnoreCase(loginForm.getUsername());
-
-        // We expect 0 or 1, so if we get more than 1, bail out as this is an error we don't deal with properly.
         if (users.size() != 1)
             return false;
-        Login u = users.getFirst();
-        // XXX - Using Java's hashCode is wrong on SO many levels, but is good enough for demonstration purposes.
-        // NEVER EVER do this in production code!
-        final String userProvidedHash = Integer.toString(loginForm.getPassword().hashCode());
-        if (!u.getHashedPassword().equals(userProvidedHash))
-            return false;
 
-        // User exists, and the provided password matches the hashed password in the database.
-        return true;
+        Login u = users.getFirst();
+
+        // Hash the provided password and compare to stored hash
+        final String userProvidedHash = Integer.toString(loginForm.getPassword().hashCode());
+        return u.getPassword().equals(userProvidedHash);
     }
 
     @Override
-    public boolean validateUser(RegisterForm registerForm) {
-        // Always do the lookup in a case-insensitive manner (lower-casing the data).
-        List<Login> users = loginRepo.findByUsernameIgnoreCase(registerForm.getUsername());
+    public void saveUser(Login login) {
+        if (!loginRepo.findByUsernameIgnoreCase(login.getUsername()).isEmpty()) {
+            throw new IllegalArgumentException("Username already exists");
+        }
 
-        // We expect 0 or 1, so if we get more than 1, bail out as this is an error we don't deal with properly.
-        if (users.size() != 1)
-            return false;
-        Login u = users.getFirst();
-        // XXX - Using Java's hashCode is wrong on SO many levels, but is good enough for demonstration purposes.
-        // NEVER EVER do this in production code!
-        final String userProvidedHash = Integer.toString(registerForm.getPassword().hashCode());
-        if (!u.getHashedPassword().equals(userProvidedHash))
-            return false;
+        // Hash before saving
+        String hashedPassword = Integer.toString(login.getPassword().hashCode());
+        login.setPassword(hashedPassword);
 
-        // User exists, and the provided password matches the hashed password in the database.
-        return true;
+        loginRepo.save(login);
     }
 
 }

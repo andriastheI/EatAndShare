@@ -1,7 +1,7 @@
 package edu.carroll.EatAndShare.web.controller;
 
+import edu.carroll.EatAndShare.backEnd.model.Login;
 import edu.carroll.EatAndShare.web.form.LoginForm;
-import edu.carroll.EatAndShare.web.form.RegisterForm;
 import edu.carroll.EatAndShare.web.service.LoginService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +16,7 @@ public class IndexController {
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("loginForm", new LoginForm());
+        model.addAttribute("registerForm", new Login());
         return "index";
     }
 
@@ -40,19 +41,23 @@ public class IndexController {
         return "redirect:/loginSuccess";
     }
 
-    @PostMapping("/")
-    public String registerPost(@Validated @ModelAttribute RegisterForm registerForm, BindingResult result, RedirectAttributes attrs) {
-        if (result.hasErrors()) {
+    @PostMapping("/register")
+    public String registerUser(@ModelAttribute("registerForm") Login login,
+                               Model model,
+                               RedirectAttributes attrs) {
+        try {
+            loginService.saveUser(login);
+            attrs.addFlashAttribute("message", "Registration successful. Please log in.");
+            return "redirect:/";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("loginForm", new LoginForm());
+            model.addAttribute("registerForm", new Login());
+            model.addAttribute("showRegister", true); // <-- NEW
             return "index";
         }
-
-        if (!loginService.validateUser(registerForm)) {
-            result.addError(new ObjectError("globalError", "Username and password do not match known users"));
-            return "index";
-        }
-        attrs.addAttribute("username", registerForm.getUsername());
-        return "redirect:/loginSuccess";
     }
+
     
 
     @GetMapping("/loginSuccess")

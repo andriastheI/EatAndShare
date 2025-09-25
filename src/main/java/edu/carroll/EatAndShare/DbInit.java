@@ -30,7 +30,7 @@ public class DbInit {
         if (defaultUsers.isEmpty()) {
             Login defaultUser = new Login();
             defaultUser.setUsername(defaultUsername);
-            defaultUser.setHashedPassword(defaultPassHash);
+            defaultUser.setPassword(defaultPassHash);
             defaultUser.setEmail(defaultEmail);
             loginRepo.save(defaultUser);
         }
