@@ -10,12 +10,10 @@
 }
 
 body {
-<<<<<<< HEAD
     background-color: rgb(15, 173, 173);
     display: block;
     padding: 0;
     margin: 0;
-=======
     display: flex;
     justify-content: center;
     align-items: center;
@@ -23,7 +21,6 @@ body {
     background: url('/imgResource/foodBack.jpg') no-repeat;
     background-size: cover;
     background-position: center;
->>>>>>> designingUploadPage
 }
 
 header {
