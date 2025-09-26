@@ -13,31 +13,44 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class IndexController {
-    @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("loginForm", new LoginForm());
-        model.addAttribute("registerForm", new Login());
-        return "index";
-    }
-
 
     private final LoginService loginService;
+
     public IndexController(LoginService loginService) {
         this.loginService = loginService;
     }
 
+    @GetMapping("/")
+    public String index(Model model) {
+        // always add both forms so Thymeleaf has them
+        if (!model.containsAttribute("loginForm")) {
+            model.addAttribute("loginForm", new LoginForm());
+        }
+        if (!model.containsAttribute("registerForm")) {
+            model.addAttribute("registerForm", new Login());
+        }
+        return "index";
+    }
 
     @PostMapping("/")
-    public String loginPost(@Validated @ModelAttribute LoginForm loginForm, BindingResult result, RedirectAttributes attrs) {
+    public String loginPost(@Validated @ModelAttribute("loginForm") LoginForm loginForm,
+                            BindingResult result,
+                            Model model,
+                            RedirectAttributes attrs) {
         if (result.hasErrors()) {
+            // repopulate register form so Thymeleaf won't break
+            model.addAttribute("registerForm", new Login());
             return "index";
         }
 
         if (!loginService.validateUser(loginForm)) {
             result.addError(new ObjectError("globalError", "Username and password do not match known users"));
+            model.addAttribute("registerForm", new Login()); // required for template
             return "index";
         }
-        attrs.addAttribute("username", loginForm.getUsername());
+
+        // put username in flash attributes so it survives redirect
+        attrs.addFlashAttribute("username", loginForm.getUsername());
         return "redirect:/loginSuccess";
     }
 
@@ -53,15 +66,13 @@ public class IndexController {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("loginForm", new LoginForm());
             model.addAttribute("registerForm", new Login());
-            model.addAttribute("showRegister", true); // <-- NEW
+            model.addAttribute("showRegister", true); // to reopen registration popup
             return "index";
         }
     }
 
-    
-
     @GetMapping("/loginSuccess")
-    public String loginSuccess(String username, Model model) {
+    public String loginSuccess(@ModelAttribute("username") String username, Model model) {
         model.addAttribute("username", username);
         return "loginSuccess";
     }
@@ -71,10 +82,8 @@ public class IndexController {
         return "loginFailure";
     }
 
-
     @GetMapping("/services")
     public String services() {
         return "services";  // loads services.html
     }
-
 }
