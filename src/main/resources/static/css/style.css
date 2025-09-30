@@ -41,6 +41,55 @@ header {
     user-select: none;
 
 }
+.navigation {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+}
+
+.icon-login {
+    position: relative;
+    cursor: pointer;
+    font-size: 2em;
+}
+
+.icon-login .dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #fff;
+    list-style: none;
+    margin: 0;
+    padding: 6px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    min-width: 140px;
+    z-index: 1000;
+}
+
+.icon-login .dropdown li {
+    padding: 4px 8px;
+}
+
+.icon-login .dropdown li p,
+.icon-login .dropdown li a {
+    margin: 0;
+    font-size: 0.5em;
+    color: #333;
+    text-decoration: none;
+    line-height: 1.2;
+}
+
+.icon-login .dropdown li a:hover {
+    color: #0077cc;
+}
+
+.icon-login:hover .dropdown {
+    display: block;
+}
 
 .navigation a {
     position: relative;
@@ -92,24 +141,6 @@ header {
 
 }
 
-/* .wrapper {
-    position: fixed;
-    width: 400px;
-    height: 400px;
-    background: transparent;
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    border-radius: 20px;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    transform: scale(0);
-    transition: transform .5s ease, height .2s ease;
-
-} */
-
 /* Popup wrapper centered and fixed */
 .wrapper {
     position: fixed; /* stays in viewport */
@@ -134,9 +165,7 @@ header {
 .wrapper.active-popup {
     transform: translate(-50%, -50%) scale(1); /* show on click */
 }
-/* .wrapper.active-popup {
-    transform: scale(1);
-} */
+
 
 .wrapper.active{
     height: 520px;
@@ -346,35 +375,35 @@ header {
 }
 
 .tile-catagory .button-tile .catbtn1 {
-  background-image: url('/imgResource/breakfast-img.jpg');
+  background-image: url('/static/imgResource/breakfast-img.jpg');
   background-size: cover;      
   background-position: center; 
   background-repeat: no-repeat;
 }
 
 .tile-catagory .button-tile .catbtn2 {
-  background-image: url('/imgResource/lunch-img.jpg');
+  background-image: url('/static/imgResource/lunch-img.jpg');
   background-size: cover;      
   background-position: center; 
   background-repeat: no-repeat;
 }
 
 .tile-catagory .button-tile .catbtn3 {
-  background-image: url('/imgResource/dinner-img.jpg');
+  background-image: url('/static/imgResource/dinner-img.jpg');
   background-size: cover;     
   background-position: center; 
   background-repeat: no-repeat;
 }
 
 .tile-catagory .button-tile .catbtn4 {
-  background-image: url('/imgResource/salad-img.jpg');
+  background-image: url('/static/imgResource/salad-img.jpg');
   background-size: cover;      
   background-position: center;
   background-repeat: no-repeat;
 }
 
 .tile-catagory .button-tile .catbtn5 {
-  background-image: url('/imgResource/dessert-img.jpg');
+  background-image: url('/static/imgResource/dessert-img.jpg');
   background-size: cover;      
   background-position: center; 
   background-repeat: no-repeat;

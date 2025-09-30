@@ -22,37 +22,66 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(Model model) {
-        // always add both forms so Thymeleaf has them
         if (!model.containsAttribute("loginForm")) {
             model.addAttribute("loginForm", new LoginForm());
         }
         if (!model.containsAttribute("registerForm")) {
             model.addAttribute("registerForm", new Login());
         }
+
+        // ✅ Always provide defaults
+        if (!model.containsAttribute("loggedIn")) {
+            model.addAttribute("loggedIn", Boolean.FALSE);
+        }
+        if (!model.containsAttribute("username")) {
+            model.addAttribute("username", "");
+        }
+        if (!model.containsAttribute("email")) {
+            model.addAttribute("email", "");
+        }
+
         return "index";
     }
 
+
     @PostMapping("/")
-    public String loginPost(@Validated @ModelAttribute("loginForm") LoginForm loginForm,
+    public String loginPost(@ModelAttribute("loginForm") LoginForm loginForm,
                             BindingResult result,
                             Model model,
                             RedirectAttributes attrs) {
-        if (result.hasErrors()) {
-            // repopulate register form so Thymeleaf won't break
-            model.addAttribute("registerForm", new Login());
-            return "index";
-        }
 
         if (!loginService.validateUser(loginForm)) {
-            result.addError(new ObjectError("globalError", "Username and password do not match known users"));
-            model.addAttribute("registerForm", new Login()); // required for template
+            result.reject("login.invalid", "Username and password do not match known users");
+
+            model.addAttribute("loginForm", loginForm);
+            model.addAttribute("registerForm", new Login());
+            model.addAttribute("loggedIn", false);
             return "index";
         }
 
-        // put username in flash attributes so it survives redirect
-        attrs.addFlashAttribute("username", loginForm.getUsername());
-        return "redirect:/loginSuccess";
+        Login user = loginService.findByUsername(loginForm.getUsername());
+        if (user == null) {
+            result.reject("login.notfound", "User not found in database");
+
+            model.addAttribute("loginForm", loginForm);
+            model.addAttribute("registerForm", new Login());
+            model.addAttribute("loggedIn", false);
+            return "index";
+        }
+
+        System.out.println("✅ Login success for: " + user.getUsername());
+
+        attrs.addFlashAttribute("username", user.getUsername());
+        attrs.addFlashAttribute("email", user.getEmail());
+        attrs.addFlashAttribute("loggedIn", true);
+
+        return "redirect:/";
     }
+
+
+
+
+
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("registerForm") Login login,
@@ -60,30 +89,28 @@ public class IndexController {
                                RedirectAttributes attrs) {
         try {
             loginService.saveUser(login);
-            attrs.addFlashAttribute("message", "Registration successful. Please log in.");
+            attrs.addFlashAttribute("showLogin", true);
             return "redirect:/";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("loginForm", new LoginForm());
             model.addAttribute("registerForm", new Login());
-            model.addAttribute("showRegister", true); // to reopen registration popup
+            model.addAttribute("showRegister", true);
             return "index";
         }
     }
 
-    @GetMapping("/loginSuccess")
-    public String loginSuccess(@ModelAttribute("username") String username, Model model) {
-        model.addAttribute("username", username);
-        return "loginSuccess";
-    }
-
-    @GetMapping("/loginFailure")
-    public String loginFailure() {
-        return "loginFailure";
+    // new logout mapping
+    @GetMapping("/logout")
+    public String logout(RedirectAttributes attrs) {
+        attrs.addFlashAttribute("loggedIn", false);
+        attrs.addFlashAttribute("username", "");
+        attrs.addFlashAttribute("email", "");
+        return "redirect:/";
     }
 
     @GetMapping("/services")
     public String services() {
-        return "services";  // loads services.html
+        return "services";
     }
 }

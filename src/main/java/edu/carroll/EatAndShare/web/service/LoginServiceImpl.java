@@ -47,5 +47,10 @@ public class LoginServiceImpl implements LoginService {
         loginRepo.save(login);
     }
 
+    @Override
+    public Login findByUsername(String username) {
+        return loginRepo.findByUsername(username);
+    }
+
 }
 //-1164577301

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EatandShare</title>
 
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="/css/style.css" />
   </head>
 
   <body>
@@ -16,11 +16,22 @@
         <a href="#">About</a>
         <a href="#">Contact</a>
         <a href="/services">Services</a>
-        <button class="btnLogin-popup">Login</button>
+          <!-- If logged in, show icon -->
+          <div th:if="${loggedIn}" class="icon-login">
+              <ion-icon name="person-circle-outline"></ion-icon>
+              <ul class="dropdown">
+                  <li><p th:text="'Username: ' + ${username}"></p></li>
+                  <li><p th:text="'Email: ' + ${email}"></p></li>
+                  <li><a th:href="@{/logout}">Logout</a></li>
+              </ul>
+          </div>
+          <!-- If not logged in, show login button -->
+        <button th:if="${!loggedIn}" class="btnLogin-popup">Login</button>
+        
       </nav>
     </header>
 
-    <div class="main-content">
+    <div th:if="${!loggedIn}" class="main-content">
       <div class="wrapper" th:classappend="${showRegister} ? 'active active-popup' : 'active-popup'">
         <span class="icon-close"><ion-icon name="close"></ion-icon></span>
 
@@ -116,6 +127,6 @@
       nomodule
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
     ></script>
-    <script src="js/script.js"></script>
+    <script src="/js/script.js"></script>
   </body>
 </html>
