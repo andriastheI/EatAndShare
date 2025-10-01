@@ -70,7 +70,6 @@ public class IndexController {
             return "index";
         }
 
-        System.out.println("✅ Login success for: " + user.getUsername());
 
         attrs.addFlashAttribute("username", user.getUsername());
         attrs.addFlashAttribute("email", user.getEmail());
@@ -85,7 +84,11 @@ public class IndexController {
                                RedirectAttributes attrs) {
         try {
             loginService.saveUser(login);
+
+            // ✅ send them to login popup
             attrs.addFlashAttribute("showLogin", true);
+            attrs.addFlashAttribute("loggedIn", false);
+
             return "redirect:/";
         } catch (IllegalArgumentException | DataIntegrityViolationException e) {
             model.addAttribute("error", e.getMessage() != null ? e.getMessage() : "Registration failed");
@@ -95,6 +98,7 @@ public class IndexController {
             return "index";
         }
     }
+
 
     // new logout mapping
     @GetMapping("/logout")
