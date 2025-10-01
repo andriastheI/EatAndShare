@@ -5,6 +5,7 @@ import java.util.List;
 import edu.carroll.EatAndShare.backEnd.model.Login;
 import edu.carroll.EatAndShare.backEnd.repo.LoginRepository;
 import edu.carroll.EatAndShare.web.form.LoginForm;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,16 +37,35 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public void saveUser(Login login) {
-        if (!loginRepo.findByUsernameIgnoreCase(login.getUsername()).isEmpty()) {
-            throw new IllegalArgumentException("Username already exists");
+        if (login.getUsername() == null || login.getUsername().isBlank()) {
+            throw new IllegalArgumentException("Username cannot be empty");
+        }
+        if (login.getEmail() == null || login.getEmail().isBlank()) {
+            throw new IllegalArgumentException("Email cannot be empty");
+        }
+        if (login.getPassword() == null || login.getPassword().isBlank()) {
+            throw new IllegalArgumentException("Password cannot be empty");
         }
 
-        // Hash before saving
+        if (loginRepo.existsByUsernameIgnoreCase(login.getUsername())) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+        if (loginRepo.existsByEmailIgnoreCase(login.getEmail())) {
+            throw new IllegalArgumentException("Email already registered");
+        }
+
+        // hash password
         String hashedPassword = Integer.toString(login.getPassword().hashCode());
         login.setPassword(hashedPassword);
 
-        loginRepo.save(login);
+        try {
+            loginRepo.save(login);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException("Username or email already exists!");
+        }
     }
+
+
 
     @Override
     public Login findByUsername(String username) {

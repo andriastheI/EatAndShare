@@ -3,6 +3,7 @@ package edu.carroll.EatAndShare.web.controller;
 import edu.carroll.EatAndShare.backEnd.model.Login;
 import edu.carroll.EatAndShare.web.form.LoginForm;
 import edu.carroll.EatAndShare.web.service.LoginService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -78,11 +79,6 @@ public class IndexController {
         return "redirect:/";
     }
 
-
-
-
-
-
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("registerForm") Login login,
                                Model model,
@@ -91,8 +87,8 @@ public class IndexController {
             loginService.saveUser(login);
             attrs.addFlashAttribute("showLogin", true);
             return "redirect:/";
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("error", e.getMessage());
+        } catch (IllegalArgumentException | DataIntegrityViolationException e) {
+            model.addAttribute("error", e.getMessage() != null ? e.getMessage() : "Registration failed");
             model.addAttribute("loginForm", new LoginForm());
             model.addAttribute("registerForm", new Login());
             model.addAttribute("showRegister", true);

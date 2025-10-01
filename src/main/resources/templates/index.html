@@ -6,9 +6,11 @@
     <title>EatandShare</title>
 
     <link rel="stylesheet" href="/css/style.css" />
+    
   </head>
 
   <body>
+
     <header>
       <h2 class="logo">EatAndShare</h2>
       <nav class="navigation">
@@ -16,51 +18,51 @@
         <a href="#">About</a>
         <a href="#">Contact</a>
         <a href="/services">Services</a>
-          <!-- If logged in, show icon -->
-          <div th:if="${loggedIn}" class="icon-login">
-              <ion-icon name="person-circle-outline"></ion-icon>
-              <ul class="dropdown">
-                  <li><p th:text="'Username: ' + ${username}"></p></li>
-                  <li><p th:text="'Email: ' + ${email}"></p></li>
-                  <li><a th:href="@{/logout}">Logout</a></li>
-              </ul>
-          </div>
-          <!-- If not logged in, show login button -->
+        <!-- If logged in, show icon -->
+        <div th:if="${loggedIn}" class="icon-login">
+          <ion-icon name="person-circle-outline"></ion-icon>
+          <ul class="dropdown">
+            <li><p th:text="'Username: ' + ${username}"></p></li>
+            <li><p th:text="'Email: ' + ${email}"></p></li>
+            <li><a th:href="@{/logout}">Logout</a></li>
+          </ul>
+        </div>
+        <!-- If not logged in, show login button -->
         <button th:if="${!loggedIn}" class="btnLogin-popup">Login</button>
-        
       </nav>
     </header>
 
     <div th:if="${!loggedIn}" class="main-content">
-      <div class="wrapper" th:classappend="${showRegister} ? 'active active-popup' : 'active-popup'">
+      <div
+        class="wrapper"
+        th:classappend="${showRegister} ? 'active active-popup' : 'active-popup'"
+      >
         <span class="icon-close"><ion-icon name="close"></ion-icon></span>
 
         <div class="form-box Login">
           <h2>Login</h2>
-          <form
-            th:action="@{/}"
-            th:object="${loginForm}"
-            method="post"
-          >
+          <form th:action="@{/}" th:object="${loginForm}" method="post">
             <div class="input-box">
               <span class="icon"><ion-icon name="person"></ion-icon></span>
-              <input type="text" required th:field="*{username}" />
+              <input type="text" required th:field="*{username}" th:id="login_username"/>
               <label class="user-align">Username</label>
             </div>
             <div class="input-box">
               <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-              <input type="password" required th:field="*{password}" />
+              <input type="password" required th:field="*{password}" th:id="login_password" />
               <label class="password-align">Password</label>
             </div>
             <div class="remember-forgot">
               <a href="#">Forgot Password?</a>
             </div>
             <button type="submit" class="btn">Login</button>
-              <div th:if="${#fields.hasGlobalErrors()}">
-                  <p th:each="err : ${#fields.globalErrors()}"
-                     th:text="${err}"
-                     style="color:red;"></p>
-              </div>
+            <div th:if="${#fields.hasGlobalErrors()}">
+              <p
+                th:each="err : ${#fields.globalErrors()}"
+                th:text="${err}"
+                style="color: red"
+              ></p>
+            </div>
             <div class="login-register">
               <p>
                 Don't have an account?
@@ -72,13 +74,14 @@
 
         <div class="form-box register">
           <h2>Registration</h2>
-          <form th:action="@{/register}"
-                th:object="${registerForm}"
-                method="post"
+          <form
+            th:action="@{/register}"
+            th:object="${registerForm}"
+            method="post"
           >
             <div class="input-box">
               <span class="icon"><ion-icon name="person"></ion-icon></span>
-              <input type="text" required th:field="*{username}"/>
+              <input type="text" required th:field="*{username}" />
               <label class="user-align">Username</label>
             </div>
             <div class="input-box">
@@ -88,18 +91,19 @@
             </div>
             <div class="input-box">
               <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-              <input type="password" required th:field="*{password}" />
+              <input type="password" required th:field="*{password}" th:id="password"/>
               <label class="password-align">Password</label>
             </div>
-            <div class="term-agree">
-              <label
-                ><input type="checkbox" /> I agree to terms & conditions</label
-              >
+            <div class="input-box">
+              <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+              <input type="password" required id="confirm_password" />
+              <label class="confirm-align">Confirm Password</label>
             </div>
-            <button type="submit" class="btn">Register</button>
-              <div th:if="${error}" class="error-message">
-                  <p th:text="${error}" style="color:red;"></p>
-              </div>
+            <button type="submit" class="btn" disabled>Register</button>
+            <p id="match_message"></p>
+            <div th:if="${error}" class="error-message">
+              <p th:text="${error}" style="color: red"></p>
+            </div>
             <div class="login-register">
               <p>
                 Already have an account?
@@ -127,6 +131,6 @@
       nomodule
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
     ></script>
-    <script src="/js/script.js"></script>
+    <script src="/js/script.js" ></script>
   </body>
 </html>

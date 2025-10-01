@@ -26,36 +26,54 @@ iconClose.addEventListener('click', ()=> {
 
 });
 
-function addIngredient() {
-  const container = document.getElementById("ingredientsList");
-  const input = document.createElement("input");
-  input.type = "text";
-  input.name = "ingredient[]";
-  input.placeholder = "e.g. 1 tbsp olive oil";
-  input.required = true;
-  container.appendChild(input);
-}
+// Password validation
+const passwordInput = document.getElementById('password');
+const confirmPasswordInput = document.getElementById('confirm_password');
+const messageElement = document.getElementById('match_message');
+const registerButton = document.querySelector('.form-box.register button[type="submit"]');
 
-document.getElementById("recipeForm").addEventListener("submit", async function(e) {
-  e.preventDefault();
-  const errorDiv = document.getElementById("errorMsg");
-  errorDiv.textContent = "";
+// Debug: check if elements exist
+console.log("Password input:", passwordInput);
+console.log("Confirm input:", confirmPasswordInput);
+console.log("Message element:", messageElement);
 
-  const formData = new FormData(this);
+if (passwordInput && confirmPasswordInput && messageElement && registerButton) {
+  const checkPasswords = () => {
+    const password = passwordInput.value;
+    const confirmPassword = confirmPasswordInput.value;
 
-  try {
-    const response = await fetch('/api/recipes', {
-      method: 'POST',
-      body: formData
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to submit recipe.");
+    if (password === "" && confirmPassword === "") {
+      messageElement.textContent = "";
+      registerButton.disabled = true;
+      return;
     }
 
-    alert("Recipe submitted successfully!");
-    this.reset();
-  } catch (err) {
-    errorDiv.textContent = err.message;
-  }
-});
+    if (password.length < 8) {
+      messageElement.textContent = "Password can't be less than 8 characters";
+      messageElement.className = "no-match";
+      registerButton.disabled = true;
+      return;
+    }
+
+    if (password.includes(" ") || confirmPassword.includes(" ")) {
+      messageElement.textContent = "No spaces allowed!!";
+      messageElement.className = "no-match";
+      registerButton.disabled = true;
+      return;
+    }
+
+    if (password === confirmPassword) {
+      messageElement.textContent = "✅ Passwords match";
+      messageElement.className = "match";
+      registerButton.disabled = false;
+    } else {
+      messageElement.textContent = "❌ Passwords do not match";
+      messageElement.className = "no-match";
+      registerButton.disabled = true;
+    }
+  };
+
+  // Listen to input events instead of just keyup
+  passwordInput.addEventListener('input', checkPasswords);
+  confirmPasswordInput.addEventListener('input', checkPasswords);
+}

@@ -246,9 +246,22 @@ header {
 .input-box .user-align{
     left: 42px;
 }
+.input-box .confirm-align{
+    left: 75px;
+}
 .input-box input:focus~label,
 .input-box input:valid~label {
     top: -9px;
+}
+
+#match_message.match {
+  color: green;
+  font-weight: bold;
+}
+
+#match_message.no-match {
+  color: red;
+  font-weight: bold;
 }
 
 .input-box input {
@@ -375,35 +388,35 @@ header {
 }
 
 .tile-catagory .button-tile .catbtn1 {
-  background-image: url('/static/imgResource/breakfast-img.jpg');
+  background-image: url('/imgResource/breakfast-img.jpg');
   background-size: cover;      
   background-position: center; 
   background-repeat: no-repeat;
 }
 
 .tile-catagory .button-tile .catbtn2 {
-  background-image: url('/static/imgResource/lunch-img.jpg');
+  background-image: url('/imgResource/lunch-img.jpg');
   background-size: cover;      
   background-position: center; 
   background-repeat: no-repeat;
 }
 
 .tile-catagory .button-tile .catbtn3 {
-  background-image: url('/static/imgResource/dinner-img.jpg');
+  background-image: url('/imgResource/dinner-img.jpg');
   background-size: cover;     
   background-position: center; 
   background-repeat: no-repeat;
 }
 
 .tile-catagory .button-tile .catbtn4 {
-  background-image: url('/static/imgResource/salad-img.jpg');
+  background-image: url('/imgResource/salad-img.jpg');
   background-size: cover;      
   background-position: center;
   background-repeat: no-repeat;
 }
 
 .tile-catagory .button-tile .catbtn5 {
-  background-image: url('/static/imgResource/dessert-img.jpg');
+  background-image: url('/imgResource/dessert-img.jpg');
   background-size: cover;      
   background-position: center; 
   background-repeat: no-repeat;

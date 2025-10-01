@@ -11,4 +11,6 @@ public interface LoginRepository extends JpaRepository<Login, Integer> {
     List<Login> findByUsernameIgnoreCase(String username);
 
     Login findByUsername(String username);
+    boolean existsByUsernameIgnoreCase(String username);
+    boolean existsByEmailIgnoreCase(String email);
 }
