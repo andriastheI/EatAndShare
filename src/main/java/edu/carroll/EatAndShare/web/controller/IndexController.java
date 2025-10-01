@@ -30,7 +30,6 @@ public class IndexController {
             model.addAttribute("registerForm", new Login());
         }
 
-        // ✅ Always provide defaults
         if (!model.containsAttribute("loggedIn")) {
             model.addAttribute("loggedIn", Boolean.FALSE);
         }
@@ -85,16 +84,19 @@ public class IndexController {
         try {
             loginService.saveUser(login);
 
-            // ✅ send them to login popup
+
             attrs.addFlashAttribute("showLogin", true);
             attrs.addFlashAttribute("loggedIn", false);
 
             return "redirect:/";
         } catch (IllegalArgumentException | DataIntegrityViolationException e) {
+
             model.addAttribute("error", e.getMessage() != null ? e.getMessage() : "Registration failed");
             model.addAttribute("loginForm", new LoginForm());
             model.addAttribute("registerForm", new Login());
             model.addAttribute("showRegister", true);
+
+            model.addAttribute("loggedIn", false);
             return "index";
         }
     }
