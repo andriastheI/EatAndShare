@@ -1,60 +1,93 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <title>Share Your Recipe</title>
-    <link rel="stylesheet" href="/css/uploadPage.css" />
+    <meta charset="UTF-8"/>
+    <title>Services</title>
+    <link rel="stylesheet" href="/css/uploadPage.css"/>
 </head>
 <body>
 
-<form id="recipeForm">
-    <h2>Share Your Recipe 🍽️</h2>
+<header>
+    <h2 class="logo">EatAndShare</h2>
+    <nav class="navigation">
+        <a href="/">Home</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <a href="/services">Services</a>
+        <div class="icon-login" th:if="${loggedIn}">
+            <ion-icon name="person-circle-outline"></ion-icon>
+            <ul class="dropdown">
+                <li><p th:text="'Username: ' + ${username}"></p></li>
+                <li><p th:text="'Email: ' + ${email}"></p></li>
+                <li><a th:href="@{/logout}">Logout</a></li>
+            </ul>
+        </div>
+        <button class="btnLogin-popup" th:if="${!loggedIn}">Login</button>
+    </nav>
+</header>
 
-    <div class="form-group">
-        <label for="title">Recipe Title *</label>
-        <input type="text" id="title" name="title" required />
-    </div>
+<div class="main-content">
+    <form id="recipeForm">
+        <h2>Welcome <span th:text="${firstName}"></span> <span th:text="${lastName}"></span>, Share Your Recipe 🍽️</h2>
 
-    <div class="form-group">
-        <label for="description">Short Description *</label>
-        <textarea id="description" name="description" rows="3" required></textarea>
-    </div>
 
-    <div class="form-group">
-        <label for="prepTime">Preparation Time (mins) *</label>
-        <input type="number" id="prepTime" name="prepTime" min="1" required />
-    </div>
+        <!-- Recipe Title -->
+        <div class="form-group">
+            <label for="title">Recipe Title *</label>
+            <input type="text" id="title" name="title" required />
+        </div>
 
-    <div class="form-group">
-        <label for="difficulty">Difficulty *</label>
-        <select id="difficulty" name="difficulty" required>
-            <option value="">--Choose--</option>
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Hard">Hard</option>
-        </select>
-    </div>
+        <!-- Prep Time -->
+        <div class="form-group">
+            <label for="prepTime">Preparation Time (mins) *</label>
+            <input type="number" id="prepTime" name="prepTime" min="1" required />
+        </div>
 
-    <div class="form-group ingredients-container" id="ingredientsList">
-        <label>Ingredients *</label>
-        <input type="text" name="ingredient[]" placeholder="e.g. 1 cup sugar" required />
-    </div>
+        <!-- Cooking Time -->
+        <div class="form-group">
+            <label for="cookTime">Cooking Time (mins) *</label>
+            <input type="number" id="cookTime" name="cookTime" min="1" required />
+        </div>
 
-    <button type="button" onclick="addIngredient()">+ Add Ingredient</button>
+        <!-- Difficulty -->
+        <div class="form-group">
+            <label for="difficulty">Difficulty *</label>
+            <select id="difficulty" name="difficulty" required>
+                <option value="">--Choose--</option>
+                <option value="Easy">Easy</option>
+                <option value="Medium">Medium</option>
+                <option value="Hard">Hard</option>
+            </select>
+        </div>
 
-    <div class="form-group">
-        <label for="instructions">Instructions *</label>
-        <textarea id="instructions" name="instructions" rows="5" required></textarea>
-    </div>
+        <!-- Ingredients -->
+        <div class="form-group ingredients-container" id="ingredientsList">
+            <label>Ingredients *</label>
+            <input type="text" name="ingredient[]" placeholder="e.g. 1 cup sugar" required />
+        </div>
 
-    <div class="form-group">
-        <label for="image">Upload Image</label>
-        <input type="file" id="image" name="image" accept="image/*" />
-    </div>
+        <button type="button" onclick="addIngredient()">+ Add Ingredient</button>
 
-    <button type="submit">Submit Recipe</button>
-    <div id="errorMsg" class="error"></div>
-</form>
+        <!-- Instructions -->
+        <div class="form-group">
+            <label for="instructions">Instructions *</label>
+            <textarea id="instructions" name="instructions" rows="5" required></textarea>
+        </div>
+
+        <!-- Upload Image -->
+        <div class="form-group">
+            <label for="image">Upload Image</label>
+            <input type="file" id="image" name="image" accept="image/*" />
+        </div>
+
+        <button type="submit">Submit Recipe</button>
+        <div id="errorMsg" class="error"></div>
+    </form>
+</div>
+
+<!-- Ionicons fix -->
+<script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" type="module"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
 <script src="/js/recipescript.js"></script>
 </body>

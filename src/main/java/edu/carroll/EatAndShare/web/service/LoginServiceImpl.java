@@ -53,6 +53,13 @@ public class LoginServiceImpl implements LoginService {
         if (loginRepo.existsByEmailIgnoreCase(login.getEmail())) {
             throw new IllegalArgumentException("Email already registered");
         }
+        if (login.getFirstName() == null || login.getFirstName().isBlank()) {
+            throw new IllegalArgumentException("First name cannot be empty");
+        }
+        if (login.getLastName() == null || login.getLastName().isBlank()) {
+            throw new IllegalArgumentException("Last name cannot be empty");
+        }
+
 
         // hash password
         String hashedPassword = Integer.toString(login.getPassword().hashCode());

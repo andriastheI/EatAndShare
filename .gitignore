@@ -38,3 +38,5 @@ out/
 
 # H2 database files
 /demoDb*
+
+.DS_Store

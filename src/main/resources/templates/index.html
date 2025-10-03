@@ -81,6 +81,18 @@
             >
                 <div class="input-box">
                     <span class="icon"><ion-icon name="person"></ion-icon></span>
+                    <input required th:field="*{firstName}" type="text"/>
+                    <label>First Name</label>
+                </div>
+
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="person"></ion-icon></span>
+                    <input required th:field="*{lastName}" type="text"/>
+                    <label>Last Name</label>
+                </div>
+
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="person"></ion-icon></span>
                     <input required th:field="*{username}" type="text"/>
                     <label class="user-align">Username</label>
                 </div>
@@ -99,6 +111,11 @@
                     <input id="confirm_password" required type="password"/>
                     <label class="confirm-align">Confirm Password</label>
                 </div>
+
+
+
+
+
                 <button class="btn" disabled type="submit">Register</button>
                 <p id="match_message"></p>
                 <div class="error-message" th:if="${error}">

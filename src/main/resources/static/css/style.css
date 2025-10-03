@@ -147,8 +147,8 @@ header {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0); /* hidden by default */
-    width: 400px;
-    height: 400px;
+    width: 380px;
+    height: 600px;
     background: transparent;
     border: 2px solid rgba(255, 255, 255, 0.5);
     border-radius: 20px;
@@ -168,7 +168,7 @@ header {
 
 
 .wrapper.active{
-    height: 520px;
+    height: 650px;
 }
 
 
@@ -234,26 +234,27 @@ header {
 .input-box label {
     position: absolute;
     top: 50%;
-    left: 25px;
-    transform: translate(-50%);
+    left: 42px;
+    transform: translateY(-50%);
     font-size: 1em;
     color: #000;
     font-weight: 800;
     pointer-events: none;
     transition: .5s;
 }
+.input-box .user-align,
 .input-box .password-align,
-.input-box .user-align{
+.input-box .confirm-align {
     left: 42px;
 }
-.input-box .confirm-align{
-    left: 75px;
-}
+
 .input-box input:focus~label,
 .input-box input:valid~label {
     top: -9px;
 }
-
+.input-box {
+    margin: 25px 0;        /* consistent spacing between fields */
+}
 #match_message.match {
   color: green;
   font-weight: bold;
@@ -375,7 +376,7 @@ header {
     color: #ffffff;
     font-size: 1.2em;
     font-weight: 600;
-    text-shadow: 
+    text-shadow:
     0 0 5px black,
     0 0 10px black,
     0 0 15px black,
@@ -389,35 +390,35 @@ header {
 
 .tile-catagory .button-tile .catbtn1 {
   background-image: url('/imgResource/breakfast-img.jpg');
-  background-size: cover;      
-  background-position: center; 
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
 }
 
 .tile-catagory .button-tile .catbtn2 {
   background-image: url('/imgResource/lunch-img.jpg');
-  background-size: cover;      
-  background-position: center; 
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
 }
 
 .tile-catagory .button-tile .catbtn3 {
   background-image: url('/imgResource/dinner-img.jpg');
-  background-size: cover;     
-  background-position: center; 
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
 }
 
 .tile-catagory .button-tile .catbtn4 {
   background-image: url('/imgResource/salad-img.jpg');
-  background-size: cover;      
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 
 .tile-catagory .button-tile .catbtn5 {
   background-image: url('/imgResource/dessert-img.jpg');
-  background-size: cover;      
-  background-position: center; 
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
 }
