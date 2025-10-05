@@ -27,7 +27,7 @@
                 <li><a th:href="@{/logout}">Logout</a></li>
             </ul>
         </div>
-        <!-- If not logged in, show login button -->
+        <!-- If not logged in, show user button -->
         <button class="btnLogin-popup" th:if="${!loggedIn}">Login</button>
     </nav>
 </header>
@@ -41,7 +41,7 @@
 
         <div class="form-box Login">
             <h2>Login</h2>
-            <form method="post" th:action="@{/}" th:object="${loginForm}">
+            <form method="post" th:action="@{/}" th:object="${userForm}">
                 <div class="input-box">
                     <span class="icon"><ion-icon name="person"></ion-icon></span>
                     <input required th:field="*{username}" th:id="login_username" type="text"/>

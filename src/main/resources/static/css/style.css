@@ -9,37 +9,35 @@
     font-family: 'Poppins', sans-serif;
 }
 
-body {
-    background-color: rgb(15, 173, 173);
-    display: block;
-    padding: 0;
+html, body {
     margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* prevent horizontal scroll */
 }
 
 header {
-    position: relative;
-    top: 0;
-    left: 0;
     width: 100%;
-    padding: 20px 100px;
+    padding: 20px 5%; /* responsive padding */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 99;
-
+    box-sizing: border-box;
 }
+.navigation a,
+.navigation .btnLogin-popup {
+    margin-left: 20px;
+}
+
+
 .main-content {
     margin-top: 100px;
 }
 
 .logo {
     font-family: "Italianno", cursive;
-    font-weight: 400;
-    font-style: normal;
     font-size: 3em;
-    color: #000000;
+    color: #000;
     user-select: none;
-
 }
 .navigation {
     display: flex;

@@ -1,7 +1,7 @@
 package edu.carroll.EatAndShare.web.form;
 
 
-public class LoginForm {
+public class UserForm {
     private String username;
     private String password;
 

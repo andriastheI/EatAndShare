@@ -1,20 +1,18 @@
 package edu.carroll.EatAndShare.backEnd.model;
 
+import java.util.List;
 import java.util.Objects;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "login")
-public class Login {
+@Table(name = "users")
+public class User {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Integer id;
 
     @Column(name = "username", nullable = false, unique = true)
@@ -31,6 +29,9 @@ public class Login {
 
     @Column(name = "last_name", nullable = false)
     private String lastName;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,  orphanRemoval = true)
+    private List<Recipe> recipes;
 
     public String getFirstName() {
         return firstName;
@@ -100,8 +101,8 @@ public class Login {
         if (o == null || getClass() != o.getClass())
             return false;
 
-        final Login login = (Login)o;
-        return username.equals(login.username) && password.equals(login.password);
+        final User user = (User)o;
+        return username.equals(user.username) && password.equals(user.password);
     }
 
     @Override
