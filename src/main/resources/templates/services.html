@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Services</title>
-    <link rel="stylesheet" href="/css/uploadPage.css"/>
+    <link rel="stylesheet" href="/static/css/uploadPage.css"/>
 </head>
 <body>
 
@@ -60,10 +60,27 @@
             </select>
         </div>
 
+        <!-- Category -->
+        <div class="form-group">
+            <label for="category">Category *</label>
+            <select id="category" name="categoryName" required>
+                <option value="">-- Choose Category --</option>
+                <option value="Breakfast">Breakfast</option>
+                <option value="Lunch">Lunch</option>
+                <option value="Dinner">Dinner</option>
+                <option value="Salad">Salad</option>
+                <option value="Dessert">Dessert</option>
+            </select>
+        </div>
+
         <!-- Ingredients -->
         <div class="form-group ingredients-container" id="ingredientsList">
             <label>Ingredients *</label>
-            <input type="text" name="ingredient[]" placeholder="e.g. 1 cup sugar" required />
+            <div class="ingredient-item">
+                <input type="text" name="ingredientName[]" placeholder="Ingredient (e.g. Sugar)" required />
+                <input type="text" name="quantity[]" placeholder="Quantity (e.g. 2)" required />
+                <input type="text" name="unit[]" placeholder="Unit (e.g. cups)" required />
+            </div>
         </div>
 
         <button type="button" onclick="addIngredient()">+ Add Ingredient</button>

@@ -12,7 +12,9 @@
 html, body {
     margin: 0;
     padding: 0;
-    overflow-x: hidden; /* prevent horizontal scroll */
+    overflow-x: hidden;
+    background-color: rgb(15, 173, 173);
+
 }
 
 header {

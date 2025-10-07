@@ -1,13 +1,14 @@
 function addIngredient() {
-  const container = document.getElementById("ingredientsList");
-  const input = document.createElement("input");
-  input.type = "text";
-  input.name = "ingredient[]";
-  input.placeholder = "e.g. 1 tbsp olive oil";
-  input.required = true;
-  container.appendChild(input);
+    const container = document.getElementById('ingredientsList');
+    const newItem = document.createElement('div');
+    newItem.classList.add('ingredient-item');
+    newItem.innerHTML = `
+        <input type="text" name="ingredientName[]" placeholder="Ingredient" required />
+        <input type="text" name="quantity[]" placeholder="Quantity" required />
+        <input type="text" name="unit[]" placeholder="Unit" required />
+    `;
+    container.appendChild(newItem);
 }
-
 
 
 document.getElementById("recipeForm").addEventListener("submit", async function(e) {

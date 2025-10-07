@@ -4,6 +4,8 @@ package edu.carroll.EatAndShare.backEnd.model;
 import jakarta.persistence.*;
 import org.springframework.core.SpringVersion;
 
+import java.util.List;
+
 @Entity
 @Table(name = "recipe")
 public class Recipe {
@@ -17,6 +19,15 @@ public class Recipe {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecipeIngredient> recipeIngredients;
+
+    // 🧩 Add under your existing fields in Recipe.java
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
 
     @Column(nullable = false, length = 100)
     private String title;
@@ -34,8 +45,35 @@ public class Recipe {
     @Column
     private String difficulty;
 
+    @Column
+    private String instructions;
+
     @Column(nullable = false, length = 1000)
     private String imgURL;
+
+    public Category getCategory() {
+        return category;
+    }
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
+
+    public List<RecipeIngredient> getRecipeIngredients() {
+        return recipeIngredients;
+    }
+
+    public void setRecipeIngredients(List<RecipeIngredient> recipeIngredients) {
+        this.recipeIngredients = recipeIngredients;
+    }
+
 
     public void setUser(User user) {
         this.user = user;
