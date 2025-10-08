@@ -3,6 +3,7 @@ package edu.carroll.EatAndShare.web.service;
 import edu.carroll.EatAndShare.backEnd.model.*;
 import edu.carroll.EatAndShare.backEnd.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +22,9 @@ public class RecipeService {
     @Autowired private RecipeIngredientRepository recipeIngredientRepo;
     @Autowired private UserRepository userRepo;
     @Autowired private CategoryRepository categoryRepo;
+
+    @Value("${file.upload-dir}")
+    private String uploadDir;  // injected from properties file
 
     /**
      * Saves a recipe along with its category, ingredients, and user.
@@ -54,27 +58,25 @@ public class RecipeService {
                         return categoryRepo.save(newCat);
                     });
 
-            // ✅ 3. Handle image upload (download to local directory)
+            // ✅ Get real project folder (finalproject)
+            String baseDir = System.getProperty("user.dir");
+            Path uploadPath = Paths.get(baseDir, uploadDir);
+
+            // ✅ Ensure the uploads directory exists
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
             String imageUrl = null;
+
+            // ✅ Save the uploaded image
             if (image != null && !image.isEmpty()) {
-                // Define upload directory
-                String uploadDir = "/home/dre/cs_341/finalproject/uploads/";
-
-                // Ensure directory exists
-                Path uploadPath = Paths.get(uploadDir);
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
-                }
-
-                // Generate unique file name
-                String originalName = image.getOriginalFilename();
-                String fileName = System.currentTimeMillis() + "_" + (originalName != null ? originalName : "recipe_image.jpg");
+                String safeName = Paths.get(image.getOriginalFilename()).getFileName().toString();
+                String fileName = System.currentTimeMillis() + "_" + safeName;
                 Path filePath = uploadPath.resolve(fileName);
 
-                // Save image to the uploads directory
                 image.transferTo(filePath.toFile());
 
-                // Save accessible URL path for later
                 imageUrl = "/uploads/" + fileName;
             }
 
