@@ -2,18 +2,19 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Services</title>
-    <link rel="stylesheet" href="/static/css/uploadPage.css"/>
+    <title>Submit Recipe - EatAndShare</title>
+    <link rel="stylesheet" th:href="@{/css/uploadPage.css}"/>
 </head>
 <body>
 
 <header>
     <h2 class="logo">EatAndShare</h2>
     <nav class="navigation">
-        <a href="/">Home</a>
+        <a th:href="@{/}">Home</a>
         <a href="#">About</a>
         <a href="#">Contact</a>
-        <a href="/services">Services</a>
+        <a th:href="@{/services}">Services</a>
+
         <div class="icon-login" th:if="${loggedIn}">
             <ion-icon name="person-circle-outline"></ion-icon>
             <ul class="dropdown">
@@ -22,31 +23,39 @@
                 <li><a th:href="@{/logout}">Logout</a></li>
             </ul>
         </div>
+
         <button class="btnLogin-popup" th:if="${!loggedIn}">Login</button>
     </nav>
 </header>
 
 <div class="main-content">
-    <form id="recipeForm">
-        <h2>Welcome <span th:text="${firstName}"></span> <span th:text="${lastName}"></span>, Share Your Recipe 🍽️</h2>
 
+
+    <!-- ✅ Recipe Submission Form -->
+    <form th:action="@{/recipes/add}" method="post" enctype="multipart/form-data">
+
+        <h2>
+            Welcome
+            <span th:text="${firstName}">User</span>
+            <span th:text="${lastName}"></span>, Share Your Recipe 🍽️
+        </h2>
 
         <!-- Recipe Title -->
         <div class="form-group">
             <label for="title">Recipe Title *</label>
-            <input type="text" id="title" name="title" required />
+            <input type="text" id="title" name="title" placeholder="Enter recipe name" required/>
         </div>
 
-        <!-- Prep Time -->
+        <!-- Preparation Time -->
         <div class="form-group">
             <label for="prepTime">Preparation Time (mins) *</label>
-            <input type="number" id="prepTime" name="prepTime" min="1" required />
+            <input type="number" id="prepTime" name="prepTime" min="1" placeholder="10" required/>
         </div>
 
         <!-- Cooking Time -->
         <div class="form-group">
             <label for="cookTime">Cooking Time (mins) *</label>
-            <input type="number" id="cookTime" name="cookTime" min="1" required />
+            <input type="number" id="cookTime" name="cookTime" min="1" placeholder="20" required/>
         </div>
 
         <!-- Difficulty -->
@@ -62,8 +71,8 @@
 
         <!-- Category -->
         <div class="form-group">
-            <label for="category">Category *</label>
-            <select id="category" name="categoryName" required>
+            <label for="categoryName">Category *</label>
+            <select id="categoryName" name="categoryName" required>
                 <option value="">-- Choose Category --</option>
                 <option value="Breakfast">Breakfast</option>
                 <option value="Lunch">Lunch</option>
@@ -73,39 +82,45 @@
             </select>
         </div>
 
-        <!-- Ingredients -->
+        <!-- Ingredients Section -->
         <div class="form-group ingredients-container" id="ingredientsList">
             <label>Ingredients *</label>
             <div class="ingredient-item">
-                <input type="text" name="ingredientName[]" placeholder="Ingredient (e.g. Sugar)" required />
-                <input type="text" name="quantity[]" placeholder="Quantity (e.g. 2)" required />
-                <input type="text" name="unit[]" placeholder="Unit (e.g. cups)" required />
+                <input type="text" name="ingredientName[]" placeholder="Ingredient (e.g. Sugar)" required/>
+                <input type="text" name="quantity[]" placeholder="Quantity (e.g. 2)" required/>
+                <input type="text" name="unit[]" placeholder="Unit (e.g. cups)" required/>
             </div>
         </div>
-
-        <button type="button" onclick="addIngredient()">+ Add Ingredient</button>
+        <button type="button" class="add-btn" onclick="addIngredient()">+ Add Ingredient</button>
 
         <!-- Instructions -->
         <div class="form-group">
             <label for="instructions">Instructions *</label>
-            <textarea id="instructions" name="instructions" rows="5" required></textarea>
+            <textarea id="instructions" name="instructions" rows="5"
+                      placeholder="Step-by-step instructions..." required></textarea>
         </div>
 
         <!-- Upload Image -->
         <div class="form-group">
             <label for="image">Upload Image</label>
-            <input type="file" id="image" name="image" accept="image/*" />
+            <input type="file" id="image" name="image" accept="image/*" required/>
         </div>
 
-        <button type="submit">Submit Recipe</button>
-        <div id="errorMsg" class="error"></div>
+        <!-- ✅ Flash messages from controller -->
+        <div th:if="${successMessage}" class="success-msg" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="error-msg" th:text="${errorMessage}"></div>
+
+        <!-- Submit -->
+        <button type="submit" class="submit-btn">Submit Recipe</button>
     </form>
 </div>
 
-<!-- Ionicons fix -->
+<!-- Ionicons -->
 <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" type="module"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
-<script src="/js/recipescript.js"></script>
+<!-- JS -->
+<script th:src="@{/js/recipescript.js}"></script>
+
 </body>
 </html>

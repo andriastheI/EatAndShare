@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a recipe category (e.g., Dessert, Breakfast, Vegan).
+ * Linked to recipes through a one-to-many relationship.
+ */
 @Entity
 @Table(name = "category")
 public class Category {
@@ -16,7 +20,6 @@ public class Category {
     @Column(name = "category_name", nullable = false, unique = true, length = 50)
     private String categoryName;
 
-    // Link back to recipes (optional, for navigation)
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Recipe> recipes = new ArrayList<>();
 

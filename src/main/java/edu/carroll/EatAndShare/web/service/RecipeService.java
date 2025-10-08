@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.security.Principal;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class RecipeService {
@@ -19,56 +22,102 @@ public class RecipeService {
     @Autowired private UserRepository userRepo;
     @Autowired private CategoryRepository categoryRepo;
 
-    public void saveRecipe(String title, Integer prepTime, Integer cookTime, String difficulty,
-                           String instructions, List<String> ingredientNames, List<String> quantities,
-                           List<String> units, String categoryName, MultipartFile image, Principal principal) {
+    /**
+     * Saves a recipe along with its category, ingredients, and user.
+     * Downloads the uploaded image into the local uploads directory and
+     * stores its URL path in the database for future access.
+     */
+    public void saveRecipe(String title,
+                           Integer prepTime,
+                           Integer cookTime,
+                           String difficulty,
+                           String instructions,
+                           List<String> ingredientNames,
+                           List<String> quantities,
+                           List<String> units,
+                           String categoryName,
+                           MultipartFile image,
+                           String username) {
 
-        // 1️Get the logged-in user
-        User user = userRepo.findByUsername(principal.getName());
+        try {
+            // ✅ 1. Get the user who created the recipe
+            User user = userRepo.findByUsername(username);
+            if (user == null) {
+                throw new IllegalArgumentException("User not found: " + username);
+            }
 
-        // 2️Create and save Recipe
-        Recipe recipe = new Recipe();
-        recipe.setUser(user);
-        recipe.setTitle(title);
-        recipe.setPrepTimeMins(prepTime);
-        recipe.setCookTimeMins(cookTime);
-        recipe.setDifficulty(difficulty);
-        recipe.setImgURL("/uploads/" + (image != null ? image.getOriginalFilename() : "default.jpg"));
-        // ✅ Add this once your Recipe class has an instructions field
-        recipe.setInstructions(instructions);
+            // ✅ 2. Find or create category
+            Category category = categoryRepo.findByCategoryName(categoryName)
+                    .orElseGet(() -> {
+                        Category newCat = new Category();
+                        newCat.setCategoryName(categoryName);
+                        return categoryRepo.save(newCat);
+                    });
 
+            // ✅ 3. Handle image upload (download to local directory)
+            String imageUrl = null;
+            if (image != null && !image.isEmpty()) {
+                // Define upload directory
+                String uploadDir = "/home/dre/cs_341/finalproject/uploads/";
 
-        // Get or create category
-        Optional<Category> catOptional = categoryRepo.findByCategoryNameIgnoreCase(categoryName);
-        Category category = catOptional.orElseGet(() -> {
-            Category newCat = new Category();
-            newCat.setCategoryName(categoryName);
-            return categoryRepo.save(newCat);
-        });
-        recipe.setCategory(category);
+                // Ensure directory exists
+                Path uploadPath = Paths.get(uploadDir);
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
 
-        recipeRepo.save(recipe);
-        // 3️Handle ingredients + linking
-        for (int i = 0; i < ingredientNames.size(); i++) {
-            String name = ingredientNames.get(i).trim();
-            String qty = quantities.get(i).trim();
-            String unit = units.get(i).trim();
+                // Generate unique file name
+                String originalName = image.getOriginalFilename();
+                String fileName = System.currentTimeMillis() + "_" + (originalName != null ? originalName : "recipe_image.jpg");
+                Path filePath = uploadPath.resolve(fileName);
 
-            // Check if ingredient already exists
-            Optional<Ingredient> existingIng = ingredientRepo.findByIngredientNameIgnoreCase(name);
-            Ingredient ingredient = existingIng.orElseGet(() -> {
-                Ingredient newIng = new Ingredient();
-                newIng.setIngredientName(name);
-                return ingredientRepo.save(newIng);
-            });
+                // Save image to the uploads directory
+                image.transferTo(filePath.toFile());
 
-            // Create and save RecipeIngredient link
-            RecipeIngredient link = new RecipeIngredient();
-            link.setRecipe(recipe);
-            link.setIngredient(ingredient);
-            link.setQuantity(qty);
-            link.setUnit(unit);
-            recipeIngredientRepo.save(link);
+                // Save accessible URL path for later
+                imageUrl = "/uploads/" + fileName;
+            }
+
+            // ✅ 4. Create and save the recipe
+            Recipe recipe = new Recipe();
+            recipe.setTitle(title);
+            recipe.setPrepTimeMins(prepTime);
+            recipe.setCookTimeMins(cookTime);
+            recipe.setDifficulty(difficulty);
+            recipe.setInstructions(instructions);
+            recipe.setCategory(category);
+            recipe.setUser(user);
+            recipe.setImgURL(imageUrl);
+
+            recipeRepo.save(recipe);
+
+            // ✅ 5. Link ingredients
+            if (ingredientNames != null && !ingredientNames.isEmpty()) {
+                for (int i = 0; i < ingredientNames.size(); i++) {
+                    String ingName = ingredientNames.get(i);
+                    if (ingName == null || ingName.trim().isEmpty()) continue; // skip blanks
+
+                    Ingredient ingredient = ingredientRepo.findByIngredientNameIgnoreCase(ingName.trim())
+                            .orElseGet(() -> {
+                                Ingredient newIng = new Ingredient();
+                                newIng.setIngredientName(ingName.trim());
+                                return ingredientRepo.save(newIng);
+                            });
+
+                    RecipeIngredient link = new RecipeIngredient();
+                    link.setRecipe(recipe);
+                    link.setIngredient(ingredient);
+                    link.setQuantity(i < quantities.size() ? quantities.get(i) : "");
+                    link.setUnit(i < units.size() ? units.get(i) : "");
+
+                    recipeIngredientRepo.save(link);
+                }
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("Error saving recipe image: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new RuntimeException("Error saving recipe: " + e.getMessage(), e);
         }
     }
 }
