@@ -122,4 +122,13 @@ public class RecipeService {
             throw new RuntimeException("Error saving recipe: " + e.getMessage(), e);
         }
     }
+
+    public List<Recipe> latestRecipes() {
+        return recipeRepo.findAllByOrderByIdDesc();
+    }
+
+    public Recipe getRecipeOrThrow(Integer id) {
+        return recipeRepo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Recipe not found: " + id));
+    }
 }

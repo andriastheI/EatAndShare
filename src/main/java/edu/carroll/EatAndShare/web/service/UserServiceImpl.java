@@ -64,6 +64,8 @@ public class UserServiceImpl implements UserService {
         // hash password
         String hashedPassword = Integer.toString(user.getPassword().hashCode());
         user.setPassword(hashedPassword);
+        user.setPasswordHash(hashedPassword);   // <-- NEW: set password_hash column
+
 
         try {
             loginRepo.save(user);

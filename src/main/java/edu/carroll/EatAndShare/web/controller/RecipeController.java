@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.ui.Model;
+import edu.carroll.EatAndShare.backEnd.model.Recipe;
 
 import java.util.List;
 
@@ -52,4 +56,19 @@ public class RecipeController {
 
         return "redirect:/services";
     }
+
+    @GetMapping("/recipes/{id}")
+    public String viewRecipe(@PathVariable Integer id, Model model, HttpSession session) {
+        Recipe recipe = recipeService.getRecipeOrThrow(id);
+
+        model.addAttribute("recipe", recipe);
+        model.addAttribute("loggedIn", Boolean.TRUE.equals(session.getAttribute("loggedIn")));
+        model.addAttribute("username", session.getAttribute("username"));
+        model.addAttribute("email", session.getAttribute("email"));
+        model.addAttribute("firstName", session.getAttribute("firstName"));
+        model.addAttribute("lastName", session.getAttribute("lastName"));
+
+        return "recipeDetails"; // new Thymeleaf template
+    }
+
 }

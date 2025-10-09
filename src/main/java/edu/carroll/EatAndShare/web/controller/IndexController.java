@@ -1,5 +1,6 @@
 package edu.carroll.EatAndShare.web.controller;
 
+import edu.carroll.EatAndShare.web.service.RecipeService;
 import edu.carroll.EatAndShare.backEnd.model.User;
 import edu.carroll.EatAndShare.web.form.UserForm;
 import edu.carroll.EatAndShare.web.service.UserService;
@@ -10,11 +11,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+
+
 
 @Controller
 public class IndexController {
 
     private final UserService userService;
+    @Autowired private RecipeService recipeService;
+
 
     public IndexController(UserService userService) {
         this.userService = userService;
@@ -41,6 +47,8 @@ public class IndexController {
         model.addAttribute("email", email != null ? email : "");
         model.addAttribute("firstName", firstName != null ? firstName : "");
         model.addAttribute("lastName", lastName != null ? lastName : "");
+
+        model.addAttribute("recipes", recipeService.latestRecipes());
 
         return "index";
     }
