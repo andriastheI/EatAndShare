@@ -1,36 +1,74 @@
+// ============================================================
+// 🎯 EATANDSHARE BUILD CONFIGURATION (Gradle)
+// Defines project setup, dependencies, and build settings
+// ============================================================
+
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.5.5'
-	id 'io.spring.dependency-management' version '1.1.7'
+    // Core Java project support
+    id 'java'
+
+    // Spring Boot plugin for packaging, running, and dependency setup
+    id 'org.springframework.boot' version '3.5.5'
+
+    // Ensures consistent dependency versions for Spring ecosystem
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
+// Group, version, and description metadata
 group = 'edu.carroll'
 version = '0.0.1-SNAPSHOT'
 description = 'CS341 Final project for Spring Boot'
 
+// ============================================================
+// ⚙️ Java toolchain configuration
+// Ensures project uses Java 21 (LTS release)
+// ============================================================
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
+// ============================================================
+// 📦 Repositories
+// Defines where dependencies are pulled from
+// ============================================================
 repositories {
-	mavenCentral()
+    mavenCentral() // Standard Maven repository for stable libraries
 }
 
+// ============================================================
+// 🔧 Dependencies
+// Specifies all libraries used in this project
+// ============================================================
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    // Core web starter: provides Spring MVC, REST, and embedded Tomcat
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Thymeleaf template engine for dynamic HTML views
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
-    //JPA backend dependencies
+    // JPA + Hibernate for ORM and database persistence
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    testRuntimeOnly 'com.h2database:h2'
-    // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
+
+    // MySQL JDBC driver (runtime only, since it's external)
     runtimeOnly 'com.mysql:mysql-connector-j:9.4.0'
+
+    // Spring Security for password hashing + authentication
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // H2 in-memory database for testing (no install required)
+    testRuntimeOnly 'com.h2database:h2'
+
+    // JUnit 5 testing support
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+// ============================================================
+// 🧪 Testing Configuration
+// Enables JUnit Platform for running unit and integration tests
+// ============================================================
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
