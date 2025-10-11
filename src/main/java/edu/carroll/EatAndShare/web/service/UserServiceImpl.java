@@ -6,14 +6,18 @@ import edu.carroll.EatAndShare.backEnd.model.User;
 import edu.carroll.EatAndShare.backEnd.repo.UserRepository;
 import edu.carroll.EatAndShare.web.form.UserForm;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository loginRepo;
 
-    public UserServiceImpl(UserRepository loginRepo) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository loginRepo, PasswordEncoder passwordEncoder) {
         this.loginRepo = loginRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -30,9 +34,7 @@ public class UserServiceImpl implements UserService {
 
         User u = users.getFirst();
 
-        // Hash the provided password and compare to stored hash
-        final String userProvidedHash = Integer.toString(userForm.getPassword().hashCode());
-        return u.getPassword().equals(userProvidedHash);
+        return passwordEncoder.matches(userForm.getPassword(), u.getPassword());
     }
 
     @Override
@@ -62,9 +64,8 @@ public class UserServiceImpl implements UserService {
 
 
         // hash password
-        String hashedPassword = Integer.toString(user.getPassword().hashCode());
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
-        user.setPasswordHash(hashedPassword);   // <-- NEW: set password_hash column
 
 
         try {
