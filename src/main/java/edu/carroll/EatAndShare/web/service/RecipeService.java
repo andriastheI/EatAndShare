@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -58,6 +59,9 @@ public class RecipeService {
     /** Repository for retrieving or creating recipe categories. */
     @Autowired private CategoryRepository categoryRepo;
 
+    private final static Logger log = LoggerFactory.getLogger(RecipeService.class);
+
+
     /** Upload directory path injected from application properties. */
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -106,6 +110,7 @@ public class RecipeService {
             // ✅ 1. Get the user who created the recipe
             User user = userRepo.findByUsername(username);
             if (user == null) {
+                log.warn("User not found: {}", username);
                 throw new IllegalArgumentException("User not found: " + username);
             }
 
@@ -123,6 +128,7 @@ public class RecipeService {
 
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
+                log.info("Created upload directory at {}", uploadPath);
             }
 
             String imageUrl = null;
@@ -135,6 +141,7 @@ public class RecipeService {
 
                 image.transferTo(filePath.toFile());
                 imageUrl = "/uploads/" + fileName; // Web-accessible path
+                log.info("Saved image for recipe '{}' to {}", title, imageUrl);
             }
 
             // ✅ 5. Create and save the recipe entity
@@ -147,8 +154,10 @@ public class RecipeService {
             recipe.setCategory(category);
             recipe.setUser(user);
             recipe.setImgURL(imageUrl);
-
             recipeRepo.save(recipe);
+
+            log.info("Recipe '{}' saved successfully (id={})", title, recipe.getId());
+
 
             // ✅ 6. Link ingredients through the join table
             if (ingredientNames != null && !ingredientNames.isEmpty()) {
@@ -171,6 +180,7 @@ public class RecipeService {
 
                     recipeIngredientRepo.save(link);
                 }
+                log.info("Linked {} ingredients to recipe '{}'", ingredientNames.size(), title);
             }
 
         } catch (IOException e) {
@@ -187,7 +197,9 @@ public class RecipeService {
      * @return a list of the most recent recipes
      */
     public List<Recipe> latestRecipes() {
-        return recipeRepo.findAllByOrderByIdDesc();
+        List<Recipe> recipes = recipeRepo.findAllByOrderByIdDesc();
+        log.debug("Loaded {} recipes for home feed", recipes.size());
+        return recipes;
     }
 
     /**

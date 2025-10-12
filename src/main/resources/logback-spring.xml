@@ -29,6 +29,8 @@
         </encoder>
     </appender>
 
+    <logger name="edu.carroll.EatAndShare.web.service.RecipeService" level="OFF"/>
+
     <!-- === ROOT LOGGER (controls all log output) === -->
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>

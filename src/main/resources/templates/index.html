@@ -169,8 +169,11 @@
             <!-- Recipe info -->
             <div>
                 <div>
-                    <span th:text="${r.category != null ? r.category.categoryName : 'Uncategorized'}"></span>
-                    <span th:text="${r.difficulty}">Medium</span>
+                    <span class="category-badge"
+                          th:classappend="${r.category != null ? r.category.categoryName : 'Uncategorized'}"
+                          th:text="${r.category != null ? r.category.categoryName : 'Uncategorized'}"></span>
+                    <span class="difficulty-text" th:text="${r.difficulty}">Medium</span>
+
                 </div>
                 <a th:href="@{/recipes/{id}(id=${r.id})}">
                     <h3 th:text="${r.title}">Recipe title</h3>
