@@ -29,7 +29,8 @@
         </encoder>
     </appender>
 
-    <logger name="edu.carroll.EatAndShare.web.service.RecipeService" level="OFF"/>
+    <logger name="edu.carroll.EatAndShare.web.service.RecipeService" level="ERROR"/>
+    <logger name="edu.carroll.EatAndShare.web.controller.IndexController" level="WARN" />
 
     <!-- === ROOT LOGGER (controls all log output) === -->
     <root level="INFO">
