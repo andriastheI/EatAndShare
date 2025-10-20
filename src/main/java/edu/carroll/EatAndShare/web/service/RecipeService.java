@@ -45,19 +45,27 @@ import java.util.List;
 public class RecipeService {
 
     /** Repository for performing CRUD operations on recipes. */
-    @Autowired private RecipeRepository recipeRepo;
-
+    private final RecipeRepository recipeRepo;
     /** Repository for ingredient lookups and creation. */
-    @Autowired private IngredientRepository ingredientRepo;
-
+    private final IngredientRepository ingredientRepo;
     /** Repository for managing recipe-ingredient relationships. */
-    @Autowired private RecipeIngredientRepository recipeIngredientRepo;
-
+    private final RecipeIngredientRepository recipeIngredientRepo;
     /** Repository for retrieving user information. */
-    @Autowired private UserRepository userRepo;
-
+    private final UserRepository userRepo;
     /** Repository for retrieving or creating recipe categories. */
-    @Autowired private CategoryRepository categoryRepo;
+    private final CategoryRepository categoryRepo;
+
+    public RecipeService(RecipeRepository recipeRepo,
+                         IngredientRepository ingredientRepo,
+                         UserRepository userRepo,
+                         CategoryRepository categoryRepo,
+                         RecipeIngredientRepository recipeIngredientRepo) {
+        this.recipeRepo = recipeRepo;
+        this.ingredientRepo = ingredientRepo;
+        this.userRepo = userRepo;
+        this.categoryRepo = categoryRepo;
+        this.recipeIngredientRepo = recipeIngredientRepo;
+    }
 
     private final static Logger log = LoggerFactory.getLogger(RecipeService.class);
 

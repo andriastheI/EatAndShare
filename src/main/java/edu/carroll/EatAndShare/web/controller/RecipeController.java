@@ -32,7 +32,7 @@ import java.util.List;
  * <p>All uploads are validated through user session data to ensure
  * that only authenticated users can submit recipes.</p>
  *
- * @author Andrias
+ * @author Andrias and Selin
  * @version 1.0
  * @since 2025-10-11
  */
