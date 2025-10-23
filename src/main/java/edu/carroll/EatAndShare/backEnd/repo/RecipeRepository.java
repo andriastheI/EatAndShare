@@ -4,6 +4,7 @@ import edu.carroll.EatAndShare.backEnd.model.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository interface for performing CRUD operations on {@link Recipe} entities.
@@ -36,4 +37,5 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
      * @return a list of all recipes sorted by ID (newest first)
      */
     List<Recipe> findAllByOrderByIdDesc();
+    Optional<Recipe> findByTitle(String title);
 }

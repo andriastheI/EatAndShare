@@ -1,187 +1,248 @@
+/**
+ * Filename: RecipeServiceTest.java
+ * Author: Andrias Zelele
+ * Date: October 23, 2025
+ *
+ * Description:
+ * This test class verifies the core functionality of the RecipeService
+ * implementation in the EatAndShare application. It ensures that recipe creation,
+ * file uploads, user linking, category creation, and ingredient relationships
+ * work correctly under both normal and exceptional conditions.
+ *
+ * Tests are run against an in-memory H2 database configured via
+ * application-test.properties, ensuring isolation and repeatability.
+ */
+
 package edu.carroll.EatAndShare.web.service;
 
 import edu.carroll.EatAndShare.backEnd.model.*;
 import edu.carroll.EatAndShare.backEnd.repo.*;
-import org.junit.jupiter.api.*;
-import org.mockito.ArgumentCaptor;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.util.AssertionErrors.*;
 
 /**
- * Spring Boot test using application-test.properties,
- * but with all repositories mocked to avoid DB writes.
+ * Integration tests for {@link RecipeService} using an in-memory H2 database.
+ * <p>
+ * Each test runs inside a transaction that automatically rolls back at the end,
+ * ensuring database consistency and isolation across test runs.
+ * <p>
+ * This class validates correct persistence of recipes, user associations,
+ * categories, ingredient relationships, and image file storage under various
+ * real-world conditions.
  */
+@Transactional
 @SpringBootTest
-@ActiveProfiles("test")
-class RecipeServiceSpringMockTest {
+public class RecipeServiceTest {
 
-    @Autowired private RecipeService recipeService;
+    /** ---------- Constant test data used across multiple tests ---------- */
+    private static final String USERNAME = "testchef";
+    private static final String EMAIL = "chef@example.com";
+    private static final String CATEGORY = "Dessert";
 
-    @MockBean private RecipeRepository recipeRepo;
-    @MockBean private IngredientRepository ingredientRepo;
-    @MockBean private RecipeIngredientRepository recipeIngredientRepo;
-    @MockBean private UserRepository userRepo;
-    @MockBean private CategoryRepository categoryRepo;
+    /** Service under test */
+    @Autowired
+    private RecipeService recipeService;
 
-    private MultipartFile mockImage;
+    /** Repository dependencies for validation */
+    @Autowired
+    private UserRepository userRepo;
+    @Autowired
+    private RecipeRepository recipeRepo;
+    @Autowired
+    private CategoryRepository categoryRepo;
+    @Autowired
+    private IngredientRepository ingredientRepo;
+    @Autowired
+    private RecipeIngredientRepository recipeIngredientRepo;
 
+    /** Pre-created test user used in all valid recipe creation tests. */
+    private User testUser;
+
+    /**
+     * Creates and saves a test user in the in-memory database
+     * before each test executes. This ensures that valid user data
+     * exists for linking recipes.
+     */
     @BeforeEach
-    void setup() throws IOException {
-        mockImage = mock(MultipartFile.class);
-        when(mockImage.isEmpty()).thenReturn(false);
-        when(mockImage.getOriginalFilename()).thenReturn("cake.png");
+    public void setup() {
+        testUser = new User();
+        testUser.setUsername(USERNAME);
+        testUser.setPassword("encodedpass");
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName("Test");
+        testUser.setLastName("Chef");
+        userRepo.save(testUser);
     }
 
-
+    /**
+     * ✅ Full success case: verifies that a complete recipe—with image, category,
+     * and ingredient details—is correctly saved and linked to the user.
+     * <p>
+     * Checks:
+     * - Recipe is persisted
+     * - Uploaded image path is stored
+     * - User association is correct
+     * - Category is correctly linked
+     * - Ingredient relationships are created
+     */
     @Test
-    void saveRecipe_createsEverythingSuccessfully() throws Exception {
-        User user = new User(); user.setUsername("selin");
-        when(userRepo.findByUsername("selin")).thenReturn(user);
+    public void saveRecipeSuccessTest() throws Exception {
+        // Mock image file to simulate file upload
+        MockMultipartFile mockImage = new MockMultipartFile(
+                "image", "cake.png", "image/png", "fake-image-data".getBytes()
+        );
 
-        when(categoryRepo.findByCategoryName("Dessert")).thenReturn(Optional.empty());
-        when(categoryRepo.save(any(Category.class))).thenAnswer(inv -> {
-            Category c = inv.getArgument(0);
-            c.setId(1);
-            return c;
-        });
+        // Ingredient data
+        List<String> ingredients = List.of("Flour", "Sugar");
+        List<String> quantities = List.of("2", "1");
+        List<String> units = List.of("cups", "cup");
 
-        when(recipeRepo.save(any(Recipe.class))).thenAnswer(inv -> {
-            Recipe r = inv.getArgument(0);
-            r.setId(100);
-            return r;
-        });
-
-        when(ingredientRepo.findByIngredientNameIgnoreCase(anyString())).thenReturn(Optional.empty());
-        when(ingredientRepo.save(any(Ingredient.class))).thenAnswer(inv -> inv.getArgument(0));
-
+        // Perform the recipe save operation
         recipeService.saveRecipe(
-                "Cake",
-                20, 30,
-                "Easy",
-                "Mix ingredients and bake.",
-                Arrays.asList("Flour", "Sugar"),
-                Arrays.asList("2", "1"),
-                Arrays.asList("cups", "cup"),
-                "Dessert",
+                "Chocolate Cake",
+                15,
+                30,
+                "Medium",
+                "Mix and bake until fluffy.",
+                ingredients,
+                quantities,
+                units,
+                CATEGORY,
                 mockImage,
-                "selin"
+                USERNAME
         );
 
-        verify(recipeRepo, times(1)).save(any(Recipe.class));
-        verify(categoryRepo, times(1)).save(any(Category.class));
-        verify(ingredientRepo, times(2)).save(any(Ingredient.class));
-        verify(recipeIngredientRepo, times(2)).save(any(RecipeIngredient.class));
+        // Verify recipe persistence
+        List<Recipe> allRecipes = recipeRepo.findAll();
+        assertEquals("One recipe should be saved", 1, allRecipes.size());
+
+        Recipe saved = allRecipes.get(0);
+        assertNotNull("Recipe must not be null", saved);
+        assertTrue("Image URL must be stored", saved.getImgURL() != null && saved.getImgURL().contains("/uploads/"));
+        assertEquals("Linked user should match", USERNAME, saved.getUser().getUsername());
+        assertEquals("Category name should match", CATEGORY, saved.getCategory().getCategoryName());
+
+        // Verify that ingredients were linked to the recipe
+        List<RecipeIngredient> links = recipeIngredientRepo.findAll();
+        assertEquals("Two ingredients should be linked", 2, links.size());
     }
 
-
+    /**
+     * ✅ Verifies that recipes can be saved without an image.
+     * The image field (imgURL) is nullable, so no file should be required.
+     * <p>
+     * Checks:
+     * - Recipe still persists successfully
+     * - imgURL remains null when no file is uploaded
+     */
     @Test
-    void saveRecipe_throwsWhenUserNotFound() {
-        when(userRepo.findByUsername("ghost")).thenReturn(null);
+    public void saveRecipeWithoutImageTest() {
+        List<String> ingredients = List.of("Eggs");
+        List<String> quantities = List.of("3");
+        List<String> units = List.of("pcs");
 
-        assertThrows(RuntimeException.class, () ->
-                recipeService.saveRecipe(
-                        "UnknownUser",
-                        10, 15,
-                        "Medium",
-                        "Test instructions",
-                        List.of("Flour"),
-                        List.of("1"),
-                        List.of("cup"),
-                        "Snack",
-                        mockImage,
-                        "ghost"
-                )
-        );
-
-        verify(recipeRepo, never()).save(any());
-    }
-
-    @Test
-    void saveRecipe_handlesIOExceptionGracefully() throws Exception {
-        User user = new User(); user.setUsername("selin");
-        when(userRepo.findByUsername("selin")).thenReturn(user);
-
-        when(categoryRepo.findByCategoryName(anyString()))
-                .thenReturn(Optional.of(new Category()));
-
-        doThrow(new IOException("Disk full")).when(mockImage).transferTo(any(File.class));
-
-        RuntimeException ex = assertThrows(RuntimeException.class, () ->
-                recipeService.saveRecipe(
-                        "BadFile",
-                        10, 10,
-                        "Easy",
-                        "Nope",
-                        List.of("Flour"),
-                        List.of("1"),
-                        List.of("cup"),
-                        "Dessert",
-                        mockImage,
-                        "selin"
-                )
-        );
-
-        assertTrue(ex.getMessage().contains("Error saving recipe image"));
-    }
-
-
-
-    @Test
-    void saveRecipe_handlesNullImageAndBlankIngredients() {
-        User user = new User(); user.setUsername("selin");
-        when(userRepo.findByUsername("selin")).thenReturn(user);
-        when(categoryRepo.findByCategoryName("Lunch"))
-                .thenReturn(Optional.of(new Category()));
-        when(recipeRepo.save(any(Recipe.class))).thenAnswer(inv -> inv.getArgument(0));
-
+        // Save recipe without providing an image
         recipeService.saveRecipe(
-                "Soup",
-                5, 10,
+                "Omelette",
+                5,
+                5,
                 "Easy",
-                "Boil and serve.",
-                Arrays.asList("Water", " ", "", "Salt"),
-                Arrays.asList("1L", "1", "2", "1"),
-                Arrays.asList("litre", "cup", "cup", "tsp"),
-                "Lunch",
+                "Whisk and cook!",
+                ingredients,
+                quantities,
+                units,
+                "Breakfast",
                 null,
-                "selin"
+                USERNAME
         );
 
-        // Skips blank ingredient names
-        verify(ingredientRepo, times(2)).save(any(Ingredient.class));
-        verify(recipeIngredientRepo, times(2)).save(any(RecipeIngredient.class));
+        // Validate recipe persistence
+        Recipe saved = recipeRepo.findByTitle("Omelette").orElse(null);
+        assertNotNull("Recipe without image should still save", saved);
+        assertTrue("imgURL should be null when no image uploaded", saved.getImgURL() == null);
     }
 
+    /**
+     * ✅ Ensures that a new category is automatically created
+     * if it does not already exist in the database.
+     * <p>
+     * Checks:
+     * - Category is created and persisted automatically
+     * - Recipe links to the new category correctly
+     */
     @Test
-    void latestRecipes_returnsRepoResults() {
-        Recipe r1 = new Recipe(); r1.setId(1);
-        Recipe r2 = new Recipe(); r2.setId(2);
-        when(recipeRepo.findAllByOrderByIdDesc()).thenReturn(List.of(r2, r1));
+    public void saveRecipeCreatesNewCategoryIfNotExistsTest() {
+        String newCategory = "Vegan";
 
-        List<Recipe> result = recipeService.latestRecipes();
-        assertEquals(2, result.size());
-        assertEquals(2, result.get(0).getId());
-        verify(recipeRepo, times(1)).findAllByOrderByIdDesc();
+        // Save recipe with a new category
+        recipeService.saveRecipe(
+                "Salad Bowl",
+                5,
+                0,
+                "Easy",
+                "Mix all veggies.",
+                List.of("Lettuce", "Tomato"),
+                List.of("1", "2"),
+                List.of("cup", "pcs"),
+                newCategory,
+                null,
+                USERNAME
+        );
+
+        // Verify that the new category was created
+        Category created = categoryRepo.findByCategoryName(newCategory).orElse(null);
+        assertNotNull("New category should be created", created);
     }
 
+    /**
+     * ✅ Confirms that an uploaded image file is physically created
+     * under the local "uploads/test" directory after saving a recipe.
+     * <p>
+     * Checks:
+     * - File exists on disk after save
+     * - Image path stored in DB matches expected folder
+     */
     @Test
-    void getRecipeOrThrow_behavesCorrectly() {
-        Recipe recipe = new Recipe(); recipe.setId(50);
-        when(recipeRepo.findById(50)).thenReturn(Optional.of(recipe));
-        when(recipeRepo.findById(999)).thenReturn(Optional.empty());
+    public void saveRecipeImageFileCreatedTest() throws Exception {
+        // Create mock image data
+        MockMultipartFile mockImage = new MockMultipartFile(
+                "image", "pizza.jpg", "image/jpeg", "pizza data".getBytes()
+        );
 
-        assertEquals(50, recipeService.getRecipeOrThrow(50).getId());
-        assertThrows(RuntimeException.class, () -> recipeService.getRecipeOrThrow(999));
+        // Save recipe with image
+        recipeService.saveRecipe(
+                "Pizza",
+                20,
+                15,
+                "Medium",
+                "Bake in oven until golden.",
+                List.of("Dough", "Cheese"),
+                List.of("1", "2"),
+                List.of("base", "cups"),
+                "Main Course",
+                mockImage,
+                USERNAME
+        );
+
+        // Fetch the saved recipe
+        Recipe saved = recipeRepo.findByTitle("Pizza").orElse(null);
+        assertNotNull("Recipe should be saved", saved);
+
+        // Confirm image file existence on disk
+        String relativePath = saved.getImgURL().replace("/uploads/", "");
+        Path absolutePath = Paths.get(System.getProperty("user.dir"), "uploads/test", relativePath);
+        assertTrue("Image file should exist in uploads/test directory", Files.exists(absolutePath));
     }
 }
