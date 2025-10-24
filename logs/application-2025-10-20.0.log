@@ -33,7 +33,7 @@
 2025-10-20 14:22:51 INFO  [main] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
 2025-10-20 14:22:51 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
 2025-10-20 14:22:51 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-10-20 14:22:51 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+2025-10-20 14:22:51 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
 
 Using generated security password: 5b5bbdfc-5814-48bd-9b12-2132538c1bee
 
@@ -92,7 +92,7 @@ This generated password is for development use only. Your security configuration
 2025-10-20 15:53:41 INFO  [main] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
 2025-10-20 15:53:41 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
 2025-10-20 15:53:41 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-10-20 15:53:41 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+2025-10-20 15:53:41 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
 
 Using generated security password: f1126c42-d6b2-4ded-93c9-4da4ef884cab
 
@@ -154,7 +154,7 @@ This generated password is for development use only. Your security configuration
 2025-10-20 15:58:38 INFO  [main] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
 2025-10-20 15:58:38 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
 2025-10-20 15:58:38 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-10-20 15:58:38 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+2025-10-20 15:58:38 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
 
 Using generated security password: bc6dbeb1-141d-4708-a401-dfea603aaa27
 
@@ -211,7 +211,7 @@ This generated password is for development use only. Your security configuration
 2025-10-20 16:08:20 INFO  [main] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
 2025-10-20 16:08:20 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
 2025-10-20 16:08:20 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-10-20 16:08:20 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+2025-10-20 16:08:20 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
 
 Using generated security password: 87c9b365-dec2-4e0f-bd3c-310413b545dd
 
@@ -274,7 +274,7 @@ This generated password is for development use only. Your security configuration
 2025-10-20 16:12:22 INFO  [main] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
 2025-10-20 16:12:22 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
 2025-10-20 16:12:22 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-10-20 16:12:22 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+2025-10-20 16:12:22 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
 
 Using generated security password: 3f96b8da-8447-4ab7-9d07-acae000e8d71
 
@@ -777,7 +777,7 @@ org.springframework.expression.spel.SpelEvaluationException: EL1001E: Type conve
 2025-10-20 16:42:53 INFO  [main] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
 2025-10-20 16:42:53 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
 2025-10-20 16:42:53 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-10-20 16:42:53 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+2025-10-20 16:42:53 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
 
 Using generated security password: eea3d66a-a224-43b7-acdd-3e5ff1c1c8ed
 
@@ -837,7 +837,7 @@ This generated password is for development use only. Your security configuration
 2025-10-20 19:16:56 INFO  [main] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
 2025-10-20 19:16:56 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
 2025-10-20 19:16:56 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-10-20 19:16:56 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+2025-10-20 19:16:56 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
 
 Using generated security password: d7aeb3e6-6cd6-4c59-bd91-bb0561bea54c
 
@@ -903,7 +903,7 @@ This generated password is for development use only. Your security configuration
 2025-10-20 19:35:55 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
 2025-10-20 19:35:55 INFO  [main] e.c.E.web.service.RecipeServiceImpl - ✅ RecipeServiceImpl initialized successfully
 2025-10-20 19:35:55 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-10-20 19:35:55 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+2025-10-20 19:35:55 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
 
 Using generated security password: b124bd53-54a7-435b-b680-8f0a1938730a
 
@@ -956,7 +956,7 @@ This generated password is for development use only. Your security configuration
 2025-10-20 19:47:02 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
 2025-10-20 19:47:02 INFO  [main] e.c.E.web.service.RecipeServiceImpl - ✅ RecipeServiceImpl initialized successfully
 2025-10-20 19:47:02 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-10-20 19:47:02 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+2025-10-20 19:47:02 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
 
 Using generated security password: 5c924e97-1cb2-4af9-8747-2f56d63ee40d
 
@@ -1010,7 +1010,7 @@ This generated password is for development use only. Your security configuration
 2025-10-20 19:55:09 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
 2025-10-20 19:55:09 INFO  [main] e.c.E.web.service.RecipeServiceImpl - ✅ RecipeServiceImpl initialized successfully
 2025-10-20 19:55:09 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-10-20 19:55:09 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+2025-10-20 19:55:09 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
 
 Using generated security password: bf75ca62-666c-4fe2-af7e-20898f768ce3
 
@@ -1047,6 +1047,20 @@ This generated password is for development use only. Your security configuration
 2025-10-20 20:21:46 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
 2025-10-20 20:21:46 WARN  [main] org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
 2025-10-20 20:21:46 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+2025-10-20 12:23:34 INFO  [Test worker] e.c.E.web.controller.EatAndShareTest - Starting EatAndShareTest using Java 21.0.8 with PID 14329 (started by dre in /home/dre/cs_341/finalproject)
+2025-10-20 12:23:34 INFO  [Test worker] e.c.E.web.controller.EatAndShareTest - No active profile set, falling back to 1 default profile: "default"
+2025-10-20 12:23:35 INFO  [Test worker] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-20 12:23:35 INFO  [Test worker] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 82 ms. Found 5 JPA repository interfaces.
+2025-10-20 12:23:35 INFO  [Test worker] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-20 12:23:36 INFO  [Test worker] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.26.Final
+2025-10-20 12:23:36 INFO  [Test worker] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-20 12:23:36 INFO  [Test worker] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-20 12:23:36 INFO  [Test worker] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-20 12:23:37 INFO  [Test worker] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@24954e82
+2025-10-20 12:23:37 INFO  [Test worker] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-20 12:23:37 WARN  [Test worker] org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-20 12:23:37 WARN  [Test worker] org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-10-20 12:23:37 INFO  [Test worker] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 	Database driver: undefined/unknown
 	Database version: 8.0
@@ -1054,16 +1068,43 @@ This generated password is for development use only. Your security configuration
 	Isolation level: undefined/unknown
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
+2025-10-20 12:23:38 INFO  [Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-20 12:23:38 INFO  [Test worker] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-20 12:23:39 WARN  [Test worker] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-20 12:23:39 WARN  [Test worker] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
 2025-10-20 20:21:46 INFO  [main] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
 2025-10-20 20:21:46 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
 2025-10-20 20:21:46 INFO  [main] e.c.E.web.service.RecipeServiceImpl - ✅ RecipeServiceImpl initialized successfully
 2025-10-20 20:21:46 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-10-20 20:21:46 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+2025-10-20 20:21:46 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
 
+Using generated security password: c5cd5ac1-c419-46c8-93c5-cffa16233998
 Using generated security password: 129a5335-2bdb-4196-ab43-64853fe5d0ab
 
 This generated password is for development use only. Your security configuration must be updated before running your application in production.
 
+2025-10-20 12:23:39 INFO  [Test worker] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2025-10-20 12:23:39 INFO  [Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-20 12:23:40 INFO  [Test worker] e.c.E.web.controller.EatAndShareTest - Started EatAndShareTest in 7.0 seconds (process running for 8.782)
+2025-10-20 12:23:40 INFO  [Test worker] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [edu.carroll.EatAndShare.web.service.UserServiceTest]: UserServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-10-20 12:23:41 INFO  [Test worker] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration edu.carroll.EatAndShare.FoodRecipeApplication for test class edu.carroll.EatAndShare.web.service.UserServiceTest
+2025-10-20 12:23:41 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-20 12:23:41 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-20 12:23:41 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-20 12:32:34 INFO  [Test worker] e.c.E.web.controller.EatAndShareTest - Starting EatAndShareTest using Java 21.0.8 with PID 15035 (started by dre in /home/dre/cs_341/finalproject)
+2025-10-20 12:32:34 INFO  [Test worker] e.c.E.web.controller.EatAndShareTest - No active profile set, falling back to 1 default profile: "default"
+2025-10-20 12:32:35 INFO  [Test worker] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-20 12:32:35 INFO  [Test worker] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 87 ms. Found 5 JPA repository interfaces.
+2025-10-20 12:32:36 INFO  [Test worker] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-20 12:32:36 INFO  [Test worker] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.26.Final
+2025-10-20 12:32:36 INFO  [Test worker] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-20 12:32:36 INFO  [Test worker] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-20 12:32:36 INFO  [Test worker] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-20 12:32:37 INFO  [Test worker] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@22f80e36
+2025-10-20 12:32:37 INFO  [Test worker] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-20 12:32:37 WARN  [Test worker] org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-20 12:32:37 WARN  [Test worker] org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-10-20 12:32:37 INFO  [Test worker] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
 2025-10-20 20:21:46 INFO  [main] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
 2025-10-20 20:21:46 INFO  [main] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
 2025-10-20 20:21:46 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
@@ -1111,9 +1152,14 @@ This generated password is for development use only. Your security configuration
 2025-10-20 20:32:13 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
 2025-10-20 20:32:13 INFO  [main] e.c.E.web.service.RecipeServiceImpl - ✅ RecipeServiceImpl initialized successfully
 2025-10-20 20:32:13 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-10-20 20:32:13 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+2025-10-20 20:32:13 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
+2025-10-20 12:32:39 INFO  [Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-20 12:32:39 INFO  [Test worker] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-20 12:32:39 WARN  [Test worker] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-20 12:32:39 WARN  [Test worker] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
 
 Using generated security password: d02a5df5-afe7-4bc4-9cfc-03b8db842487
+Using generated security password: 5cec52bd-4bfe-4de9-9320-ae5a37cc8c86
 
 This generated password is for development use only. Your security configuration must be updated before running your application in production.
 
@@ -1153,6 +1199,26 @@ This generated password is for development use only. Your security configuration
 2025-10-20 20:53:43 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
 2025-10-20 20:53:43 WARN  [main] org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
 2025-10-20 20:53:43 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+2025-10-20 12:32:40 INFO  [Test worker] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2025-10-20 12:32:40 INFO  [Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-20 12:32:41 INFO  [Test worker] e.c.E.web.controller.EatAndShareTest - Started EatAndShareTest in 7.435 seconds (process running for 9.03)
+2025-10-20 12:32:41 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-20 12:32:41 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-20 12:32:41 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-20 12:35:26 INFO  [Test worker] e.c.E.web.controller.EatAndShareTest - Starting EatAndShareTest using Java 21.0.8 with PID 15471 (started by dre in /home/dre/cs_341/finalproject)
+2025-10-20 12:35:26 INFO  [Test worker] e.c.E.web.controller.EatAndShareTest - No active profile set, falling back to 1 default profile: "default"
+2025-10-20 12:35:27 INFO  [Test worker] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-20 12:35:27 INFO  [Test worker] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 79 ms. Found 5 JPA repository interfaces.
+2025-10-20 12:35:28 INFO  [Test worker] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-20 12:35:28 INFO  [Test worker] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.26.Final
+2025-10-20 12:35:28 INFO  [Test worker] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-20 12:35:29 INFO  [Test worker] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-20 12:35:29 INFO  [Test worker] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-20 12:35:29 INFO  [Test worker] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@51c008fd
+2025-10-20 12:35:29 INFO  [Test worker] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-20 12:35:29 WARN  [Test worker] org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-20 12:35:29 WARN  [Test worker] org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-10-20 12:35:29 INFO  [Test worker] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 	Database driver: undefined/unknown
 	Database version: 8.0
@@ -1164,9 +1230,14 @@ This generated password is for development use only. Your security configuration
 2025-10-20 20:53:43 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
 2025-10-20 20:53:43 INFO  [main] e.c.E.web.service.RecipeServiceImpl - ✅ RecipeServiceImpl initialized successfully
 2025-10-20 20:53:43 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-10-20 20:53:43 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+2025-10-20 20:53:43 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
+2025-10-20 12:35:31 INFO  [Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-20 12:35:31 INFO  [Test worker] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-20 12:35:31 WARN  [Test worker] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-20 12:35:31 WARN  [Test worker] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
 
 Using generated security password: 606a8589-0dce-4653-a7a2-4ba93c7474fa
+Using generated security password: 4c399a04-9035-4621-b9b0-953a2a0df36c
 
 This generated password is for development use only. Your security configuration must be updated before running your application in production.
 
@@ -1211,6 +1282,26 @@ This generated password is for development use only. Your security configuration
 2025-10-20 21:08:11 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
 2025-10-20 21:08:11 WARN  [main] org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
 2025-10-20 21:08:11 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+2025-10-20 12:35:31 INFO  [Test worker] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2025-10-20 12:35:32 INFO  [Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-20 12:35:32 INFO  [Test worker] e.c.E.web.controller.EatAndShareTest - Started EatAndShareTest in 6.663 seconds (process running for 8.559)
+2025-10-20 12:35:34 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-20 12:35:34 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-20 12:35:34 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-20 12:36:56 INFO  [Test worker] e.c.E.web.controller.EatAndShareTest - Starting EatAndShareTest using Java 21.0.8 with PID 15862 (started by dre in /home/dre/cs_341/finalproject)
+2025-10-20 12:36:56 INFO  [Test worker] e.c.E.web.controller.EatAndShareTest - No active profile set, falling back to 1 default profile: "default"
+2025-10-20 12:36:58 INFO  [Test worker] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-20 12:36:58 INFO  [Test worker] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 77 ms. Found 5 JPA repository interfaces.
+2025-10-20 12:36:58 INFO  [Test worker] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-20 12:36:58 INFO  [Test worker] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.26.Final
+2025-10-20 12:36:59 INFO  [Test worker] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-20 12:36:59 INFO  [Test worker] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-20 12:36:59 INFO  [Test worker] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-20 12:36:59 INFO  [Test worker] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6d7bb5cc
+2025-10-20 12:36:59 INFO  [Test worker] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-20 12:37:00 WARN  [Test worker] org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-20 12:37:00 WARN  [Test worker] org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-10-20 12:37:00 INFO  [Test worker] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 	Database driver: undefined/unknown
 	Database version: 8.0
@@ -1222,9 +1313,14 @@ This generated password is for development use only. Your security configuration
 2025-10-20 21:08:11 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
 2025-10-20 21:08:11 INFO  [main] e.c.E.web.service.RecipeServiceImpl - ✅ RecipeServiceImpl initialized successfully
 2025-10-20 21:08:11 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-10-20 21:08:12 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+2025-10-20 21:08:12 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
+2025-10-20 12:37:01 INFO  [Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-20 12:37:01 INFO  [Test worker] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-20 12:37:02 WARN  [Test worker] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-20 12:37:02 WARN  [Test worker] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
 
 Using generated security password: 042494b4-085a-45c6-a6f2-9fda27bbebf4
+Using generated security password: 5c67905e-349a-41e5-af26-a20a18065f2a
 
 This generated password is for development use only. Your security configuration must be updated before running your application in production.
 
@@ -1272,6 +1368,26 @@ This generated password is for development use only. Your security configuration
 2025-10-20 21:13:52 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
 2025-10-20 21:13:52 WARN  [main] org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
 2025-10-20 21:13:52 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+2025-10-20 12:37:02 INFO  [Test worker] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2025-10-20 12:37:02 INFO  [Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-20 12:37:03 INFO  [Test worker] e.c.E.web.controller.EatAndShareTest - Started EatAndShareTest in 6.614 seconds (process running for 8.402)
+2025-10-20 12:37:03 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-20 12:37:03 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-20 12:37:03 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-20 12:38:11 INFO  [Test worker] e.c.E.web.controller.EatAndShareTest - Starting EatAndShareTest using Java 21.0.8 with PID 16154 (started by dre in /home/dre/cs_341/finalproject)
+2025-10-20 12:38:11 INFO  [Test worker] e.c.E.web.controller.EatAndShareTest - No active profile set, falling back to 1 default profile: "default"
+2025-10-20 12:38:12 INFO  [Test worker] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-20 12:38:13 INFO  [Test worker] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 89 ms. Found 5 JPA repository interfaces.
+2025-10-20 12:38:13 INFO  [Test worker] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-20 12:38:13 INFO  [Test worker] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.26.Final
+2025-10-20 12:38:13 INFO  [Test worker] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-20 12:38:14 INFO  [Test worker] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-20 12:38:14 INFO  [Test worker] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-20 12:38:14 INFO  [Test worker] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@114badf0
+2025-10-20 12:38:14 INFO  [Test worker] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-20 12:38:14 WARN  [Test worker] org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-20 12:38:14 WARN  [Test worker] org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-10-20 12:38:15 INFO  [Test worker] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 	Database driver: undefined/unknown
 	Database version: 8.0
@@ -1283,9 +1399,14 @@ This generated password is for development use only. Your security configuration
 2025-10-20 21:13:52 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
 2025-10-20 21:13:52 INFO  [main] e.c.E.web.service.RecipeServiceImpl - ✅ RecipeServiceImpl initialized successfully
 2025-10-20 21:13:52 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-10-20 21:13:52 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+2025-10-20 21:13:52 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
+2025-10-20 12:38:16 INFO  [Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-20 12:38:16 INFO  [Test worker] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-20 12:38:17 WARN  [Test worker] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-20 12:38:17 WARN  [Test worker] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
 
 Using generated security password: fe6d344f-e66f-4b98-83b3-5b4907e48598
+Using generated security password: 63518c28-d7d2-40c8-a446-d87aa7412b8d
 
 This generated password is for development use only. Your security configuration must be updated before running your application in production.
 
@@ -1336,7 +1457,7 @@ This generated password is for development use only. Your security configuration
 2025-10-20 21:36:19 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
 2025-10-20 21:36:19 INFO  [main] e.c.E.web.service.RecipeServiceImpl - ✅ RecipeServiceImpl initialized successfully
 2025-10-20 21:36:19 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-10-20 21:36:19 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+2025-10-20 21:36:19 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration -
 
 Using generated security password: a8b50527-97b1-4b0e-8848-7f16f65c7a3b
 
@@ -1367,3 +1488,9 @@ This generated password is for development use only. Your security configuration
 2025-10-20 21:38:58 INFO  [http-nio-8080-exec-1] e.c.E.web.controller.IndexController - Loading Homepage for the user: sam
 2025-10-20 23:14:48 WARN  [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=12m59s103ms).
 2025-10-20 23:54:24 WARN  [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=9m4s924ms).
+2025-10-20 12:38:17 INFO  [Test worker] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2025-10-20 12:38:17 INFO  [Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-20 12:38:18 INFO  [Test worker] e.c.E.web.controller.EatAndShareTest - Started EatAndShareTest in 6.653 seconds (process running for 8.52)
+2025-10-20 12:38:22 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-20 12:38:22 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-20 12:38:22 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

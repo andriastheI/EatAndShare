@@ -88,7 +88,7 @@ public class Recipe {
     private String instructions;
 
     /** URL or file path to the recipe's image. */
-    @Column(nullable = false, length = 1000)
+    @Column(nullable = true, length = 1000)
     private String imgURL;
 
     /** @return the user who created the recipe */
@@ -194,5 +194,9 @@ public class Recipe {
     @Column(unique = true)
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Recipe orElse(Object o) {
+        return null;
     }
 }

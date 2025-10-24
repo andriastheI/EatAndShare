@@ -231,7 +231,7 @@ public class IndexController {
         model.addAttribute("lastName", session.getAttribute("lastName"));
         model.addAttribute("loggedIn", true);
 
-        return "services"; // Loads services.html
+        return "services";
     }
 
     @GetMapping("/breakfast")
