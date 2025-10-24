@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Salad Recipes - EatAndShare</title>
+    <link href="/css/style.css" rel="stylesheet"/>
+</head>
+
+<body>
+
+<header>
+    <h2 class="logo">EatAndShare</h2>
+    <nav class="navigation">
+        <a th:href="@{/}">Home</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <a th:href="@{/services}">Services</a>
+
+        <div class="icon-login" th:if="${loggedIn}">
+            <ion-icon name="person-circle-outline"></ion-icon>
+            <ul class="dropdown">
+                <li><p th:text="'Username: ' + ${username}"></p></li>
+                <li><p th:text="'Email: ' + ${email}"></p></li>
+                <li><a th:href="@{/logout}">Logout</a></li>
+            </ul>
+        </div>
+
+        <button class="btnLogin-popup" th:if="${!loggedIn}">Login</button>
+    </nav>
+</header>
+
+<!-- ===== CATEGORY: Only Breakfast Recipes ===== -->
+<div class="feed" th:if="${loggedIn}">
+    <h2>Salad Recipes</h2>
+
+    <div class="feed-grid">
+        <!-- Loop through breakfast recipes only -->
+        <div class="recipe-card" th:each="r : ${recipes}" th:if="${r.category != null and r.category.categoryName == 'Salad'}">
+            <a th:href="@{/recipes/{id}(id=${r.id})}">
+                <img th:if="${r.imgURL}" th:src="${r.imgURL}" alt="Recipe image">
+                <div th:if="${r.imgURL == null}">
+                    <span>No image</span>
+                </div>
+            </a>
+
+            <div>
+                <div>
+                    <span class="category-badge"
+                          th:classappend="${r.category.categoryName}"
+                          th:text="${r.category.categoryName}"></span>
+                    <span class="difficulty-text" th:text="${r.difficulty}">Medium</span>
+                </div>
+                <a th:href="@{/recipes/{id}(id=${r.id})}">
+                    <h3 th:text="${r.title}">Recipe Title</h3>
+                </a>
+                <p th:text="${#strings.abbreviate(r.instructions, 110)}">Short teaser...</p>
+            </div>
+
+            <div>
+                <span th:text="'By ' + ${r.user != null ? r.user.firstName : 'Someone'}"></span>
+                <span th:text="${r.prepTimeMins} + ' + ' + ${r.cookTimeMins} + ' mins'"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== ICONS & SCRIPTS ===== -->
+<script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" type="module"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>

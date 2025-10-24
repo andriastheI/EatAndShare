@@ -143,57 +143,83 @@
 <!-- ===== CATEGORY BUTTONS (visible when logged in) ===== -->
 <div class="tile-catagory" th:if="${loggedIn}">
     <div class="button-tile">
-        <a class="catbtn1" href="#">Breakfast</a>
-        <a class="catbtn2" href="#">Lunch</a>
-        <a class="catbtn3" href="#">Dinner</a>
-        <a class="catbtn4" href="#">Salad</a>
-        <a class="catbtn5" href="#">Dessert</a>
+        <a class="catbtn1" href="/breakfast">Breakfast</a>
+        <a class="catbtn2" href="/lunch">Lunch</a>
+        <a class="catbtn3" href="/dinner">Dinner</a>
+        <a class="catbtn4" href="/salad">Salad</a>
+        <a class="catbtn5" href="/dessert">Dessert</a>
     </div>
 </div>
 
-<!-- ===== RECIPE FEED: Displays latest recipes dynamically ===== -->
-<div class="feed" th:if="${loggedIn}">
-    <h2>Latest recipes</h2>
+<!-- ===== SEARCH BAR (visible when logged in) ===== -->
+<div th:if="${loggedIn}">
+    <form th:action="@{/}" method="get" class="search-bar">
+        <input type="text" name="q" th:value="${q}"
+               placeholder="Search recipes, ingredients, categories..." />
+        <button type="submit">Search</button>
+    </form>
+    <div th:if="${searching}" class="search-summary">
+        <p th:text="${resultCount} + ' result(s) for ' + ${q}"></p>
+    </div>
+</div>
 
+
+
+
+<!-- Empty state (no initial recipes) -->
+<div th:if="${loggedIn and !searching}">
+    <p>Search for recipes by title, ingredient, or category.</p>
+</div>
+
+<!-- Results only when searching AND there are items -->
+<div class="feed" th:if="${loggedIn and searching and #lists.size(recipes) > 0}">
+    <h2>Search results</h2>
     <div class="feed-grid">
-        <!-- Loop through all recipes -->
         <div class="recipe-card" th:each="r : ${recipes}">
-            <!-- Recipe image or fallback -->
-            <a th:href="@{/recipes/{id}(id=${r.id})}">
-                <img th:if="${r.imgURL}" th:src="${r.imgURL}" alt="">
-                <div th:if="${r.imgURL == null}">
-                    <span>No image</span>
+            <!-- ... your existing card ... -->
+            <a th:href="@{/recipes/{id}(id=${r.id})}"> <img th:if="${r.imgURL}" th:src="${r.imgURL}" alt="">
+                <div th:if="${r.imgURL == null}"> <span>No image</span>
                 </div>
             </a>
 
-            <!-- Recipe info -->
-            <div>
-                <div>
-                    <span class="category-badge"
-                          th:classappend="${r.category != null ? r.category.categoryName : 'Uncategorized'}"
-                          th:text="${r.category != null ? r.category.categoryName : 'Uncategorized'}"></span>
-                    <span class="difficulty-text" th:text="${r.difficulty}">Medium</span>
+            <div> <div> <span class="category-badge" th:classappend="${r.category != null ? r.category.categoryName : 'Uncategorized'}" th:text="${r.category != null ? r.category.categoryName : 'Uncategorized'}"></span> <span class="difficulty-text" th:text="${r.difficulty}">Medium</span> </div> <a th:href="@{/recipes/{id}(id=${r.id})}"> <h3 th:text="${r.title}">Recipe title</h3> </a> <p th:text="${#strings.abbreviate(r.instructions, 110)}">Short teaser...</p> </div> <div> <span th:text="'By ' + ${r.user != null ? r.user.firstName : 'Someone'}"></span> <span th:text="${r.prepTimeMins} + ' + ' + ${r.cookTimeMins} + ' mins'"></span>
+        </div> </div>
 
-                </div>
-                <a th:href="@{/recipes/{id}(id=${r.id})}">
-                    <h3 th:text="${r.title}">Recipe title</h3>
-                </a>
-                <p th:text="${#strings.abbreviate(r.instructions, 110)}">Short teaser...</p>
-            </div>
 
-            <!-- Footer info: author and time -->
-            <div>
-                <span th:text="'By ' + ${r.user != null ? r.user.firstName : 'Someone'}"></span>
-                <span th:text="${r.prepTimeMins} + ' + ' + ${r.cookTimeMins} + ' mins'"></span>
-            </div>
+
+
         </div>
+    </div>
+
+    <div class="pagination" th:if="${totalPages > 1}">
+        <a th:if="${page > 0}" th:href="@{/(page=${page-1}, size=${size}, q=${q})}">« Prev</a>
+        <span th:each="p : ${#numbers.sequence(0, totalPages-1)}">
+      <a th:if="${p != page}" th:href="@{/(page=${p}, size=${size}, q=${q})}" th:text="${p + 1}"></a>
+      <span th:if="${p == page}" th:text="${p + 1}" class="current"></span>
+    </span>
+        <a th:if="${page + 1 < totalPages}" th:href="@{/(page=${page+1}, size=${size}, q=${q})}">Next »</a>
     </div>
 </div>
 
+<!-- No results message -->
+<div th:if="${loggedIn and searching and #lists.isEmpty(recipes)}">
+    <p th:text="'No results for ' + ${q}"></p>
+</div>
 <!-- ===== ICONS & SCRIPTS ===== -->
 <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" type="module"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <script src="/js/script.js"></script>
+
+<!-- Minimal inline styles for new UI bits -->
+<style>
+    .search-bar{display:flex;gap:.5rem;margin:1rem 0}
+    .search-bar input{flex:1;padding:.6rem}
+    .search-bar button{padding:.6rem 1rem}
+    .search-summary{margin:.25rem 0;font-size:.9rem;opacity:.8}
+    .pagination{display:flex;gap:.5rem;align-items:center;margin:1rem 0;flex-wrap:wrap}
+    .pagination a,.pagination span{padding:.4rem .6rem;border:1px solid #ddd;border-radius:.4rem;text-decoration:none}
+    .pagination .current{font-weight:700;background:#f2f2f2}
+</style>
 
 </body>
 </html>

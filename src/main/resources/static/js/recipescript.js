@@ -42,9 +42,9 @@ function addIngredient() {
 
     // Create HTML structure for new ingredient
     newItem.innerHTML = `
-    <input type="text" name="ingredientName[]" placeholder="Ingredient" required />
-    <input type="text" name="quantity[]" placeholder="Quantity" required />
-    <input type="text" name="unit[]" placeholder="Unit" required />
+    <input type="text" name="ingredientNames" placeholder="Ingredient" required />
+    <input type="text" name="quantities" placeholder="Quantity" required />
+    <input type="text" name="units" placeholder="Unit" required />
   `;
 
     // Append to form

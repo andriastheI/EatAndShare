@@ -4,6 +4,11 @@ import edu.carroll.EatAndShare.backEnd.model.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 
 /**
  * Repository interface for performing CRUD operations on {@link Recipe} entities.
@@ -36,4 +41,24 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
      * @return a list of all recipes sorted by ID (newest first)
      */
     List<Recipe> findAllByOrderByIdDesc();
+    List<Recipe> findByCategory_CategoryNameIgnoreCase(String categoryName);
+
+    Page<Recipe> findAllByOrderByIdDesc(Pageable pageable);
+
+    // Pageable search across title, instructions, category, and ingredient
+    @Query("""
+        select distinct r from Recipe r
+        left join r.category c
+        left join r.recipeIngredients ri
+        left join ri.ingredient i
+        where lower(r.title) like lower(concat('%', :q, '%'))
+           or lower(r.instructions) like lower(concat('%', :q, '%'))
+           or lower(c.categoryName) like lower(concat('%', :q, '%'))
+           or lower(i.ingredientName) like lower(concat('%', :q, '%'))
+    """)
+    Page<Recipe> search(@Param("q") String q, Pageable pageable);
+
+
 }
+
+

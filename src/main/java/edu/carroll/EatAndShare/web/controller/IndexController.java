@@ -1,5 +1,6 @@
 package edu.carroll.EatAndShare.web.controller;
 
+import edu.carroll.EatAndShare.backEnd.model.Recipe;
 import edu.carroll.EatAndShare.web.service.RecipeService;
 import edu.carroll.EatAndShare.backEnd.model.User;
 import edu.carroll.EatAndShare.web.form.UserForm;
@@ -7,13 +8,17 @@ import edu.carroll.EatAndShare.web.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
+
 
 /**
  * Main controller for handling homepage, login, registration, and session management
@@ -33,44 +38,34 @@ import org.springframework.beans.factory.annotation.Autowired;
  *   <li><strong>services.html</strong> – Authenticated user page.</li>
  * </ul>
  *
- * @author Andrias and Selin
- * @version 1.0
- * @since 2025-10-11
+ *
  */
 @Controller
 public class IndexController {
 
+    private static final Logger log = LoggerFactory.getLogger(IndexController.class);
+
     /** Service handling user authentication, registration, and lookup operations. */
     private final UserService userService;
 
-    private final static Logger log = LoggerFactory.getLogger(IndexController.class);
-
-    /** Service for retrieving and managing recipe data for the homepage. */
-    @Autowired
-    private RecipeService recipeService;
+    /** Service for retrieving and managing recipe data for homepage and categories. */
+    private final RecipeService recipeService;
 
     /**
-     * Constructor-based dependency injection for {@link UserService}.
-     *
-     * @param userService service handling user-related business logic
+     * Constructor-based dependency injection for {@link UserService} and {@link RecipeService}.
      */
-    public IndexController(UserService userService) {
+    public IndexController(UserService userService, RecipeService recipeService) {
         this.userService = userService;
+        this.recipeService = recipeService;
     }
 
-    /**
-     * Displays the main index page.
-     *
-     * <p>This method prepares login and registration forms and populates
-     * model attributes with session data to maintain user state across
-     * page loads. It also fetches and displays the latest recipes.</p>
-     *
-     * @param model the model to pass attributes to the Thymeleaf view
-     * @param session the HTTP session containing login state
-     * @return the name of the view to render ("index")
-     */
     @GetMapping("/")
-    public String index(Model model, HttpSession session) {
+    public String index(@RequestParam(value = "q", required = false) String q,
+                        @RequestParam(value = "page", defaultValue = "0") int page,
+                        @RequestParam(value = "size", defaultValue = "12") int size,
+                        Model model,
+                        HttpSession session) {
+
         if (!model.containsAttribute("userForm")) {
             model.addAttribute("userForm", new UserForm());
         }
@@ -78,23 +73,42 @@ public class IndexController {
             model.addAttribute("registerForm", new User());
         }
 
-        // Load login state from session
+        // session -> model
         Boolean loggedIn = (Boolean) session.getAttribute("loggedIn");
-        String username = (String) session.getAttribute("username");
-        String email = (String) session.getAttribute("email");
-        String firstName = (String) session.getAttribute("firstName");
-        String lastName = (String) session.getAttribute("lastName");
-
-        // Inject session values into the model
         model.addAttribute("loggedIn", loggedIn != null && loggedIn);
-        model.addAttribute("username", username != null ? username : "");
-        model.addAttribute("email", email != null ? email : "");
-        model.addAttribute("firstName", firstName != null ? firstName : "");
-        model.addAttribute("lastName", lastName != null ? lastName : "");
+        model.addAttribute("username", session.getAttribute("username"));
+        model.addAttribute("email", session.getAttribute("email"));
+        model.addAttribute("firstName", session.getAttribute("firstName"));
+        model.addAttribute("lastName", session.getAttribute("lastName"));
 
-        // Add latest recipes to homepage
-        model.addAttribute("recipes", recipeService.latestRecipes());
-        log.info("Loading Homepage for the user: {}", username);
+        // Only search when q is provided; otherwise, show nothing
+        boolean searching = q != null && !q.isBlank();
+        model.addAttribute("searching", searching);
+        model.addAttribute("q", q);
+
+        if (!searching) {
+            model.addAttribute("recipes", java.util.Collections.emptyList());
+            model.addAttribute("resultCount", 0L);
+            model.addAttribute("page", 0);
+            model.addAttribute("totalPages", 0);
+            model.addAttribute("size", size);
+            return "index";
+        }
+
+        // Searching → run pageable query
+        if (page < 0) page = 0;
+        if (size < 1 || size > 60) size = 12;
+        var pageable = org.springframework.data.domain.PageRequest.of(
+                page, size, org.springframework.data.domain.Sort.by("id").descending()
+        );
+
+        var recipesPage = recipeService.searchRecipes(q.trim(), pageable);
+        model.addAttribute("recipesPage", recipesPage);
+        model.addAttribute("recipes", recipesPage.getContent());
+        model.addAttribute("resultCount", recipesPage.getTotalElements());
+        model.addAttribute("page", recipesPage.getNumber());
+        model.addAttribute("totalPages", recipesPage.getTotalPages());
+        model.addAttribute("size", recipesPage.getSize());
 
         return "index";
     }
@@ -219,4 +233,51 @@ public class IndexController {
 
         return "services"; // Loads services.html
     }
+
+    @GetMapping("/breakfast")
+    public String showBreakfast(Model model, HttpSession session) {
+        populateSessionAttributes(model, session);
+        model.addAttribute("recipes", recipeService.findByCategoryName("Breakfast"));
+        return "breakfast";
+    }
+
+    @GetMapping("/lunch")
+    public String showLunch(Model model, HttpSession session) {
+        populateSessionAttributes(model, session);
+        model.addAttribute("recipes", recipeService.findByCategoryName("Lunch"));
+        log.info("Loaded {} recipes for {}", recipeService.findByCategoryName("Lunch").size(), "Lunch");
+
+        return "lunch";
+    }
+
+    @GetMapping("/dinner")
+    public String showDinner(Model model, HttpSession session) {
+        populateSessionAttributes(model, session);
+        model.addAttribute("recipes", recipeService.findByCategoryName("Dinner"));
+        return "dinner";
+    }
+
+    @GetMapping("/salad")
+    public String showSalad(Model model, HttpSession session) {
+        populateSessionAttributes(model, session);
+        model.addAttribute("recipes", recipeService.findByCategoryName("Salad"));
+        return "salad";
+    }
+
+    @GetMapping("/dessert")
+    public String showDessert(Model model, HttpSession session) {
+        populateSessionAttributes(model, session);
+        model.addAttribute("recipes", recipeService.findByCategoryName("Dessert"));
+        return "dessert";
+    }
+
+    // ✅ Helper method to inject session info for category pages
+    private void populateSessionAttributes(Model model, HttpSession session) {
+        model.addAttribute("loggedIn", session.getAttribute("loggedIn"));
+        model.addAttribute("username", session.getAttribute("username"));
+        model.addAttribute("email", session.getAttribute("email"));
+        model.addAttribute("firstName", session.getAttribute("firstName"));
+        model.addAttribute("lastName", session.getAttribute("lastName"));
+    }
+
 }
