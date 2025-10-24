@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
+import java.util.Optional;
 
 /**
  * Repository interface for performing CRUD operations on {@link Recipe} entities.
@@ -57,7 +57,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
            or lower(i.ingredientName) like lower(concat('%', :q, '%'))
     """)
     Page<Recipe> search(@Param("q") String q, Pageable pageable);
-
+    Optional<Recipe> findByTitle(String title);
 
 }
 

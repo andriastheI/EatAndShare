@@ -1206,3 +1206,108 @@ This generated password is for development use only. Your security configuration
 2025-10-23 16:59:38 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
 2025-10-23 16:59:38 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
 2025-10-23 16:59:38 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-23 20:31:19 INFO  [main] e.c.E.FoodRecipeApplication - Starting FoodRecipeApplication using Java 21.0.8 with PID 60232 (/Users/selin/cs341/finalProject/EatAndShare/build/classes/java/main started by selin in /Users/selin/cs341/finalProject/EatAndShare)
+2025-10-23 20:31:19 INFO  [main] e.c.E.FoodRecipeApplication - No active profile set, falling back to 1 default profile: "default"
+2025-10-23 20:31:19 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-23 20:31:19 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 15 ms. Found 5 JPA repository interfaces.
+2025-10-23 20:31:19 INFO  [main] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-10-23 20:31:19 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-10-23 20:31:19 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-23 20:31:19 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.44]
+2025-10-23 20:31:19 INFO  [main] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-10-23 20:31:19 INFO  [main] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 392 ms
+2025-10-23 20:31:19 INFO  [main] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-23 20:31:19 INFO  [main] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.26.Final
+2025-10-23 20:31:19 INFO  [main] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-23 20:31:19 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-23 20:31:19 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-23 20:31:19 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3a80c534
+2025-10-23 20:31:19 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-23 20:31:19 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-23 20:31:19 WARN  [main] org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-10-23 20:31:19 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-23 20:31:20 INFO  [main] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-23 20:31:20 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 20:31:20 INFO  [main] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-23 20:31:20 INFO  [main] e.c.E.web.service.RecipeServiceImpl - ✅ RecipeServiceImpl initialized successfully
+2025-10-23 20:31:20 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-23 20:31:20 WARN  [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: acc5b4c6-1dcb-4752-9856-4395ea8886ff
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-10-23 20:31:20 INFO  [main] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2025-10-23 20:31:20 INFO  [main] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-23 20:31:20 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-10-23 20:31:20 INFO  [main] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-10-23 20:31:20 INFO  [main] e.c.E.FoodRecipeApplication - Started FoodRecipeApplication in 1.832 seconds (process running for 1.937)
+2025-10-23 20:31:25 INFO  [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-10-23 20:31:25 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-10-23 20:31:25 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
+2025-10-23 20:32:20 INFO  [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-10-23 20:32:20 INFO  [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-10-23 20:32:20 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 20:32:20 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-23 20:32:20 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-23 21:59:15 INFO  [Test worker] e.c.E.web.controller.EatAndShareTest - Starting EatAndShareTest using Java 21.0.8 with PID 60895 (started by selin in /Users/selin/cs341/finalProject/EatAndShare)
+2025-10-23 21:59:15 INFO  [Test worker] e.c.E.web.controller.EatAndShareTest - No active profile set, falling back to 1 default profile: "default"
+2025-10-23 21:59:16 INFO  [Test worker] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-23 21:59:16 INFO  [Test worker] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 16 ms. Found 5 JPA repository interfaces.
+2025-10-23 21:59:16 INFO  [Test worker] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-23 21:59:16 INFO  [Test worker] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.26.Final
+2025-10-23 21:59:16 INFO  [Test worker] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-23 21:59:16 INFO  [Test worker] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-23 21:59:16 INFO  [Test worker] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-23 21:59:16 INFO  [Test worker] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+2025-10-23 21:59:16 INFO  [Test worker] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-23 21:59:16 INFO  [Test worker] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-23 21:59:16 INFO  [Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-23 21:59:16 INFO  [Test worker] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 21:59:17 INFO  [Test worker] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-23 21:59:17 INFO  [Test worker] e.c.E.web.service.RecipeServiceImpl - ✅ RecipeServiceImpl initialized successfully
+2025-10-23 21:59:17 WARN  [Test worker] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-23 21:59:17 WARN  [Test worker] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 9b8fc6f1-9e27-4a6b-9884-b4a6ba6ace0a
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-10-23 21:59:17 INFO  [Test worker] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2025-10-23 21:59:17 INFO  [Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-23 21:59:17 INFO  [Test worker] e.c.E.web.controller.EatAndShareTest - Started EatAndShareTest in 1.779 seconds (process running for 2.155)
+2025-10-23 21:59:17 INFO  [Test worker] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [edu.carroll.EatAndShare.web.service.RecipeServiceTest]: RecipeServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-10-23 21:59:17 INFO  [Test worker] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration edu.carroll.EatAndShare.FoodRecipeApplication for test class edu.carroll.EatAndShare.web.service.RecipeServiceTest
+2025-10-23 21:59:17 WARN  [Test worker] e.c.E.web.service.RecipeServiceImpl - ⚠️ Category 'Main course' not found — creating it now
+2025-10-23 21:59:17 INFO  [Test worker] e.c.E.web.service.RecipeServiceImpl - Saved image for recipe 'Pizza' to /uploads/1761278357927_pizza.jpg
+2025-10-23 21:59:17 INFO  [Test worker] e.c.E.web.service.RecipeServiceImpl - Recipe 'Pizza' saved successfully (id=1) under category 'Main course'
+2025-10-23 21:59:17 INFO  [Test worker] e.c.E.web.service.RecipeServiceImpl - Linked 2 ingredients to recipe 'Pizza'
+2025-10-23 21:59:17 WARN  [Test worker] e.c.E.web.service.RecipeServiceImpl - ⚠️ Category 'Vegan' not found — creating it now
+2025-10-23 21:59:17 INFO  [Test worker] e.c.E.web.service.RecipeServiceImpl - Recipe 'Salad Bowl' saved successfully (id=2) under category 'Vegan'
+2025-10-23 21:59:17 INFO  [Test worker] e.c.E.web.service.RecipeServiceImpl - Linked 2 ingredients to recipe 'Salad Bowl'
+2025-10-23 21:59:17 WARN  [Test worker] e.c.E.web.service.RecipeServiceImpl - ⚠️ Category 'Breakfast' not found — creating it now
+2025-10-23 21:59:17 INFO  [Test worker] e.c.E.web.service.RecipeServiceImpl - Recipe 'Omelette' saved successfully (id=3) under category 'Breakfast'
+2025-10-23 21:59:17 INFO  [Test worker] e.c.E.web.service.RecipeServiceImpl - Linked 1 ingredients to recipe 'Omelette'
+2025-10-23 21:59:17 WARN  [Test worker] e.c.E.web.service.RecipeServiceImpl - ⚠️ Category 'Dessert' not found — creating it now
+2025-10-23 21:59:17 INFO  [Test worker] e.c.E.web.service.RecipeServiceImpl - Saved image for recipe 'Chocolate Cake' to /uploads/1761278357961_cake.png
+2025-10-23 21:59:17 INFO  [Test worker] e.c.E.web.service.RecipeServiceImpl - Recipe 'Chocolate Cake' saved successfully (id=4) under category 'Dessert'
+2025-10-23 21:59:17 INFO  [Test worker] e.c.E.web.service.RecipeServiceImpl - Linked 2 ingredients to recipe 'Chocolate Cake'
+2025-10-23 21:59:17 INFO  [Test worker] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [edu.carroll.EatAndShare.web.service.UserServiceTest]: UserServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-10-23 21:59:17 INFO  [Test worker] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration edu.carroll.EatAndShare.FoodRecipeApplication for test class edu.carroll.EatAndShare.web.service.UserServiceTest
+2025-10-23 21:59:18 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 21:59:18 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-23 21:59:18 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
