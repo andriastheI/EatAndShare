@@ -280,4 +280,15 @@ public class IndexController {
         model.addAttribute("lastName", session.getAttribute("lastName"));
     }
 
+    @GetMapping("/about")
+    public String about() {
+        return "about";  // loads about.html
+    }
+
+    @GetMapping("/contact")
+    public String contactPage() {
+        return "contact";
+    }
+
+
 }

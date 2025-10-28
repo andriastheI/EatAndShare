@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About • EatAndShare</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<header>
+    <h2 class="logo">EatAndShare</h2>
+    <nav class="navigation">
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/about}">About</a>
+        <a th:href="@{/contact}">Contact</a>
+        <a th:href="@{/services}">Share</a>
+        
+    </nav>
+</header>
+
+<div class="about-section">
+    <h1>About EatAndShare</h1>
+    <p>We believe food tastes better when it's shared.</p>
+
+    <div class="about-text">
+        <p>
+            EatAndShare was created with one simple idea — to make cooking and sharing recipes easier.
+            Whether you're a beginner or a kitchen expert, this platform helps you upload, discover,
+            and enjoy recipes from real, everyday people like you.
+        </p>
+        <p>
+            No fancy chef talk. No complicated steps. Just real food, shared by real people.
+        </p>
+    </div>
+</div>
+
+<footer class="footer">
+    <h2>EatAndShare</h2>
+    <p>Cook • Share • Enjoy</p>
+    <small>&copy; 2025 EatAndShare — All Rights Reserved</small>
+</footer>
+
+</body>
+</html>

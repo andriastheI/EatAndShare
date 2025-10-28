@@ -14,10 +14,10 @@
 <header>
     <h2 class="logo">EatAndShare</h2>
     <nav class="navigation">
-        <a href="#">Home</a>
-        <a href="#">About</a>
-        <a href="#">Contact</a>
-        <a href="/services">Services</a>
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/about}">About</a>
+        <a th:href="@{/contact}">Contact</a>
+        <a href="/services">Share</a>
 
         <!-- If user is logged in, show profile icon and dropdown -->
         <div class="icon-login" th:if="${loggedIn}">
@@ -55,10 +55,6 @@
                     <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
                     <input required th:field="*{password}" th:id="login_password" type="password"/>
                     <label class="password-align">Password</label>
-                </div>
-
-                <div class="remember-forgot">
-                    <a href="#">Forgot Password?</a>
                 </div>
 
                 <!-- Submit button -->
@@ -140,6 +136,10 @@
     </div>
 </div>
 
+<div class="tagline" th:if="${loggedIn}">
+    Cook it. <span>Share it.</span> Love it.
+</div>
+
 <!-- ===== CATEGORY BUTTONS (visible when logged in) ===== -->
 <div class="tile-catagory" th:if="${loggedIn}">
     <div class="button-tile">
@@ -163,14 +163,6 @@
     </div>
 </div>
 
-
-
-
-<!-- Empty state (no initial recipes) -->
-<div th:if="${loggedIn and !searching}">
-    <p>Search for recipes by title, ingredient, or category.</p>
-</div>
-
 <!-- Results only when searching AND there are items -->
 <div class="feed" th:if="${loggedIn and searching and #lists.size(recipes) > 0}">
     <h2>Search results</h2>
@@ -184,9 +176,6 @@
 
             <div> <div> <span class="category-badge" th:classappend="${r.category != null ? r.category.categoryName : 'Uncategorized'}" th:text="${r.category != null ? r.category.categoryName : 'Uncategorized'}"></span> <span class="difficulty-text" th:text="${r.difficulty}">Medium</span> </div> <a th:href="@{/recipes/{id}(id=${r.id})}"> <h3 th:text="${r.title}">Recipe title</h3> </a> <p th:text="${#strings.abbreviate(r.instructions, 110)}">Short teaser...</p> </div> <div> <span th:text="'By ' + ${r.user != null ? r.user.firstName : 'Someone'}"></span> <span th:text="${r.prepTimeMins} + ' + ' + ${r.cookTimeMins} + ' mins'"></span>
         </div> </div>
-
-
-
 
         </div>
     </div>
@@ -205,6 +194,14 @@
 <div th:if="${loggedIn and searching and #lists.isEmpty(recipes)}">
     <p th:text="'No results for ' + ${q}"></p>
 </div>
+
+<footer class="footer" th:if="${loggedIn}">
+    <h2>EatAndShare</h2>
+    <p>Cook • Share • Enjoy</p>
+
+    <small>&copy; 2025 EatAndShare — All Rights Reserved</small>
+</footer>
+
 <!-- ===== ICONS & SCRIPTS ===== -->
 <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" type="module"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

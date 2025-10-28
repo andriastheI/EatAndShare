@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact • EatAndShare</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<header>
+    <h2 class="logo">EatAndShare</h2>
+    <nav class="navigation">
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/about}">About</a>
+        <a th:href="@{/contact}">Contact</a>
+        <a th:href="@{/services}">Share</a>
+    </nav>
+</header>
+
+<div class="contact-section">
+    <h1>Contact Us</h1>
+    <p>Have questions? Feedback? Recipe suggestions? We’d love to hear from you.</p>
+
+    <form action="https://formspree.io/f/mqagpowr" method="POST" class="contact-form">
+
+        <input type="text" name="name" placeholder="Your Name" required>
+
+        <input type="email" name="email" placeholder="Your Email" required>
+
+        <textarea name="message" rows="5" placeholder="Your Message..." required></textarea>
+
+        <button type="submit">Send Message</button>
+    </form>
+</div>
+
+<footer class="footer">
+    <h2>EatAndShare</h2>
+    <p>Cook • Share • Enjoy</p>
+    <small>&copy; 2025 EatAndShare — All Rights Reserved</small>
+</footer>
+
+</body>
+</html>
