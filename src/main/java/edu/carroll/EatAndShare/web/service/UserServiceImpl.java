@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserRepository loginRepo, PasswordEncoder passwordEncoder) {
         this.loginRepo = loginRepo;
         this.passwordEncoder = passwordEncoder;
-        log.info("✅ UserServiceImpl initialized");
+        log.info("UserServiceImpl initialized");
     }
 
     /**
@@ -64,12 +64,12 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public boolean validateUser(UserForm userForm) {
-        log.info("➡️ validateUser START for username='{}'", userForm.getUsername());
+        log.info("validateUser START for username='{}'", userForm.getUsername());
 
         List<User> users = loginRepo.findByUsernameIgnoreCase(userForm.getUsername());
 
         if (users.size() != 1) {
-            log.warn("❌ Login failed — username '{}' not found or duplicate entries", userForm.getUsername());
+            log.warn("Login failed — username '{}' not found or duplicate entries", userForm.getUsername());
             return false;
         }
 
@@ -77,9 +77,9 @@ public class UserServiceImpl implements UserService {
         boolean passwordMatch = passwordEncoder.matches(userForm.getPassword(), user.getPassword());
 
         if (passwordMatch) {
-            log.info("✅ Login successful for username='{}'", userForm.getUsername());
+            log.info("Login successful for username='{}'", userForm.getUsername());
         } else {
-            log.warn("❌ Login failed — password mismatch for username='{}'", userForm.getUsername());
+            log.warn("Login failed — password mismatch for username='{}'", userForm.getUsername());
         }
 
         return passwordMatch;
@@ -97,35 +97,35 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void saveUser(User user) {
-        log.info("➡️ saveUser START — username='{}', email='{}'", user.getUsername(), user.getEmail());
+        log.info("saveUser START — username='{}', email='{}'", user.getUsername(), user.getEmail());
 
         // Validation
         if (user.getUsername() == null || user.getUsername().isBlank()) {
-            log.warn("❌ Username validation failed");
+            log.warn("Username validation failed");
             throw new IllegalArgumentException("Username cannot be empty");
         }
         if (user.getEmail() == null || user.getEmail().isBlank()) {
-            log.warn("❌ Email validation failed");
+            log.warn("Email validation failed");
             throw new IllegalArgumentException("Email cannot be empty");
         }
         if (user.getPassword() == null || user.getPassword().isBlank()) {
-            log.warn("❌ Password validation failed");
+            log.warn("Password validation failed");
             throw new IllegalArgumentException("Password cannot be empty");
         }
         if (loginRepo.existsByUsernameIgnoreCase(user.getUsername())) {
-            log.warn("❌ Duplicate username detected '{}'", user.getUsername());
+            log.warn("Duplicate username detected '{}'", user.getUsername());
             throw new IllegalArgumentException("Username already exists");
         }
         if (loginRepo.existsByEmailIgnoreCase(user.getEmail())) {
-            log.warn("❌ Duplicate email detected '{}'", user.getEmail());
+            log.warn("Duplicate email detected '{}'", user.getEmail());
             throw new IllegalArgumentException("Email already registered");
         }
         if (user.getFirstName() == null || user.getFirstName().isBlank()) {
-            log.warn("❌ First name validation failed");
+            log.warn("First name validation failed");
             throw new IllegalArgumentException("First name cannot be empty");
         }
         if (user.getLastName() == null || user.getLastName().isBlank()) {
-            log.warn("❌ Last name validation failed");
+            log.warn("Last name validation failed");
             throw new IllegalArgumentException("Last name cannot be empty");
         }
 
@@ -134,9 +134,9 @@ public class UserServiceImpl implements UserService {
 
         try {
             loginRepo.save(user);
-            log.info("✅ User successfully saved — username='{}'", user.getUsername());
+            log.info("User successfully saved — username='{}'", user.getUsername());
         } catch (DataIntegrityViolationException e) {
-            log.error("❌ Data integrity error while saving user '{}': {}", user.getUsername(), e.getMessage());
+            log.error("Data integrity error while saving user '{}': {}", user.getUsername(), e.getMessage());
             throw new IllegalArgumentException("Username or email already exists!");
         }
     }

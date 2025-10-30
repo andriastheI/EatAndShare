@@ -45,7 +45,7 @@ public class RecipeServiceImpl implements RecipeService {
         this.recipeIngredientRepo = recipeIngredientRepo;
         this.userRepo = userRepo;
         this.categoryRepo = categoryRepo;
-        log.info("✅ RecipeServiceImpl initialized");
+        log.info("RecipeServiceImpl initialized");
     }
 
     @Override
@@ -61,39 +61,39 @@ public class RecipeServiceImpl implements RecipeService {
                            MultipartFile image,
                            String username) {
 
-        log.info("➡️ saveRecipe START — user='{}', title='{}', category='{}'", username, title, categoryName);
+        log.info("saveRecipe START — user='{}', title='{}', category='{}'", username, title, categoryName);
 
         try {
-            // ✅ Find user
+            // Find user
             User user = userRepo.findByUsername(username);
             if (user == null) {
-                log.warn("❌ saveRecipe FAILED — user not found: '{}'", username);
+                log.warn("saveRecipe FAILED — user not found: '{}'", username);
                 throw new IllegalArgumentException("User not found: " + username);
             }
             log.debug("User resolved: {}", user.getUsername());
 
-            // ✅ Normalize category name
+            // Normalize category name
             String normalizedCategory = categoryName.substring(0, 1).toUpperCase()
                     + categoryName.substring(1).toLowerCase();
 
             Category category = categoryRepo.findByCategoryNameIgnoreCase(normalizedCategory)
                     .orElseGet(() -> {
-                        log.warn("⚠️ Category '{}' not found — creating", normalizedCategory);
+                        log.warn(" Category '{}' not found — creating", normalizedCategory);
                         Category newCategory = new Category();
                         newCategory.setCategoryName(normalizedCategory);
                         return categoryRepo.save(newCategory);
                     });
 
-            // ✅ Ensure upload directory exists
+            // Ensure upload directory exists
             String baseDir = System.getProperty("user.dir");
             Path uploadPath = Paths.get(baseDir, uploadDir);
 
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
-                log.info("📁 Created upload directory at {}", uploadPath);
+                log.info("Created upload directory at {}", uploadPath);
             }
 
-            // ✅ Save image
+            // Save image
             String imageUrl = null;
             if (image != null && !image.isEmpty()) {
                 String safeName = Paths.get(image.getOriginalFilename()).getFileName().toString();
@@ -105,7 +105,7 @@ public class RecipeServiceImpl implements RecipeService {
                 log.debug("📷 Image uploaded: {}", imageUrl);
             }
 
-            // ✅ Create recipe
+            // Create recipe
             Recipe recipe = new Recipe();
             recipe.setTitle(title);
             recipe.setPrepTimeMins(prepTime);
@@ -117,9 +117,9 @@ public class RecipeServiceImpl implements RecipeService {
             recipe.setImgURL(imageUrl);
 
             recipeRepo.save(recipe);
-            log.info("✅ Recipe saved — id={}, title='{}', category='{}'", recipe.getId(), title, category.getCategoryName());
+            log.info("Recipe saved — id={}, title='{}', category='{}'", recipe.getId(), title, category.getCategoryName());
 
-            // ✅ Handle ingredients
+            // Handle ingredients
             if (ingredientNames != null && !ingredientNames.isEmpty()) {
                 for (int i = 0; i < ingredientNames.size(); i++) {
                     String ingName = ingredientNames.get(i);
@@ -141,17 +141,17 @@ public class RecipeServiceImpl implements RecipeService {
 
                     recipeIngredientRepo.save(link);
                 }
-                log.info("🔗 Linked {} ingredients to recipe '{}'", ingredientNames.size(), title);
+                log.info("Linked {} ingredients to recipe '{}'", ingredientNames.size(), title);
             }
 
-            log.info("✅ saveRecipe SUCCESS — recipe '{}' saved", title);
+            log.info("saveRecipe SUCCESS — recipe '{}' saved", title);
 
         } catch (IOException e) {
-            log.error("❌ Image save FAILED: {}", e.getMessage(), e);
+            log.error("Image save FAILED: {}", e.getMessage(), e);
             throw new RuntimeException("Error saving recipe image: " + e.getMessage(), e);
 
         } catch (Exception e) {
-            log.error("❌ saveRecipe FAILED: {}", e.getMessage(), e);
+            log.error("saveRecipe FAILED: {}", e.getMessage(), e);
             throw new RuntimeException("Error saving recipe: " + e.getMessage(), e);
         }
     }
@@ -174,7 +174,7 @@ public class RecipeServiceImpl implements RecipeService {
         log.debug("Fetching recipe id={}", id);
         return recipeRepo.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("❌ getRecipeOrThrow FAILED — recipe not found id={}", id);
+                    log.warn("getRecipeOrThrow FAILED — recipe not found id={}", id);
                     return new IllegalArgumentException("Recipe not found: " + id);
                 });
     }
