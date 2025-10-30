@@ -199,6 +199,7 @@ public class IndexController {
      */
     @GetMapping("/logout")
     public String logout(HttpSession session) {
+        log.info("Session Ended for user");
         session.invalidate(); // ✅ Clear session data
         return "redirect:/";
     }

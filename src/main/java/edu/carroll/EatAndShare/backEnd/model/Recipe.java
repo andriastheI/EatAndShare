@@ -84,7 +84,7 @@ public class Recipe {
     private String difficulty;
 
     /** Step-by-step instructions for preparing the recipe. */
-    @Column
+    @Column(columnDefinition = "LONGTEXT", nullable = false)
     private String instructions;
 
     /** URL or file path to the recipe's image. */
