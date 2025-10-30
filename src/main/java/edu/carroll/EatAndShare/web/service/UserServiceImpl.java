@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Filename: UserServiceImpl.java
- * Author: Andrias Zelele
+ * Author: Andrias and Selin
  * Date: October 20, 2025
  *
  * Description:

@@ -18,7 +18,16 @@ import java.util.List;
 
 /**
  * Implementation of {@link RecipeService}.
- * Handles creation, storage, and retrieval of recipes, categories, and ingredients.
+ * <p>
+ * This service handles:
+ * <ul>
+ *   <li>Creating and saving recipes</li>
+ *   <li>Uploading/storing images to a server directory</li>
+ *   <li>Creating ingredients and linking them to the recipe</li>
+ *   <li>Searching and retrieving recipes</li>
+ *   <li>Ensuring users and categories exist before associations</li>
+ * </ul>
+ * </p>
  */
 @Service
 @Transactional
@@ -32,9 +41,23 @@ public class RecipeServiceImpl implements RecipeService {
     private final UserRepository userRepo;
     private final CategoryRepository categoryRepo;
 
+    /**
+     * Directory path where uploaded files will be stored.
+     * Value comes from application.properties: file.upload-dir
+     * Defaults to /uploads when not provided.
+     */
     @Value("${file.upload-dir:uploads}")
     private String uploadDir;
 
+    /**
+     * Constructor-based dependency injection for repositories.
+     *
+     * @param recipeRepo           Repository for recipes
+     * @param ingredientRepo       Repository for ingredients
+     * @param recipeIngredientRepo Repository for linking recipe + ingredient
+     * @param userRepo             Repository for user lookup
+     * @param categoryRepo         Repository for recipe categories
+     */
     public RecipeServiceImpl(RecipeRepository recipeRepo,
                              IngredientRepository ingredientRepo,
                              RecipeIngredientRepository recipeIngredientRepo,
@@ -48,6 +71,34 @@ public class RecipeServiceImpl implements RecipeService {
         log.info("RecipeServiceImpl initialized");
     }
 
+    /**
+     * Saves a new recipe along with optional image upload and ingredient creation.
+     * <p>
+     * Responsibilities:
+     * <ul>
+     *   <li>Validates user exists</li>
+     *   <li>Creates category if needed</li>
+     *   <li>Persists recipe entity</li>
+     *   <li>Handles image upload to configured directory</li>
+     *   <li>Creates ingredients & links them to recipe (RecipeIngredient many-to-many table)</li>
+     * </ul>
+     * </p>
+     *
+     * @param title           Recipe title
+     * @param prepTime        Preparation time (minutes)
+     * @param cookTime        Cooking time (minutes)
+     * @param difficulty      Difficulty label (Easy, Medium, Hard)
+     * @param instructions    Text description of cooking steps
+     * @param ingredientNames List of ingredient names
+     * @param quantities      Corresponding ingredient quantity string values
+     * @param units           Unit of measurement corresponding to each ingredient
+     * @param categoryName    Category (Breakfast, Lunch, Dinner, etc.)
+     * @param image           Image uploaded by user (nullable)
+     * @param username        Username of recipe creator
+     *
+     * @throws IllegalArgumentException If user does not exist
+     * @throws RuntimeException         If recipe saving fails
+     */
     @Override
     public void saveRecipe(String title,
                            Integer prepTime,
@@ -64,7 +115,7 @@ public class RecipeServiceImpl implements RecipeService {
         log.info("saveRecipe START — user='{}', title='{}', category='{}'", username, title, categoryName);
 
         try {
-            // Find user
+            // ✅ Validate user exists
             User user = userRepo.findByUsername(username);
             if (user == null) {
                 log.warn("saveRecipe FAILED — user not found: '{}'", username);
@@ -72,19 +123,20 @@ public class RecipeServiceImpl implements RecipeService {
             }
             log.debug("User resolved: {}", user.getUsername());
 
-            // Normalize category name
+            // ✅ Normalize category name
             String normalizedCategory = categoryName.substring(0, 1).toUpperCase()
                     + categoryName.substring(1).toLowerCase();
 
+            // ✅ Create category if it doesn't exist
             Category category = categoryRepo.findByCategoryNameIgnoreCase(normalizedCategory)
                     .orElseGet(() -> {
-                        log.warn(" Category '{}' not found — creating", normalizedCategory);
+                        log.warn("Category '{}' not found — creating new category", normalizedCategory);
                         Category newCategory = new Category();
                         newCategory.setCategoryName(normalizedCategory);
                         return categoryRepo.save(newCategory);
                     });
 
-            // Ensure upload directory exists
+            // ✅ Ensure upload directory exists (creates if missing)
             String baseDir = System.getProperty("user.dir");
             Path uploadPath = Paths.get(baseDir, uploadDir);
 
@@ -93,7 +145,7 @@ public class RecipeServiceImpl implements RecipeService {
                 log.info("Created upload directory at {}", uploadPath);
             }
 
-            // Save image
+            // ✅ Save image to filesystem
             String imageUrl = null;
             if (image != null && !image.isEmpty()) {
                 String safeName = Paths.get(image.getOriginalFilename()).getFileName().toString();
@@ -105,7 +157,7 @@ public class RecipeServiceImpl implements RecipeService {
                 log.debug("📷 Image uploaded: {}", imageUrl);
             }
 
-            // Create recipe
+            // ✅ Create and save recipe record
             Recipe recipe = new Recipe();
             recipe.setTitle(title);
             recipe.setPrepTimeMins(prepTime);
@@ -119,7 +171,7 @@ public class RecipeServiceImpl implements RecipeService {
             recipeRepo.save(recipe);
             log.info("Recipe saved — id={}, title='{}', category='{}'", recipe.getId(), title, category.getCategoryName());
 
-            // Handle ingredients
+            // ✅ Link ingredients
             if (ingredientNames != null && !ingredientNames.isEmpty()) {
                 for (int i = 0; i < ingredientNames.size(); i++) {
                     String ingName = ingredientNames.get(i);
@@ -156,6 +208,11 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
+    /**
+     * Retrieves the newest recipes (no paging).
+     *
+     * @return List of recipes ordered by newest first
+     */
     @Override
     public List<Recipe> latestRecipes() {
         List<Recipe> recipes = recipeRepo.findAllByOrderByIdDesc();
@@ -163,12 +220,25 @@ public class RecipeServiceImpl implements RecipeService {
         return recipes;
     }
 
+    /**
+     * Retrieves newest recipes with pagination.
+     *
+     * @param pageable Pagination configuration (page number, size, sort order)
+     * @return Page of recipes in newest-first order
+     */
     @Override
     public Page<Recipe> latestRecipes(Pageable pageable) {
         log.debug("latestRecipes paginated request");
         return recipeRepo.findAllByOrderByIdDesc(pageable);
     }
 
+    /**
+     * Fetches recipe by ID or throws an exception if not found.
+     *
+     * @param id Recipe ID
+     * @return Recipe entity
+     * @throws IllegalArgumentException When recipe does not exist
+     */
     @Override
     public Recipe getRecipeOrThrow(Integer id) {
         log.debug("Fetching recipe id={}", id);
@@ -179,12 +249,25 @@ public class RecipeServiceImpl implements RecipeService {
                 });
     }
 
+    /**
+     * Retrieves recipes belonging to a specific category.
+     *
+     * @param categoryName Category name (case-insensitive)
+     * @return List of recipes
+     */
     @Override
     public List<Recipe> findByCategoryName(String categoryName) {
         log.debug("Searching recipes by category '{}'", categoryName);
         return recipeRepo.findByCategory_CategoryNameIgnoreCase(categoryName);
     }
 
+    /**
+     * Searches recipes based on query term. If query is blank, returns newest recipes instead.
+     *
+     * @param q        Search keyword (title or ingredient)
+     * @param pageable Pagination settings
+     * @return Page of recipes
+     */
     @Override
     public Page<Recipe> searchRecipes(String q, Pageable pageable) {
         log.debug("searchRecipes query='{}'", q);
@@ -195,4 +278,3 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeRepo.search(q.trim(), pageable);
     }
 }
-
