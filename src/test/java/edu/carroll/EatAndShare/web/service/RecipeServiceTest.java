@@ -245,4 +245,10 @@ public class RecipeServiceTest {
         Path absolutePath = Paths.get(System.getProperty("user.dir"), "uploads/test", relativePath);
         assertTrue("Image file should exist in uploads/test directory", Files.exists(absolutePath));
     }
+
+
+
+
+
 }
+

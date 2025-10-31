@@ -71,4 +71,11 @@ dependencies {
 // ============================================================
 tasks.named('test') {
     useJUnitPlatform()
+
+}
+
+test {
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: ${descriptor}")
+    }
 }

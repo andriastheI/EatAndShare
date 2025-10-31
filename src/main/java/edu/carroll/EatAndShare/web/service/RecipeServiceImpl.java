@@ -42,14 +42,6 @@ public class RecipeServiceImpl implements RecipeService {
     private final CategoryRepository categoryRepo;
 
     /**
-     * Directory path where uploaded files will be stored.
-     * Value comes from application.properties: file.upload-dir
-     * Defaults to /uploads when not provided.
-     */
-    @Value("${file.upload-dir:uploads}")
-    private String uploadDir;
-
-    /**
      * Constructor-based dependency injection for repositories.
      *
      * @param recipeRepo           Repository for recipes
@@ -58,6 +50,12 @@ public class RecipeServiceImpl implements RecipeService {
      * @param userRepo             Repository for user lookup
      * @param categoryRepo         Repository for recipe categories
      */
+
+    // why: provide safe default so NPE won't occur if property missing
+    @Value("${file.upload-dir:uploads}")
+    private String uploadDir;
+
+    // ✅ Constructor-based dependency injection
     public RecipeServiceImpl(RecipeRepository recipeRepo,
                              IngredientRepository ingredientRepo,
                              RecipeIngredientRepository recipeIngredientRepo,
@@ -207,7 +205,6 @@ public class RecipeServiceImpl implements RecipeService {
             throw new RuntimeException("Error saving recipe: " + e.getMessage(), e);
         }
     }
-
     /**
      * Retrieves the newest recipes (no paging).
      *
@@ -248,7 +245,6 @@ public class RecipeServiceImpl implements RecipeService {
                     return new IllegalArgumentException("Recipe not found: " + id);
                 });
     }
-
     /**
      * Retrieves recipes belonging to a specific category.
      *
@@ -277,4 +273,19 @@ public class RecipeServiceImpl implements RecipeService {
         }
         return recipeRepo.search(q.trim(), pageable);
     }
+
+    @Override
+    public List<Recipe> findByUser(User user) {
+        return recipeRepo.findByUser(user);
+    }
+
+    @Override
+    public void deleteRecipeByIdAndUser(Integer id, User user) {
+        recipeRepo.findById(id).ifPresent(recipe -> {
+            if (recipe.getUser().getId().equals(user.getId())) {
+                recipeRepo.delete(recipe);
+            }
+        });
+    }
+
 }

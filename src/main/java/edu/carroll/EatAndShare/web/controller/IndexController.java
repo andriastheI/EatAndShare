@@ -155,7 +155,7 @@ public class IndexController {
         session.setAttribute("username", user.getUsername());
         session.setAttribute("email", user.getEmail());
         session.setAttribute("loggedIn", true);
-
+        session.setAttribute("user", user);
         return "redirect:/";
     }
 

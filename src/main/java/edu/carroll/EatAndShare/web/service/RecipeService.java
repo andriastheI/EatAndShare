@@ -1,6 +1,7 @@
 package edu.carroll.EatAndShare.web.service;
 
 import edu.carroll.EatAndShare.backEnd.model.Recipe;
+import edu.carroll.EatAndShare.backEnd.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +32,10 @@ public interface RecipeService {
     Page<Recipe> latestRecipes(Pageable pageable);
 
     Page<Recipe> searchRecipes(String q, Pageable pageable);
+
+    List<Recipe> findByUser(User user);
+    void deleteRecipeByIdAndUser(Integer id, User user);
+
 
 }
 

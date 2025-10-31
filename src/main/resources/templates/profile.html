@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${firstName} + ' ' + ${lastName} + ' - Profile'">Profile</title>
+    <link rel="stylesheet" href="/css/style.css"/>
+</head>
+
+<body>
+
+<header>
+    <h2 class="logo">EatAndShare</h2>
+    <nav class="navigation">
+        <a th:href="@{/}">Home</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <a th:href="@{/services}">Services</a>
+        <div class="icon-login" th:if="${loggedIn}">
+            <ion-icon name="person-circle-outline"></ion-icon>
+            <ul class="dropdown">
+                <li><a href="/profile">My Profile</a></li>
+                <li><a th:href="@{/logout}">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<div class="feed">
+    <h2 th:text="'Welcome, ' + ${firstName} + ' ' + ${lastName} + '!'">Welcome</h2>
+    <p style="text-align:center;margin-bottom:1.5rem;color:#333;">
+        Here are your recipes:
+    </p>
+
+    <div th:if="${#lists.isEmpty(recipes)}">
+        <p style="text-align:center;font-size:1.1em;">You haven’t posted any recipes yet!</p>
+    </div>
+
+    <div class="feed-grid" th:if="${!#lists.isEmpty(recipes)}">
+        <div class="recipe-card" th:each="r : ${recipes}">
+            <a th:href="@{/recipes/{id}(id=${r.id})}">
+                <img th:if="${r.imgURL}" th:src="${r.imgURL}" alt="Recipe image">
+                <div th:if="${r.imgURL == null}">
+                    <span>No image</span>
+                </div>
+            </a>
+
+            <div>
+                <span class="category-badge"
+                      th:classappend="${r.category != null ? r.category.categoryName : 'Uncategorized'}"
+                      th:text="${r.category != null ? r.category.categoryName : 'Uncategorized'}"></span>
+                <span class="difficulty-text" th:text="${r.difficulty}">Medium</span>
+                <a th:href="@{/recipes/{id}(id=${r.id})}">
+                    <h3 th:text="${r.title}">Recipe Title</h3>
+                </a>
+                <p th:text="${#strings.abbreviate(r.instructions, 110)}"></p>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span th:text="${r.prepTimeMins} + ' + ' + ${r.cookTimeMins} + ' mins'"></span>
+                <form th:action="@{/profile/delete/{id}(id=${r.id})}" method="post" style="margin:0;">
+                    <button type="submit" class="delete-btn">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Icons -->
+<script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" type="module"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+<!-- Inline styling for delete button -->
+<style>
+    .delete-btn {
+        background-color: #c62828;
+        border: none;
+        color: white;
+        padding: 6px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .delete-btn:hover {
+        background-color: #a81e1e;
+    }
+</style>
+
+</body>
+</html>
