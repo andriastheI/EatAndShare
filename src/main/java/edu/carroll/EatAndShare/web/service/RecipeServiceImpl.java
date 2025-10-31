@@ -187,4 +187,21 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
 
+    @Override
+    public List<Recipe> findByUser(User user) {
+        return recipeRepo.findByUser(user);
+    }
+
+    @Override
+    public void deleteRecipeByIdAndUser(Integer id, User user) {
+        recipeRepo.findById(id).ifPresent(recipe -> {
+            if (recipe.getUser().getId().equals(user.getId())) {
+                recipeRepo.delete(recipe);
+            }
+        });
+    }
+
+
+
+
 }

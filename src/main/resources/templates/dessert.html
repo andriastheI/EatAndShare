@@ -18,8 +18,8 @@
         <div class="icon-login" th:if="${loggedIn}">
             <ion-icon name="person-circle-outline"></ion-icon>
             <ul class="dropdown">
-                <li><p th:text="'Username: ' + ${username}"></p></li>
-                <li><p th:text="'Email: ' + ${email}"></p></li>
+                <li><a href="/profile">My Profile</a></li>
+
                 <li><a th:href="@{/logout}">Logout</a></li>
             </ul>
         </div>

@@ -1,8 +1,12 @@
 package edu.carroll.EatAndShare.backEnd.repo;
 
 import edu.carroll.EatAndShare.backEnd.model.Recipe;
+import edu.carroll.EatAndShare.backEnd.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+
+
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -58,6 +62,11 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
     """)
     Page<Recipe> search(@Param("q") String q, Pageable pageable);
     Optional<Recipe> findByTitle(String title);
+
+    List<Recipe> findByUser(User user);
+
+    Optional<Recipe> findById(Integer id);
+
 
 }
 
