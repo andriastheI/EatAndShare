@@ -199,6 +199,7 @@ public class IndexController {
      */
     @GetMapping("/logout")
     public String logout(HttpSession session) {
+        log.info("Session Ended for user");
         session.invalidate(); // ✅ Clear session data
         return "redirect:/";
     }
@@ -279,5 +280,16 @@ public class IndexController {
         model.addAttribute("firstName", session.getAttribute("firstName"));
         model.addAttribute("lastName", session.getAttribute("lastName"));
     }
+
+    @GetMapping("/about")
+    public String about() {
+        return "about";  // loads about.html
+    }
+
+    @GetMapping("/contact")
+    public String contactPage() {
+        return "contact";
+    }
+
 
 }

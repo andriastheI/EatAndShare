@@ -13,9 +13,9 @@
     <h2 class="logo">EatAndShare</h2>
     <nav class="navigation">
         <a th:href="@{/}">Home</a>
-        <a href="#">About</a>
-        <a href="#">Contact</a>
-        <a th:href="@{/services}">Services</a>
+        <a th:href="@{/about}">About</a>
+        <a th:href="@{/contact}">Contact</a>
+        <a th:href="@{/services}">Share</a>
 
         <div class="icon-login" th:if="${loggedIn}">
             <ion-icon name="person-circle-outline"></ion-icon>
@@ -63,6 +63,13 @@
         </div>
     </div>
 </div>
+
+<footer class="footer" >
+    <h2>EatAndShare</h2>
+    <p>Cook • Share • Enjoy</p>
+
+    <small>&copy; 2025 EatAndShare — All Rights Reserved</small>
+</footer>
 
 <!-- ===== ICONS & SCRIPTS ===== -->
 <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" type="module"></script>

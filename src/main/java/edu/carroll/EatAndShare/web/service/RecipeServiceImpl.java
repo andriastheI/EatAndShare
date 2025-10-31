@@ -24,6 +24,8 @@ import java.util.List;
 @Transactional
 public class RecipeServiceImpl implements RecipeService {
 
+    private static final Logger log = LoggerFactory.getLogger(RecipeServiceImpl.class);
+
     private final RecipeRepository recipeRepo;
     private final IngredientRepository ingredientRepo;
     private final RecipeIngredientRepository recipeIngredientRepo;
@@ -48,7 +50,7 @@ public class RecipeServiceImpl implements RecipeService {
         this.recipeIngredientRepo = recipeIngredientRepo;
         this.userRepo = userRepo;
         this.categoryRepo = categoryRepo;
-        log.info("✅ RecipeServiceImpl initialized successfully");
+        log.info("✅ RecipeServiceImpl initialized");
     }
 
     @Override
@@ -64,39 +66,39 @@ public class RecipeServiceImpl implements RecipeService {
                            MultipartFile image,
                            String username) {
 
+        log.info("➡️ saveRecipe START — user='{}', title='{}', category='{}'", username, title, categoryName);
+
         try {
-            // ✅ 1. Find user
+            // ✅ Find user
             User user = userRepo.findByUsername(username);
             if (user == null) {
-                log.warn("User not found: {}", username);
+                log.warn("❌ saveRecipe FAILED — user not found: '{}'", username);
                 throw new IllegalArgumentException("User not found: " + username);
             }
+            log.debug("User resolved: {}", user.getUsername());
 
-            // ✅ 2. Fetch existing category (DO NOT create new ones)
-            // Normalize category name capitalization (e.g., "breakfast" → "Breakfast")
-            String normalizedCategory = categoryName.substring(0, 1).toUpperCase() +
-                    categoryName.substring(1).toLowerCase();
+            // ✅ Normalize category name
+            String normalizedCategory = categoryName.substring(0, 1).toUpperCase()
+                    + categoryName.substring(1).toLowerCase();
 
             Category category = categoryRepo.findByCategoryNameIgnoreCase(normalizedCategory)
                     .orElseGet(() -> {
-                        log.warn("⚠️ Category '{}' not found — creating it now", normalizedCategory);
+                        log.warn("⚠️ Category '{}' not found — creating", normalizedCategory);
                         Category newCategory = new Category();
-                        newCategory.setCategoryName(
-                                normalizedCategory.substring(0, 1).toUpperCase() + normalizedCategory.substring(1).toLowerCase()
-                        );
+                        newCategory.setCategoryName(normalizedCategory);
                         return categoryRepo.save(newCategory);
                     });
 
-            // ✅ 3. Ensure upload directory exists
+            // ✅ Ensure upload directory exists
             String baseDir = System.getProperty("user.dir");
             Path uploadPath = Paths.get(baseDir, uploadDir);
 
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
-                log.info("Created upload directory at {}", uploadPath);
+                log.info("📁 Created upload directory at {}", uploadPath);
             }
 
-            // ✅ 4. Save image if provided
+            // ✅ Save image
             String imageUrl = null;
             if (image != null && !image.isEmpty()) {
                 String safeName = Paths.get(image.getOriginalFilename()).getFileName().toString();
@@ -105,25 +107,24 @@ public class RecipeServiceImpl implements RecipeService {
 
                 image.transferTo(filePath.toFile());
                 imageUrl = "/uploads/" + fileName;
-                log.info("Saved image for recipe '{}' to {}", title, imageUrl);
+                log.debug("📷 Image uploaded: {}", imageUrl);
             }
 
-            // ✅ 5. Save recipe
+            // ✅ Create recipe
             Recipe recipe = new Recipe();
             recipe.setTitle(title);
             recipe.setPrepTimeMins(prepTime);
             recipe.setCookTimeMins(cookTime);
             recipe.setDifficulty(difficulty);
             recipe.setInstructions(instructions);
-            recipe.setCategory(category);  // Properly linked category
+            recipe.setCategory(category);
             recipe.setUser(user);
             recipe.setImgURL(imageUrl);
+
             recipeRepo.save(recipe);
+            log.info("✅ Recipe saved — id={}, title='{}', category='{}'", recipe.getId(), title, category.getCategoryName());
 
-            log.info("Recipe '{}' saved successfully (id={}) under category '{}'",
-                    title, recipe.getId(), category.getCategoryName());
-
-            // ✅ 6. Link ingredients
+            // ✅ Handle ingredients
             if (ingredientNames != null && !ingredientNames.isEmpty()) {
                 for (int i = 0; i < ingredientNames.size(); i++) {
                     String ingName = ingredientNames.get(i);
@@ -131,6 +132,7 @@ public class RecipeServiceImpl implements RecipeService {
 
                     Ingredient ingredient = ingredientRepo.findByIngredientNameIgnoreCase(ingName.trim())
                             .orElseGet(() -> {
+                                log.debug("➕ Ingredient '{}' not found — creating", ingName);
                                 Ingredient newIng = new Ingredient();
                                 newIng.setIngredientName(ingName.trim());
                                 return ingredientRepo.save(newIng);
@@ -144,12 +146,17 @@ public class RecipeServiceImpl implements RecipeService {
 
                     recipeIngredientRepo.save(link);
                 }
-                log.info("Linked {} ingredients to recipe '{}'", ingredientNames.size(), title);
+                log.info("🔗 Linked {} ingredients to recipe '{}'", ingredientNames.size(), title);
             }
 
+            log.info("✅ saveRecipe SUCCESS — recipe '{}' saved", title);
+
         } catch (IOException e) {
+            log.error("❌ Image save FAILED: {}", e.getMessage(), e);
             throw new RuntimeException("Error saving recipe image: " + e.getMessage(), e);
+
         } catch (Exception e) {
+            log.error("❌ saveRecipe FAILED: {}", e.getMessage(), e);
             throw new RuntimeException("Error saving recipe: " + e.getMessage(), e);
         }
     }
@@ -158,29 +165,38 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<Recipe> latestRecipes() {
         List<Recipe> recipes = recipeRepo.findAllByOrderByIdDesc();
-        log.debug("Loaded {} recipes for home feed", recipes.size());
+        log.debug("latestRecipes: fetched {} recipes", recipes.size());
         return recipes;
     }
+
     @Override
     public Page<Recipe> latestRecipes(Pageable pageable) {
+        log.debug("latestRecipes paginated request");
         return recipeRepo.findAllByOrderByIdDesc(pageable);
     }
 
     @Override
     public Recipe getRecipeOrThrow(Integer id) {
+        log.debug("Fetching recipe id={}", id);
         return recipeRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Recipe not found: " + id));
+                .orElseThrow(() -> {
+                    log.warn("❌ getRecipeOrThrow FAILED — recipe not found id={}", id);
+                    return new IllegalArgumentException("Recipe not found: " + id);
+                });
     }
 
     // ✅ New category filter method
     @Override
     public List<Recipe> findByCategoryName(String categoryName) {
+        log.debug("Searching recipes by category '{}'", categoryName);
         return recipeRepo.findByCategory_CategoryNameIgnoreCase(categoryName);
     }
 
     @Override
     public Page<Recipe> searchRecipes(String q, Pageable pageable) {
+        log.debug("searchRecipes query='{}'", q);
         if (q == null || q.trim().isEmpty()) {
+            log.debug("Empty search — returning latest recipes");
             return latestRecipes(pageable);
         }
         return recipeRepo.search(q.trim(), pageable);
