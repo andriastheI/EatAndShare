@@ -46,7 +46,7 @@ public class User {
     private String password;
 
     /** User's email address, used for account recovery and contact. */
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     /** User's first name. */

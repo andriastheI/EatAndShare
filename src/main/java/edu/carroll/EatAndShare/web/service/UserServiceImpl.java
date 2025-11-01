@@ -104,13 +104,33 @@ public class UserServiceImpl implements UserService {
             log.warn("Username validation failed");
             throw new IllegalArgumentException("Username cannot be empty");
         }
+        if (user.getUsername().contains(" ")) {
+            log.warn("Username cannot contain a space");
+            throw new IllegalArgumentException("Username cannot contain a space");
+        }
         if (user.getEmail() == null || user.getEmail().isBlank()) {
             log.warn("Email validation failed");
             throw new IllegalArgumentException("Email cannot be empty");
         }
+        if (user.getEmail().contains(" ")) {
+            log.warn("Email cannot contain a space");
+            throw new IllegalArgumentException("Email cannot contain a space");
+        }
         if (user.getPassword() == null || user.getPassword().isBlank()) {
             log.warn("Password validation failed");
             throw new IllegalArgumentException("Password cannot be empty");
+        }
+        if (user.getPassword().length() < 6) {
+            log.warn("Password length validation failed");
+            throw new IllegalArgumentException("Password cannot be less than 6 characters");
+        }
+        if (user.getPassword().contains(" ")) {
+            log.warn("Password cannot contain a space");
+            throw new IllegalArgumentException("Password cannot contain a space");
+        }
+        if (user.getUsername().length() < 6) {
+            log.warn("Username length validation failed");
+            throw new IllegalArgumentException("Username cannot be less than 6 characters");
         }
         if (loginRepo.existsByUsernameIgnoreCase(user.getUsername())) {
             log.warn("Duplicate username detected '{}'", user.getUsername());
@@ -124,9 +144,17 @@ public class UserServiceImpl implements UserService {
             log.warn("First name validation failed");
             throw new IllegalArgumentException("First name cannot be empty");
         }
+        if (user.getFirstName().contains(" ")) {
+            log.warn("Firstname cannot contain a space");
+            throw new IllegalArgumentException("Firstname cannot contain a space");
+        }
         if (user.getLastName() == null || user.getLastName().isBlank()) {
             log.warn("Last name validation failed");
             throw new IllegalArgumentException("Last name cannot be empty");
+        }
+        if (user.getLastName().contains(" ")) {
+            log.warn("Lastname cannot contain a space");
+            throw new IllegalArgumentException("Lastname cannot contain a space");
         }
 
         // Hash password before saving

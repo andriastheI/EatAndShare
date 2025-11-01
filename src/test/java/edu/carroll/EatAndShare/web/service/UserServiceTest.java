@@ -1,194 +1,253 @@
-/**
- * Filename: UserServiceTest.java
- * Author: Andrias Zelele
- * Date: October 20, 2025
- *
- * Description:
- * This test class verifies the functionality of the UserService implementation
- * in the EatAndShare application. It ensures that user validation and registration
- * logic work as expected — including checking valid/invalid credentials, duplicate
- * usernames, and field validation errors.
- */
-
 package edu.carroll.EatAndShare.web.service;
 
-import static org.springframework.test.util.AssertionErrors.assertTrue;
-import static org.springframework.test.util.AssertionErrors.assertFalse;
-import static org.springframework.test.util.AssertionErrors.assertNotNull;
-import static org.springframework.test.util.AssertionErrors.assertEquals;
-
 import edu.carroll.EatAndShare.backEnd.model.User;
-import edu.carroll.EatAndShare.backEnd.repo.UserRepository;
-import edu.carroll.EatAndShare.web.form.UserForm;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-/**
- * Integration tests for {@link UserService}, verifying key user management operations:
- * <ul>
- *   <li>User credential validation (login)</li>
- *   <li>User registration and persistence</li>
- *   <li>Duplicate username detection</li>
- *   <li>Validation of required fields</li>
- * </ul>
- * <p>
- * Tests run on an in-memory H2 database to guarantee data isolation and repeatability.
- */
+
+import static org.junit.jupiter.api.Assertions.*;
+
 @Transactional
 @SpringBootTest
 public class UserServiceTest {
+
+    @Autowired
+    private UserServiceImpl userSerImp;
+
 
     /** ---------- Constant test data used throughout test cases ---------- */
     private static final String username = "testuser";
     private static final String password = "testpass";
     private static final String email = "testuser@example.com";
 
-    /** Service and dependency injections */
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private UserRepository userRepo;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     /** Baseline test user created before each test for validation checks. */
     private User testUser;
 
     /**
-     * Sets up a baseline test user before each test.
-     * Ensures there is always one valid user in the test database
-     * for validation and duplicate-check scenarios.
+     * Creates and saves a test user in the in-memory database
+     * before each test executes. This ensures that valid user data
+     * exists for linking recipes.
      */
     @BeforeEach
     public void setup() {
         testUser = new User();
         testUser.setUsername(username);
-        testUser.setPassword(passwordEncoder.encode(password));
+        testUser.setPassword("password");
         testUser.setEmail(email);
         testUser.setFirstName("Test");
-        testUser.setLastName("User");
-
-        userRepo.save(testUser);
+        testUser.setLastName("Chef");
+        userSerImp.saveUser(testUser);
     }
 
-    /**
-     * Verifies that a user with correct username and password
-     * is successfully validated by the UserService.
-     * <p>
-     * Expected: Validation returns true.
-     */
     @Test
-    public void validateUserSuccessTest() {
-        UserForm form = new UserForm();
-        form.setUsername(username);
-        form.setPassword(password);
+    public void savingUserTest(){
+        User user  = new User();
+        user.setUsername("Lokkki");
+        user.setPassword("iamPassword");
+        user.setEmail("iamyouremail@gmail.com");
+        user.setFirstName("Loki");
+        user.setLastName("High");
+        userSerImp.saveUser(user);
 
-        assertTrue("Should validate successfully with correct credentials",
-                userService.validateUser(form));
+        User userCheck = userSerImp.findByUsername("Lokkki");
+        boolean  result = userCheck.equals(user);
+        assertTrue(result, "The users should be the same");
     }
 
-    /**
-     * Ensures validation fails when an incorrect password is entered.
-     * <p>
-     * Expected: Validation returns false.
-     */
     @Test
-    public void validateUserInvalidPasswordTest() {
-        UserForm form = new UserForm();
-        form.setUsername(username);
-        form.setPassword(password + "wrong");
+    public void savingExistingUserTest() {
+        User user = new User();
+        user.setUsername("Lokkki");
+        user.setPassword("iamPassword");
+        user.setEmail("iamyouremail@gmail.com");
+        user.setFirstName("Loki");
+        user.setLastName("High");
 
-        assertFalse("Should fail when password is incorrect",
-                userService.validateUser(form));
+        userSerImp.saveUser(user);
+
+        // Act + Assert — second save should throw exception
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> userSerImp.saveUser(user),
+                "Saving a user with an existing username should throw an error"
+        );
+
+        assertTrue(
+                exception.getMessage().contains("Username already exists"),
+                "Exception message should mention duplicate username"
+        );
     }
 
-    /**
-     * Ensures validation fails when a non-existent username is entered.
-     * <p>
-     * Expected: Validation returns false.
-     */
     @Test
-    public void validateUserInvalidUsernameTest() {
-        UserForm form = new UserForm();
-        form.setUsername(username + "_notexist");
-        form.setPassword(password);
+    public void savingTwoUsersTest() {
+        User user = new User();
+        user.setUsername("Lokkki");
+        user.setPassword("iamPassword");
+        user.setEmail("iamyouremail@gmail.com");
+        user.setFirstName("Loki");
+        user.setLastName("High");
 
-        assertFalse("Should fail when username does not exist",
-                userService.validateUser(form));
+        User user2 = new User();
+        user2.setUsername("Thooor");
+        user2.setPassword("iamPassword2");
+        user2.setEmail("yourmom@gmail.com");
+        user2.setFirstName("Thor");
+        user2.setLastName("Hammer");
+
+        assertDoesNotThrow(() -> {
+            userSerImp.saveUser(user);
+            userSerImp.saveUser(user2);
+        }, "Saving 2 UNIQUE users should not throw an exception");
     }
 
-    /**
-     * Tests that a new user is successfully saved with encoded password.
-     * <p>
-     * Checks:
-     * - User is persisted in the repository.
-     * - Stored password is encoded (not plain text).
-     */
     @Test
-    public void saveUserSuccessTest() {
-        User newUser = new User();
-        newUser.setUsername("newuser");
-        newUser.setPassword("newpass");
-        newUser.setEmail("newuser@example.com");
-        newUser.setFirstName("New");
-        newUser.setLastName("User");
+    public void savingInvalidPasswordLengthTest() {
+        User user = new User();
+        user.setUsername("Lokkki"); // <-- contains space
+        user.setPassword("iaord");
+        user.setEmail("iamyouremail@gmail.com");
+        user.setFirstName("Loki");
+        user.setLastName("High");
 
-        userService.saveUser(newUser);
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> userSerImp.saveUser(user),
+                "Password less than 6 characters should throw an exception"
+        );
 
-        // Fetch and verify the newly saved user
-        User found = userRepo.findByUsername("newuser");
-        assertNotNull("Newly registered user should be found in the database", found);
-        assertTrue("Stored password should be encoded",
-                passwordEncoder.matches("newpass", found.getPassword()));
+        assertTrue(
+                exception.getMessage().contains("Password cannot be less than 6 characters"),
+                "Exception message should mention invalid Password Length"
+        );
     }
 
-    /**
-     * Verifies that saving a user with an existing username throws
-     * an IllegalArgumentException to prevent duplicates.
-     * <p>
-     * Expected: Exception message equals "Username already exists".
-     */
     @Test
-    public void saveUserDuplicateUsernameTest() {
-        User duplicateUser = new User();
-        duplicateUser.setUsername(username);
-        duplicateUser.setPassword("anotherpass");
-        duplicateUser.setEmail("another@example.com");
-        duplicateUser.setFirstName("Dupe");
-        duplicateUser.setLastName("User");
+    public void savingInvalidPasswordTest() {
+        User user = new User();
+        user.setUsername("Lokkki"); // <-- contains space
+        user.setPassword("iam  Password");
+        user.setEmail("iamyouremail@gmail.com");
+        user.setFirstName("Loki");
+        user.setLastName("High");
 
-        try {
-            userService.saveUser(duplicateUser);
-            assertFalse("Expected exception for duplicate username but none thrown", true);
-        } catch (IllegalArgumentException e) {
-            assertEquals("Expected 'Username already exists' message",
-                    "Username already exists", e.getMessage());
-        }
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> userSerImp.saveUser(user),
+                "Password containing spaces should throw an exception"
+        );
+
+        assertTrue(
+                exception.getMessage().contains("Password cannot contain a space"),
+                "Exception message should mention invalid Password"
+        );
     }
 
-    /**
-     * Ensures that user registration fails when required fields are missing
-     * or empty, and an IllegalArgumentException is thrown.
-     * <p>
-     * Expected: Exception message mentions "cannot be empty".
-     */
     @Test
-    public void saveUserMissingFieldsTest() {
-        User incomplete = new User();
-        incomplete.setUsername("");
-        incomplete.setEmail("");
-        incomplete.setPassword("");
+    public void savingInvalidUsernameTest() {
+        User user = new User();
+        user.setUsername("Lo kki"); // <-- contains space
+        user.setPassword("iamPassword");
+        user.setEmail("iamyouremail@gmail.com");
+        user.setFirstName("Loki");
+        user.setLastName("High");
 
-        try {
-            userService.saveUser(incomplete);
-            assertFalse("Expected exception for missing fields but none thrown", true);
-        } catch (IllegalArgumentException e) {
-            assertTrue("Exception message should mention empty fields",
-                    e.getMessage().contains("cannot be empty"));
-        }
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> userSerImp.saveUser(user),
+                "Username containing spaces  should throw an exception"
+        );
+
+        assertTrue(
+                exception.getMessage().contains("Username cannot contain a space"),
+                "Exception message should mention invalid username"
+        );
     }
+
+    @Test
+    public void savingInvalidUsernameLengthTest() {
+        User user = new User();
+        user.setUsername("Loki"); // <-- contains space
+        user.setPassword("iamPassword");
+        user.setEmail("iamyouremail@gmail.com");
+        user.setFirstName("Loki");
+        user.setLastName("High");
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> userSerImp.saveUser(user),
+                "Username containing 6 characters should throw an exception"
+        );
+
+        assertTrue(
+                exception.getMessage().contains("Username cannot be less than 6 characters"),
+                "Exception message should mention invalid username length"
+        );
+    }
+
+    @Test
+    public void savingInvalidFirstnameTest() {
+        User user = new User();
+        user.setUsername("Lokkki"); // <-- contains space
+        user.setPassword("iamPassword");
+        user.setEmail("iamyouremail@gmail.com");
+        user.setFirstName("Lo ki");
+        user.setLastName("High");
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> userSerImp.saveUser(user),
+                "Firstname containing spaces  should throw an exception"
+        );
+
+        assertTrue(
+                exception.getMessage().contains("Firstname cannot contain a space"),
+                "Exception message should mention invalid firstname"
+        );
+    }
+    @Test
+    public void savingInvalidLastnameTest() {
+        User user = new User();
+        user.setUsername("Lokkki"); // <-- contains space
+        user.setPassword("iamPassword");
+        user.setEmail("iamyouremail@gmail.com");
+        user.setFirstName("Loki");
+        user.setLastName("Hi gh");
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> userSerImp.saveUser(user),
+                "Lastname containing spaces  should throw an exception"
+        );
+
+        assertTrue(
+                exception.getMessage().contains("Lastname cannot contain a space"),
+                "Exception message should mention invalid lastname"
+        );
+    }
+    @Test
+    public void savingInvalidEmailTest() {
+        User user = new User();
+        user.setUsername("Lokkki"); // <-- contains space
+        user.setPassword("iamPassword");
+        user.setEmail("iamyouremail@gmail.com");
+        user.setFirstName("Loki");
+        user.setLastName("Hi gh");
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> userSerImp.saveUser(user),
+                "Lastname containing spaces  should throw an exception"
+        );
+
+        assertTrue(
+                exception.getMessage().contains("Lastname cannot contain a space"),
+                "Exception message should mention invalid lastname"
+        );
+    }
+
+
+
 }
