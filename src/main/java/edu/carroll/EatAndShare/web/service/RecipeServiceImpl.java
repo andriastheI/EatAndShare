@@ -117,7 +117,7 @@ public class RecipeServiceImpl implements RecipeService {
             User user = userRepo.findByUsername(username);
             if (user == null) {
                 log.warn("saveRecipe FAILED — user not found: '{}'", username);
-                throw new IllegalArgumentException("User not found: " + username);
+                throw new IllegalArgumentException("User not found");
             }
             log.debug("User resolved: {}", user.getUsername());
 
@@ -196,14 +196,16 @@ public class RecipeServiceImpl implements RecipeService {
 
             log.info("saveRecipe SUCCESS — recipe '{}' saved", title);
 
+        } catch (IllegalArgumentException e) {
+            throw e;
         } catch (IOException e) {
             log.error("Image save FAILED: {}", e.getMessage(), e);
-            throw new RuntimeException("Error saving recipe image: " + e.getMessage(), e);
-
+            throw new RuntimeException("Error saving recipe image");
         } catch (Exception e) {
             log.error("saveRecipe FAILED: {}", e.getMessage(), e);
-            throw new RuntimeException("Error saving recipe: " + e.getMessage(), e);
+            throw new RuntimeException("Error saving recipe, " + e);
         }
+
     }
     /**
      * Retrieves the newest recipes (no paging).

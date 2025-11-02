@@ -19,9 +19,8 @@ public class UserServiceTest {
 
 
     /** ---------- Constant test data used throughout test cases ---------- */
-    private static final String username = "testuser";
-    private static final String password = "testpass";
-    private static final String email = "testuser@example.com";
+    private static final String USERNAME = "testuser";
+    private static final String EMAIL = "testuser@example.com";
 
     /** Baseline test user created before each test for validation checks. */
     private User testUser;
@@ -34,9 +33,9 @@ public class UserServiceTest {
     @BeforeEach
     public void setup() {
         testUser = new User();
-        testUser.setUsername(username);
+        testUser.setUsername(USERNAME);
         testUser.setPassword("password");
-        testUser.setEmail(email);
+        testUser.setEmail(EMAIL);
         testUser.setFirstName("Test");
         testUser.setLastName("Chef");
         userSerImp.saveUser(testUser);
