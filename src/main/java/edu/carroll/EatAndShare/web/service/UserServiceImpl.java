@@ -181,20 +181,61 @@ public class UserServiceImpl implements UserService {
         return loginRepo.findByUsername(username);
     }
 
+    /**
+     * Updates the user's password after validating the old one.
+     *
+     * <p>This method validates:
+     * <ul>
+     *   <li>Old password matches existing password</li>
+     *   <li>New password meets security rules (length, no spaces)</li>
+     * </ul>
+     * </p>
+     *
+     * @param username     the username tied to the session
+     * @param oldPassword  the current password entered by the user
+     * @param newPassword  the requested new password
+     * @return true if password updated, false if old password is incorrect
+     * @throws IllegalArgumentException if validation fails
+     */
     @Override
     public boolean updatePassword(String username, String oldPassword, String newPassword) {
+
+        log.info("Password update START for username='{}'", username);
+
         User user = loginRepo.findByUsername(username);
 
-        if (user == null)
+        if (user == null) {
+            log.warn("User '{}' not found during password update", username);
             throw new IllegalArgumentException("User not found");
-
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            return false; // Old password wrong
         }
 
+        // ✅ Validate old password
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            log.warn("Old password is incorrect for username='{}'", username);
+            return false;
+        }
+
+        // ✅ Apply same validation rules as saveUser()
+        if (newPassword == null || newPassword.isBlank()) {
+            log.warn("New password validation failed — empty");
+            throw new IllegalArgumentException("Password cannot be empty");
+        }
+        if (newPassword.length() < 6) {
+            log.warn("New password validation failed — too short");
+            throw new IllegalArgumentException("Password must be at least 6 characters");
+        }
+        if (newPassword.contains(" ")) {
+            log.warn("New password validation failed — contains space");
+            throw new IllegalArgumentException("Password cannot contain spaces");
+        }
+
+        // ✅ Passed all validation rules — update password
         user.setPassword(passwordEncoder.encode(newPassword));
         loginRepo.save(user);
+
+        log.info("Password updated successfully for '{}'", username);
         return true;
     }
+
 
 }

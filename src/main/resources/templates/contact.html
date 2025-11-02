@@ -17,7 +17,7 @@
         <a th:href="@{/}">Home</a>
         <a th:href="@{/about}">About</a>
         <a th:href="@{/contact}">Contact</a>
-        <a href="/services">Share</a>
+        <a th:href="@{/services}">Share</a>
 
         <!-- If user is logged in, show profile icon and dropdown -->
         <div class="icon-login" th:if="${loggedIn}">
@@ -56,6 +56,11 @@
     <p>Cook • Share • Enjoy</p>
     <small>&copy; 2025 EatAndShare — All Rights Reserved</small>
 </footer>
+
+<!-- ===== ICONS & SCRIPTS ===== -->
+<script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" type="module"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
 
 </body>
 </html>

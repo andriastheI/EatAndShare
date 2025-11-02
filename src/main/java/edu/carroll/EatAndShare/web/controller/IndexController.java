@@ -1,6 +1,5 @@
 package edu.carroll.EatAndShare.web.controller;
 
-import edu.carroll.EatAndShare.backEnd.model.Recipe;
 import edu.carroll.EatAndShare.web.service.RecipeService;
 import edu.carroll.EatAndShare.backEnd.model.User;
 import edu.carroll.EatAndShare.web.form.UserForm;
@@ -8,10 +7,6 @@ import edu.carroll.EatAndShare.web.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -240,32 +235,37 @@ public class IndexController {
         Boolean loggedIn = (Boolean) session.getAttribute("loggedIn");
 
         if (loggedIn == null || !loggedIn) {
-            // Not logged in → back to homepage with login popup
             attrs.addFlashAttribute("showLogin", true);
             return "redirect:/";
         }
 
-        // Add session info to model so Thymeleaf can render header data
+        model.addAttribute("loggedIn", true);
         model.addAttribute("username", session.getAttribute("username"));
         model.addAttribute("email", session.getAttribute("email"));
         model.addAttribute("firstName", session.getAttribute("firstName"));
         model.addAttribute("lastName", session.getAttribute("lastName"));
-        model.addAttribute("loggedIn", true);
 
         return "password";
     }
+
 
     /**
      * Handles password update submission.
      * Validates old password, checks new passwords match, and updates user in DB.
      */
+    /**
+     * Handles password update submission.
+     * Validates old password, checks new passwords match, and updates user in DB.
+     */
     @PostMapping("/password")
-    public String updatePassword(@RequestParam String username,
-                                 @RequestParam String oldPassword,
+    public String updatePassword(@RequestParam String oldPassword,
                                  @RequestParam String newPassword,
                                  @RequestParam String confirmPassword,
                                  HttpSession session,
                                  RedirectAttributes attrs) {
+
+        // ✅ Pull username ONLY from session — not from the form
+        String username = (String) session.getAttribute("username");
 
         // Ensure user is logged in
         Boolean loggedIn = (Boolean) session.getAttribute("loggedIn");
@@ -289,13 +289,14 @@ public class IndexController {
             }
 
             attrs.addFlashAttribute("success", "Password updated successfully!");
-            return "redirect:/profile";
+            return "redirect:/password";
 
         } catch (Exception e) {
             attrs.addFlashAttribute("error", "Unexpected error, please try again.");
             return "redirect:/password";
         }
     }
+
 
 
     @GetMapping("/breakfast")
@@ -345,12 +346,24 @@ public class IndexController {
     }
 
     @GetMapping("/about")
-    public String about() {
-        return "about";  // loads about.html
+    public String about(Model model, HttpSession session) {
+        model.addAttribute("loggedIn", session.getAttribute("loggedIn"));
+        model.addAttribute("username", session.getAttribute("username"));
+        model.addAttribute("email", session.getAttribute("email"));
+        model.addAttribute("firstName", session.getAttribute("firstName"));
+        model.addAttribute("lastName", session.getAttribute("lastName"));
+
+        return "about";
     }
 
     @GetMapping("/contact")
-    public String contactPage() {
+    public String contactPage(Model model, HttpSession session) {
+        model.addAttribute("loggedIn", session.getAttribute("loggedIn"));
+        model.addAttribute("username", session.getAttribute("username"));
+        model.addAttribute("email", session.getAttribute("email"));
+        model.addAttribute("firstName", session.getAttribute("firstName"));
+        model.addAttribute("lastName", session.getAttribute("lastName"));
+
         return "contact";
     }
 

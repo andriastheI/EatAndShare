@@ -17,14 +17,14 @@
         <a th:href="@{/}">Home</a>
         <a th:href="@{/about}">About</a>
         <a th:href="@{/contact}">Contact</a>
-        <a href="/services">Share</a>
+        <a th:href="@{/services}">Share</a>
 
         <!-- If user is logged in, show profile icon and dropdown -->
         <div class="icon-login" th:if="${loggedIn}">
             <ion-icon name="person-circle-outline"></ion-icon>
             <ul class="dropdown">
-                <li><a href="/profile">My Profile</a></li>
-                <li><a href="/password">Password</a></li>
+                <li><a th:href="@{/profile}">My Profile</a></li>
+                <li><a th:href="@{/password}">Password</a></li>
                 <li><a th:href="@{/logout}">Logout</a></li>
             </ul>
         </div>
