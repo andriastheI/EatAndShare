@@ -257,3 +257,46 @@ button[type="button"]:hover {
         font-size: 1.3em;
     }
 }
+
+
+/* Footer CSS*/
+
+.footer {
+    background: #f3f3f3;
+    padding: 25px 0;
+    text-align: center;
+    margin-top: 80px;
+    border-top: 1px solid #e2e2e2;
+    font-family: Arial, sans-serif;
+}
+
+.footer h2 {
+    margin-bottom: 5px;
+    font-size: 22px;
+    color: #333;
+}
+
+.footer p {
+    margin: 5px 0 15px;
+    color: #666;
+    font-size: 14px;
+}
+
+.footer-links a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #444;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.footer-links a:hover {
+    color: #ff7a29;
+}
+
+.footer small {
+    display: block;
+    margin-top: 15px;
+    color: #777;
+    font-size: 12px;
+}

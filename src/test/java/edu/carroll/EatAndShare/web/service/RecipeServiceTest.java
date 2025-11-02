@@ -26,9 +26,6 @@ public class RecipeServiceTest {
     private static final String USERNAME = "testuser";
     private static final String EMAIL = "testuser@example.com";
 
-    /* ------------------------------------------------------------
-              ✅  VALID RECIPE TESTS (3 TESTS)
-    ------------------------------------------------------------- */
 
     /** Baseline test user created before each test for validation checks. */
     private User testUser;
