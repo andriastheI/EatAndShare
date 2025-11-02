@@ -180,4 +180,21 @@ public class UserServiceImpl implements UserService {
         log.debug("🔍 Searching for user by username='{}'", username);
         return loginRepo.findByUsername(username);
     }
+
+    @Override
+    public boolean updatePassword(String username, String oldPassword, String newPassword) {
+        User user = loginRepo.findByUsername(username);
+
+        if (user == null)
+            throw new IllegalArgumentException("User not found");
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            return false; // Old password wrong
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        loginRepo.save(user);
+        return true;
+    }
+
 }

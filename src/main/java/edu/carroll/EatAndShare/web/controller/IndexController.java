@@ -235,6 +235,69 @@ public class IndexController {
         return "services";
     }
 
+    @GetMapping("/password")
+    public String passwords(HttpSession session, Model model, RedirectAttributes attrs) {
+        Boolean loggedIn = (Boolean) session.getAttribute("loggedIn");
+
+        if (loggedIn == null || !loggedIn) {
+            // Not logged in → back to homepage with login popup
+            attrs.addFlashAttribute("showLogin", true);
+            return "redirect:/";
+        }
+
+        // Add session info to model so Thymeleaf can render header data
+        model.addAttribute("username", session.getAttribute("username"));
+        model.addAttribute("email", session.getAttribute("email"));
+        model.addAttribute("firstName", session.getAttribute("firstName"));
+        model.addAttribute("lastName", session.getAttribute("lastName"));
+        model.addAttribute("loggedIn", true);
+
+        return "password";
+    }
+
+    /**
+     * Handles password update submission.
+     * Validates old password, checks new passwords match, and updates user in DB.
+     */
+    @PostMapping("/password")
+    public String updatePassword(@RequestParam String username,
+                                 @RequestParam String oldPassword,
+                                 @RequestParam String newPassword,
+                                 @RequestParam String confirmPassword,
+                                 HttpSession session,
+                                 RedirectAttributes attrs) {
+
+        // Ensure user is logged in
+        Boolean loggedIn = (Boolean) session.getAttribute("loggedIn");
+        if (loggedIn == null || !loggedIn) {
+            attrs.addFlashAttribute("showLogin", true);
+            return "redirect:/";
+        }
+
+        // Validate confirm password
+        if (!newPassword.equals(confirmPassword)) {
+            attrs.addFlashAttribute("error", "New passwords do not match.");
+            return "redirect:/password";
+        }
+
+        try {
+            boolean updated = userService.updatePassword(username, oldPassword, newPassword);
+
+            if (!updated) {
+                attrs.addFlashAttribute("error", "Old password is incorrect.");
+                return "redirect:/password";
+            }
+
+            attrs.addFlashAttribute("success", "Password updated successfully!");
+            return "redirect:/profile";
+
+        } catch (Exception e) {
+            attrs.addFlashAttribute("error", "Unexpected error, please try again.");
+            return "redirect:/password";
+        }
+    }
+
+
     @GetMapping("/breakfast")
     public String showBreakfast(Model model, HttpSession session) {
         populateSessionAttributes(model, session);
