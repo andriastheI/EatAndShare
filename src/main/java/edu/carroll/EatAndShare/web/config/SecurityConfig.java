@@ -6,23 +6,26 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
 @Configuration
 public class SecurityConfig {
 
-    /**
-     * Disable default Spring Security login form
-     * and allow all routes for now (you handle login manually).
-     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // Expose CSRF token on the request as attribute named "_csrf"
+        CsrfTokenRequestAttributeHandler csrfAttr = new CsrfTokenRequestAttributeHandler();
+        csrfAttr.setCsrfRequestAttributeName("_csrf");
+
         http
-                .csrf(csrf -> csrf.disable()) // disable CSRF for simplicity
+                // CSRF is ENABLED by default; do NOT disable it
+                .csrf(csrf -> csrf.csrfTokenRequestHandler(csrfAttr))
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // allow every route
+                        .anyRequest().permitAll()
                 )
-                .formLogin(form -> form.disable()) // disable Spring’s default login
-                .logout(logout -> logout.disable()); // disable default logout
+                .formLogin(form -> form.disable())
+                .logout(logout -> logout.disable());
+
         return http.build();
     }
 

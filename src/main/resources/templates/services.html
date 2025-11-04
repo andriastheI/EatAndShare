@@ -48,13 +48,16 @@
         <!-- Preparation Time -->
         <div class="form-group">
             <label for="prepTime">Preparation Time (mins) *</label>
-            <input type="number" id="prepTime" name="prepTime" min="1" placeholder="10" required/>
+
+            <input type="number" id="prepTime" name="prepTime" min="1" max="600" required />
+
         </div>
 
         <!-- Cooking Time -->
         <div class="form-group">
             <label for="cookTime">Cooking Time (mins) *</label>
-            <input type="number" id="cookTime" name="cookTime" min="1" placeholder="20" required/>
+            <input type="number" id="cookTime" name="cookTime" min="1" max="600" required />
+
         </div>
 
         <!-- Difficulty -->
@@ -102,7 +105,8 @@
         <!-- Upload Image -->
         <div class="form-group">
             <label for="image">Upload Image</label>
-            <input type="file" id="image" name="image" accept="image/*" required/>
+            <input type="file" id="image" name="image" accept="image/png,image/jpeg" required />
+
         </div>
 
         <!-- ✅ Flash messages from controller -->

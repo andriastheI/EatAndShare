@@ -1,6 +1,8 @@
 package edu.carroll.EatAndShare.backEnd.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.core.SpringVersion;
 import java.util.List;
 
@@ -83,8 +85,9 @@ public class Recipe {
     @Column
     private String difficulty;
 
-    /** Step-by-step instructions for preparing the recipe. */
-    @Column(columnDefinition = "LONGTEXT", nullable = false)
+    @Lob
+    @JdbcTypeCode(SqlTypes.LONGVARCHAR)   // maps to CLOB on H2, TEXT/LONGTEXT on MySQL
+    @Column(nullable = false)
     private String instructions;
 
     /** URL or file path to the recipe's image. */

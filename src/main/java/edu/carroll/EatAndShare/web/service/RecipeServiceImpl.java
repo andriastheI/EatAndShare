@@ -22,6 +22,7 @@ import java.util.List;
  */
 @Service
 @Transactional
+
 public class RecipeServiceImpl implements RecipeService {
 
     private static final Logger log = LoggerFactory.getLogger(RecipeServiceImpl.class);
@@ -32,7 +33,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final UserRepository userRepo;
     private final CategoryRepository categoryRepo;
 
-    private static final Logger log = LoggerFactory.getLogger(RecipeServiceImpl.class);
+
 
     // why: provide safe default so NPE won't occur if property missing
     @Value("${file.upload-dir:uploads}")
@@ -77,6 +78,15 @@ public class RecipeServiceImpl implements RecipeService {
             }
             log.debug("User resolved: {}", user.getUsername());
 
+            String trimmed = title == null ? "" : title.trim().replaceAll("\\s+", " ");
+            if (trimmed.isEmpty()) {
+                throw new IllegalArgumentException("Title cannot be empty.");
+            }
+            if (recipeRepo.existsByUser_UsernameAndTitleIgnoreCase(username, trimmed)) {
+                throw new IllegalArgumentException("You already have a recipe named \"" + trimmed + "\".");
+            }
+
+
             // ✅ Normalize category name
             String normalizedCategory = categoryName.substring(0, 1).toUpperCase()
                     + categoryName.substring(1).toLowerCase();
@@ -113,6 +123,8 @@ public class RecipeServiceImpl implements RecipeService {
             // ✅ Create recipe
             Recipe recipe = new Recipe();
             recipe.setTitle(title);
+
+
             recipe.setPrepTimeMins(prepTime);
             recipe.setCookTimeMins(cookTime);
             recipe.setDifficulty(difficulty);
@@ -176,11 +188,15 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe getRecipeOrThrow(Integer id) {
+    public Recipe getRecipe(Integer id) {
         log.debug("Fetching recipe id={}", id);
+        if (id == null) {
+            log.warn("getRecipeOrThrow FAILED — id was null");
+            throw new IllegalArgumentException("Recipe ID cannot be null");
+        }
         return recipeRepo.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("❌ getRecipeOrThrow FAILED — recipe not found id={}", id);
+                    log.warn("❌ getRecipe FAILED — recipe not found id={}", id);
                     return new IllegalArgumentException("Recipe not found: " + id);
                 });
     }
@@ -189,7 +205,18 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<Recipe> findByCategoryName(String categoryName) {
         log.debug("Searching recipes by category '{}'", categoryName);
-        return recipeRepo.findByCategory_CategoryNameIgnoreCase(categoryName);
+
+        if (categoryName == null) {
+            return List.of();
+        }
+
+        // Use strip() (Unicode-aware) then collapse internal runs of whitespace
+        String normalized = categoryName.strip().replaceAll("\\s+", " ");
+        if (normalized.isEmpty()){
+            return List.of();
+        }
+
+        return recipeRepo.findByCategory_CategoryNameIgnoreCase(normalized);
     }
 
     @Override
@@ -205,19 +232,26 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public List<Recipe> findByUser(User user) {
+        if (user == null || user.getId() == null) {
+            log.warn("user or user.id is null");
+            return List.of();
+        }
         return recipeRepo.findByUser(user);
     }
 
+
     @Override
     public void deleteRecipeByIdAndUser(Integer id, User user) {
+        if (id == null || user == null) {
+            log.warn("deleteRecipe: Skipped — null id or user");
+            return;
+            //throw new IllegalArgumentException("Recipe ID or User ID cannot be null");
+        }
         recipeRepo.findById(id).ifPresent(recipe -> {
             if (recipe.getUser().getId().equals(user.getId())) {
                 recipeRepo.delete(recipe);
             }
         });
     }
-
-
-
 
 }

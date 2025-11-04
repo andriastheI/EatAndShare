@@ -39,6 +39,8 @@ public class RecipeController {
 
     /** Service that manages recipe creation, storage, and retrieval. */
     private final RecipeService recipeService;
+    private static final int MAX_PREP_MINS = 600;   // 10 hours
+    private static final int MAX_COOK_MINS = 600;   // 10 hours
 
     /**
      * Constructor-based dependency injection.
@@ -92,6 +94,9 @@ public class RecipeController {
             return "redirect:/";
         }
 
+
+
+
         final String username = String.valueOf(session.getAttribute("username"));
         try {
             recipeService.saveRecipe(
@@ -104,16 +109,22 @@ public class RecipeController {
 
             String categoryPath = categoryName.trim().toLowerCase().replaceAll("\\s+", "");
             return "redirect:/" + categoryPath;
-        } catch (Exception e) {
+        } catch (IllegalArgumentException ex) {
+        // ✅ Show ONLY the friendly message from the service
+        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        return "redirect:/services";
+
+    }
+        catch (Exception e) {
             log.error("❌ Error while uploading recipe: {}", e.getMessage());
-            redirectAttributes.addFlashAttribute("errorMessage", "Error: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/services";
         }
     }
 
     @GetMapping("/recipes/{id}")
     public String getRecipe(@PathVariable Integer id, Model model, HttpSession session) {
-        Recipe recipe = recipeService.getRecipeOrThrow(id);
+        Recipe recipe = recipeService.getRecipe(id);
         model.addAttribute("recipe", recipe);
         model.addAttribute("loggedIn", Boolean.TRUE.equals(session.getAttribute("loggedIn")));
         model.addAttribute("username", session.getAttribute("username"));
@@ -122,6 +133,9 @@ public class RecipeController {
         model.addAttribute("lastName", session.getAttribute("lastName"));
         return "recipeDetails";
     }
+
+
+
 }
 
 

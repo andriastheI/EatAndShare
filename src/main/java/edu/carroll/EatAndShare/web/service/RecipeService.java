@@ -23,7 +23,7 @@ public interface RecipeService {
 
     List<Recipe> latestRecipes();
 
-    Recipe getRecipeOrThrow(Integer id);
+    Recipe getRecipe(Integer id);
 
     // ✅ New method for category pages
     List<Recipe> findByCategoryName(String categoryName);

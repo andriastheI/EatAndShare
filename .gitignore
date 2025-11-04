@@ -40,3 +40,9 @@ out/
 /demoDb*
 
 .DS_Store
+
+logs/**
+*.log
+
+# Uploads (ignore everything inside uploads/)
+uploads/**

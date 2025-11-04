@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title th:text="${firstName} + ' ' + ${lastName} + ' - Profile'">Profile</title>
     <link rel="stylesheet" href="/css/style.css"/>
+    <link th:href="@{/css/modal.css}" rel="stylesheet"/>
 </head>
 
 <body>
@@ -15,7 +16,7 @@
         <a th:href="@{/}">Home</a>
         <a href="#">About</a>
         <a href="#">Contact</a>
-        <a th:href="@{/services}">Services</a>
+        <a th:href="@{/services}">Share</a>
         <div class="icon-login" th:if="${loggedIn}">
             <ion-icon name="person-circle-outline"></ion-icon>
             <ul class="dropdown">
@@ -58,18 +59,41 @@
 
             <div style="display:flex;justify-content:space-between;align-items:center;">
                 <span th:text="${r.prepTimeMins} + ' + ' + ${r.cookTimeMins} + ' mins'"></span>
-                <form th:action="@{/profile/delete/{id}(id=${r.id})}" method="post" style="margin:0;">
+                <form th:action="@{/profile/delete/{id}(id=${r.id})}"
+                      method="post"
+                      class="js-delete-form"
+                      th:attr="data-title=${r.title}">
                     <button type="submit" class="delete-btn">Delete</button>
                 </form>
             </div>
         </div>
     </div>
+
+    <!-- Accessible Confirm Modal (single instance) -->
+    <div id="confirmModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="confirmTitle" aria-describedby="confirmDesc">
+        <div class="modal__backdrop" data-close="true"></div>
+        <div class="modal__dialog" role="document">
+            <div class="modal__header">
+                <h3 id="confirmTitle">Delete recipe</h3>
+            </div>
+            <div class="modal__body">
+                <p id="confirmDesc">Are you sure you want to delete <strong id="confirmRecipeTitle">this recipe</strong>? This action cannot be undone.</p>
+            </div>
+            <div class="modal__footer">
+                <button type="button" class="btn btn-outline" data-action="cancel">Cancel</button>
+                <button type="button" class="btn btn-danger" data-action="confirm">Delete</button>
+            </div>
+        </div>
+    </div>
+
+
+
 </div>
 
 <!-- Icons -->
 <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" type="module"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-
+<script src="/js/confirmModal.js" defer></script>
 <!-- Inline styling for delete button -->
 <style>
     .delete-btn {
