@@ -95,7 +95,7 @@ public class RecipeServiceImpl implements RecipeService {
 
             String trimmed = title == null ? "" : title.trim().replaceAll("\\s+", " ");
             if (trimmed.isEmpty()) {
-                throw new IllegalArgumentException("Title cannot be empty.");
+                throw new IllegalArgumentException("Recipe title cannot be empty.");
             }
             if (recipeRepo.existsByUser_UsernameAndTitleIgnoreCase(username, trimmed)) {
                 throw new IllegalArgumentException("You already have a recipe named \"" + trimmed + "\".");
@@ -288,14 +288,10 @@ public class RecipeServiceImpl implements RecipeService {
             log.info("✅ saveRecipe SUCCESS — recipe '{}' saved", title);
 
 
+        } catch (IllegalArgumentException e) {
+            throw e;
         } catch (IOException e) {
-            log.error("❌ Image save FAILED: {}", e.getMessage(), e);
-            throw new RuntimeException("Error saving recipe image: " + e.getMessage(), e);
-
-
-        } catch (Exception e) {
-            log.error("❌ saveRecipe FAILED: {}", e.getMessage(), e);
-            throw new RuntimeException("Error saving recipe: " + e.getMessage(), e);
+            log.error("Image save FAILED: {}", e.getMessage(), e);
         }
     }
 

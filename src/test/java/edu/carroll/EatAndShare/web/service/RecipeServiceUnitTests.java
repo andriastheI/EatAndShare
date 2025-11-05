@@ -34,8 +34,8 @@ class RecipeServiceUnitTests {
     @Autowired
     private UserService userService; // Assuming you have this for registering users
 
-    private final String USERNAME = "alice";
-    private final String OTHER_USERNAME = "bob";
+    private final String USERNAME = "alice1234";
+    private final String OTHER_USERNAME = "bob1234";
 
     private final MultipartFile dummyImage = new MockMultipartFile(
             "image", "test.jpg", "image/jpeg", "test image content".getBytes()
@@ -51,7 +51,7 @@ class RecipeServiceUnitTests {
         user1.setFirstName("Alice");
         user1.setLastName("Doe");
         user1.setEmail("alice@example.com");
-        user1.setUsername("alice");
+        user1.setUsername("alice1234");
         user1.setPassword("password123");
 
         userService.saveUser(user1);
@@ -61,7 +61,7 @@ class RecipeServiceUnitTests {
         user2.setFirstName("Bob");
         user2.setLastName("Smith");
         user2.setEmail("bob@example.com");
-        user2.setUsername("bob");
+        user2.setUsername("bob1234");
         user2.setPassword("password123");
 
         userService.saveUser(user2);
@@ -74,28 +74,28 @@ class RecipeServiceUnitTests {
                 "Chocolate Cake",
                 15,
                 30,
-                "EASY",
+                "Easy",
                 "Mix and bake",
                 List.of("Flour", "Sugar"),
                 List.of("2", "1"),
                 List.of("cups", "cup"),
                 "Dessert",
                 dummyImage,
-                "alice"
+                "alice1234"
         );
 
         recipeService.saveRecipe(
                 "Caesar Salad",
                 10,
-                0,
-                "EASY",
+                70,
+                "Easy",
                 "Mix lettuce and dressing",
                 List.of("Lettuce", "Croutons"),
                 List.of("1", "0.5"),
                 List.of("head", "cup"),
                 "Salad",
                 dummyImage,
-                "alice"
+                "alice1234"
         );
 
         // Store recipe IDs if needed
@@ -165,7 +165,7 @@ class RecipeServiceUnitTests {
     void getRecipe_afterDelete_shouldThrowNotFound() {
         // make one, delete it, then fetch
         recipeService.saveRecipe(
-                "Temp-Delete", 1, 1, "EASY", "x",
+                "Temp-Delete", 1, 1, "Easy", "x",
                 List.of("A"), List.of("1"), List.of("unit"),
                 "Dessert", dummyImage, USERNAME
         );
@@ -303,12 +303,12 @@ class RecipeServiceUnitTests {
                 "Temp Recipe",
                 5,
                 10,
-                "EASY",
+                "Easy",
                 "Just test",
                 List.of("TestIngredient"),
                 List.of("1"),
                 List.of("unit"),
-                "Misc",
+                "Lunch",
                 dummyImage,
                 USERNAME
         );
@@ -324,12 +324,12 @@ class RecipeServiceUnitTests {
                 "Protected Recipe",
                 5,
                 10,
-                "EASY",
+                "Easy",
                 "Can't delete",
                 List.of("Ingredient"),
                 List.of("1"),
                 List.of("unit"),
-                "Misc",
+                "Lunch",
                 dummyImage,
                 USERNAME
         );
@@ -350,7 +350,7 @@ class RecipeServiceUnitTests {
     void deleteRecipeByIdAndUser_nullUser_shouldNotThrow_andNotDelete() {
         // Create
         recipeService.saveRecipe(
-                "NullUserDelete", 1, 1, "EASY", "x",
+                "NullUserDelete", 1, 1, "Easy", "x",
                 List.of("A"), List.of("1"), List.of("unit"),
                 "Dessert", dummyImage, USERNAME
         );
@@ -369,7 +369,7 @@ class RecipeServiceUnitTests {
 
     @Test
     void deleteRecipeTwice_shouldNotThrowException() {
-        recipeService.saveRecipe("DoubleDelete", 1, 1, "EASY", "x",
+        recipeService.saveRecipe("DoubleDelete", 1, 1, "Easy", "x",
                 List.of("A"), List.of("1"), List.of("unit"),
                 "Dessert", dummyImage, USERNAME);
 
