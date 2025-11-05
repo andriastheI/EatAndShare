@@ -1,6 +1,9 @@
 package edu.carroll.eatAndShare.backEnd.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import org.springframework.core.SpringVersion;
 
 import java.util.List;
 

@@ -67,7 +67,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
 
     Optional<Recipe> findById(Integer id);
 
-
+    boolean existsByUser_UsernameAndTitleIgnoreCase(String username, String title);
 }
 
 
