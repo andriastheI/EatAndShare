@@ -42,3 +42,6 @@ out/
 /demoDb*
 
 .DS_Store
+# Logs
+logs/**
+*.log
