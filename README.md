@@ -24,14 +24,13 @@ https://downloads.mysql.com/archives/installer/
 
 
 ### 3. Clone the Project
-
+```
 git clone https://github.com/andriastheI/EatAndShare.git
-
 cd EatAndShare
-
+```
 ### 4. Configure MySQL
 Make sure MySQL is running and configured with the correct database, username, and password.
-
+```
 CREATE DATABASE cookbook;
 
 CREATE USER 'blackfe'@'localhost' IDENTIFIED BY 'iampassword';
@@ -42,10 +41,10 @@ GRANT ALL PRIVILEGES ON cookbook.* TO 'blackfe'@'%' WITH GRANT OPTION;
 
 FLUSH PRIVILEGES;
 
-
+```
 ### 5. Verify Application Configuration
 Check the file: src/main/resources/application.properties if it has the same configuration as the following
-
+```
 spring.datasource.url=jdbc:mysql://localhost:3306/cookbook
 spring.datasource.username=blackfe
 spring.datasource.password=iampassword
@@ -56,31 +55,29 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
 
 "Image Upload Directory"
 upload.dir=uploads
-
+```
 Ensure it is properly configured for your local environment.
 
 #### 🚀 Running the Application (Gradle Wrapper)
 ##### 🐧 Linux / macOS
 
 Open a terminal in the project directory:
-cd path/to/EatAndShare
+`cd path/to/EatAndShare`
 
 Give execution permission to the Gradle wrapper (only once):
-chmod +x gradlew
+`chmod +x gradlew`
 
 Run the application:
-./gradlew bootRun
+`./gradlew bootRun`
 
 
 ##### 🪟 Windows (Command Prompt or PowerShell)
 
 Open a terminal in the project directory:
-
-cd path/to/EatAndShare
+`cd path/to/EatAndShare`
 
 Run the Windows Gradle wrapper:
-
-gradlew.bat bootRun
+`gradlew.bat bootRun`
 
 #### 🌐 Accessing the Application
 Once the server starts, open your browser and navigate to:
