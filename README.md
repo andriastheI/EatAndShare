@@ -14,22 +14,36 @@ Users can:
 
 ### 1. Install Java 21
 Download and install Java 21:  
+
 https://www.oracle.com/java/technologies/downloads/
 
 ### 2. Install MySQL 8.0.43
 Download MySQL 8.0.43:  
+
 https://downloads.mysql.com/archives/installer/
 
 
 ### 3. Clone the Project
 
 git clone https://github.com/andriastheI/EatAndShare.git
+
 cd EatAndShare
 
-4. Configure MySQL
+### 4. Configure MySQL
 Make sure MySQL is running and configured with the correct database, username, and password.
 
-5. Verify Application Configuration
+CREATE DATABASE cookbook;
+
+CREATE USER 'blackfe'@'localhost' IDENTIFIED BY 'iampassword';
+CREATE USER 'blackfe'@'%' IDENTIFIED BY 'iampassword';
+
+GRANT ALL PRIVILEGES ON cookbook.* TO 'blackfe'@'localhost' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON cookbook.* TO 'blackfe'@'%' WITH GRANT OPTION;
+
+FLUSH PRIVILEGES;
+
+
+### 5. Verify Application Configuration
 Check the file: src/main/resources/application.properties if it has the same configuration as the following
 
 spring.datasource.url=jdbc:mysql://localhost:3306/cookbook
@@ -39,13 +53,14 @@ spring.datasource.password=iampassword
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
-# Image Upload Directory
+
+"Image Upload Directory"
 upload.dir=uploads
 
 Ensure it is properly configured for your local environment.
 
-🚀 Running the Application (Gradle Wrapper)
-🐧 Linux / macOS
+#### 🚀 Running the Application (Gradle Wrapper)
+##### 🐧 Linux / macOS
 
 Open a terminal in the project directory:
 cd path/to/EatAndShare
@@ -57,15 +72,17 @@ Run the application:
 ./gradlew bootRun
 
 
-🪟 Windows (Command Prompt or PowerShell)
+##### 🪟 Windows (Command Prompt or PowerShell)
 
 Open a terminal in the project directory:
+
 cd path/to/EatAndShare
 
 Run the Windows Gradle wrapper:
+
 gradlew.bat bootRun
 
-🌐 Accessing the Application
+#### 🌐 Accessing the Application
 Once the server starts, open your browser and navigate to:
 
 👉 http://localhost:8080
