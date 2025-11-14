@@ -51,6 +51,15 @@ public class RecipeServiceImpl implements RecipeService {
 
     // ✅ Constructor-based dependency injection
 
+    /**
+     * Constructor-based dependency injection for all required repositories.
+     *
+     * @param recipeRepo            repository for {@link Recipe} entities
+     * @param ingredientRepo        repository for {@link Ingredient} entities
+     * @param recipeIngredientRepo  repository for {@link RecipeIngredient} entities
+     * @param userRepo              repository for {@link User} entities
+     * @param categoryRepo          repository for {@link Category} entities
+     */
 
     public RecipeServiceImpl(RecipeRepository recipeRepo,
                              IngredientRepository ingredientRepo,

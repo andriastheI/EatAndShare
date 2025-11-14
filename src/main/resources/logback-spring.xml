@@ -30,7 +30,7 @@
     </appender>
 
     <logger name="edu.carroll.eatAndShare.web.service.RecipeService" level="INFO"/>
-    <logger name="edu.carroll.eatAndShare.web.controller.IndexController" level="WARN" />
+    <logger name="edu.carroll.eatAndShare.web.controller.IndexController" level="INFO" />
 
     <!-- === ROOT LOGGER (controls all log output) === -->
     <root level="INFO">

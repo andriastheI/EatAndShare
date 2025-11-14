@@ -121,6 +121,25 @@ public class RecipeController {
         }
     }
 
+    /**
+     * Displays the details page for a specific recipe.
+     * <p>
+     * This method:
+     * <ul>
+     *     <li>Fetches the recipe by its ID via {@link RecipeService#getRecipe(Integer)}.</li>
+     *     <li>Adds the recipe and basic session-based user info to the model.</li>
+     *     <li>Returns the view name for the recipe details page.</li>
+     * </ul>
+     * <p>
+     * If the recipe is not found, {@link RecipeService#getRecipe(Integer)} is expected
+     * to throw an exception; global error handling or an error page can be used to
+     * render a friendly message.
+     *
+     * @param id      the ID of the recipe to display
+     * @param model   the model used to pass data to the view template
+     * @param session the current HTTP session (used to indicate login state and user info)
+     * @return the name of the recipe details view template
+     */
     @GetMapping("/recipes/{id}")
     public String getRecipe(@PathVariable Integer id, Model model, HttpSession session) {
         Recipe recipe = recipeService.getRecipe(id);
