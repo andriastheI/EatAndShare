@@ -30,7 +30,6 @@ import java.util.List;
  */
 
 @Service
-@Transactional
 public class RecipeServiceImpl implements RecipeService {
 
     private static final Logger log = LoggerFactory.getLogger(RecipeServiceImpl.class);
