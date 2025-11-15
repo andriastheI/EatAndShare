@@ -1,8 +1,8 @@
+package edu.carroll.eatAndShare.backEnd.form;
 /**
  * Filename: UserForm.java
- * Author: Andrias Zelele
+ * Author: Andrias
  * Date: October 20, 2025
- *
  * Description:
  * This class represents a simple data transfer object (DTO) used to capture
  * user login form input within the EatAndShare web application. It holds
@@ -10,17 +10,9 @@
  * authentication. This object is typically passed from the controller layer
  * to the service layer for validation and authentication.
  */
-
-package edu.carroll.eatAndShare.backEnd.form;
-
-/**
- * Represents a form containing login credentials entered by the user.
- */
 public class UserForm {
-
     /** The username entered by the user. */
     private String username;
-
     /** The password entered by the user. */
     private String password;
 

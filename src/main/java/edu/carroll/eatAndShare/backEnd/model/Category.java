@@ -3,67 +3,112 @@ package edu.carroll.eatAndShare.backEnd.model;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
- * Represents a recipe category in the EatAndShare application.
+ * Filename: Category.java
+ * Author: Andrias
+ * Date: October 11, 2025
  *
- * <p>Each category (e.g., "Dessert", "Breakfast", "Vegan") is stored as a
- * separate record in the database and is linked to multiple recipes
- * through a one-to-many relationship.</p>
+ * Description:
+ * This entity represents a recipe category in the EatAndShare application.
+ * Each category (e.g., "Dessert", "Breakfast", "Vegan") is stored in the
+ * database and can contain multiple recipes through a one-to-many relationship.
  *
- * <p>This class maps to the <strong>category</strong> table and includes
- * an auto-generated primary key and a unique name field.</p>
- *
- * <p>Relationships:</p>
- * <ul>
- *   <li>{@link Recipe} – One-to-Many: each category can contain multiple recipes.</li>
- * </ul>
- *
- * <p>The relationship is bidirectional, with {@link Recipe} referencing
- * {@code Category} using the {@code category} field.</p>
- *
- * @author Andrias
- * @version 1.0
- * @since 2025-10-11
+ * The class maps to the "category" table and includes an auto-generated
+ * primary key along with a unique category name.
  */
+
 @Entity
 @Table(name = "category")
 public class Category {
 
-    /** Primary key for the category table, generated automatically by the database. */
+    /** Auto-generated primary key for the category table. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
     private Integer id;
 
-    /** The unique name of the category (e.g., "Dessert", "Vegan"). */
+    /** Unique name of the category (e.g., "Dessert", "Vegan"). */
     @Column(name = "category_name", nullable = false, unique = true, length = 50)
     private String categoryName;
 
     /**
-     * One-to-many relationship with {@link Recipe}.
-     * Each category can have multiple recipes assigned to it.
-     * Cascade ensures that category changes propagate to its recipes.
-     * Orphan removal deletes recipes that are no longer linked.
+     * One-to-many relationship with Recipe.
+     * Each category may contain multiple recipes.
+     * Cascade ensures category changes propagate to recipes.
+     * Orphan removal deletes recipes no longer associated with this category.
      */
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Recipe> recipes = new ArrayList<>();
 
-    /** @return the category ID */
+    /**
+     * Returns the category ID.
+     *
+     * @return the ID of the category
+     */
     public Integer getId() { return id; }
 
-    /** @param id sets the category ID */
+    /**
+     * Sets the category ID.
+     *
+     * @param id the ID to assign
+     */
     public void setId(Integer id) { this.id = id; }
 
-    /** @return the category name */
+    /**
+     * Returns the name of the category.
+     *
+     * @return the category name
+     */
     public String getCategoryName() { return categoryName; }
 
-    /** @param categoryName sets the category name */
+    /**
+     * Sets the category name.
+     *
+     * @param categoryName the name to assign
+     */
     public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
 
-    /** @return the list of recipes under this category */
+    /**
+     * Returns all recipes under this category.
+     *
+     * @return a list of recipes
+     */
     public List<Recipe> getRecipes() { return recipes; }
 
-    /** @param recipes sets the list of recipes under this category */
+    /**
+     * Replaces the list of recipes under this category.
+     *
+     * @param recipes list of recipes to assign
+     */
     public void setRecipes(List<Recipe> recipes) { this.recipes = recipes; }
+
+    /**
+     * Compares this Category object with another for equality.
+     * Two categories are considered equal if they share the same
+     * category name and contain the same list of recipes.
+     *
+     * @param o the object to compare with
+     * @return true if the objects are equal; false otherwise
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return Objects.equals(categoryName, category.categoryName) &&
+                Objects.equals(recipes, category.recipes);
+    }
+
+    /**
+     * Generates a hash code for this Category object, based on the
+     * category name and associated recipes list.
+     *
+     * @return the generated hash code
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(categoryName, recipes);
+    }
+
 }
