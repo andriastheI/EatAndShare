@@ -1,40 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Filename: logback.xml
+    Author: Andrias
+    Date: October 20, 2025
+
+    Description:
+    Central logging configuration for the EatAndShare Spring Boot application.
+
+    This file defines:
+    - Log file directory and naming structure
+    - Logging pattern (timestamp, level, thread, logger, message)
+    - Console output (for real-time viewing in terminal)
+    - Rolling file logs with size/time-based policies
+    - Global log level control via the root logger
+-->
+
 <configuration scan="true">
 
-    <!-- === LOG FILE LOCATION === -->
+    <!-- ================================
+         LOG DIRECTORY & FILE PROPERTIES
+         ================================ -->
+
+    <!-- Directory where all log files will be stored -->
     <property name="LOG_DIR" value="logs"/>
+
+    <!-- Main log file name -->
     <property name="LOG_FILE" value="${LOG_DIR}/application.log"/>
 
-    <!-- === PATTERN FOR LOG OUTPUT === -->
-    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n"/>
 
-    <!-- === CONSOLE APPENDER (for terminal output) === -->
+    <!-- ===================================
+         LOG PATTERN TEMPLATE
+         Controls the format of every log line.
+         Example:
+         2025-10-20 14:33:11 INFO  [main] RecipeService - Recipe saved
+         =================================== -->
+    <property name="LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n"/>
+
+
+    <!-- ================================
+         CONSOLE APPENDER
+         Writes logs to the terminal.
+         Useful during development/debugging.
+         ================================ -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
+            <!-- Apply unified logging pattern -->
             <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
-    <!-- === FILE APPENDER (main log file) === -->
+
+    <!-- ===================================
+         FILE APPENDER
+         Writes logs to a file on disk.
+         Uses rolling policies to avoid large files.
+         =================================== -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <!-- Main output log file -->
         <file>${LOG_FILE}</file>
+
+        <!--
+            Rolling Policy:
+            - Creates a new log file each day
+            - Splits logs once they exceed 10MB
+            - Keeps up to 30 days of logs
+            - Total log storage is capped at 1GB
+        -->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+
+            <!-- Daily log file pattern with index -->
             <fileNamePattern>${LOG_DIR}/application-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+
+            <!-- Maximum size for a single log file -->
             <maxFileSize>10MB</maxFileSize>
+
+            <!-- Number of days to keep log files -->
             <maxHistory>30</maxHistory>
+
+            <!-- Total size limit for all log files combined -->
             <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
+
         <encoder>
+            <!-- Apply the unified logging pattern -->
             <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
-    <logger name="edu.carroll.eatAndShare.backEnd.service.RecipeService" level="INFO"/>
-    <logger name="edu.carroll.eatAndShare.web.controller.IndexController" level="INFO" />
 
-    <!-- === ROOT LOGGER (controls all log output) === -->
+    <!-- ================================
+         ROOT LOGGER
+         Controls global logging level:
+         Levels: TRACE < DEBUG < INFO < WARN < ERROR
+         ================================ -->
     <root level="INFO">
+        <!-- Send logs to console -->
         <appender-ref ref="CONSOLE"/>
+
+        <!-- Send logs to log files -->
         <appender-ref ref="FILE"/>
     </root>
 
