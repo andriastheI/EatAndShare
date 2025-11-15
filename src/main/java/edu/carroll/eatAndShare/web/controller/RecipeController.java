@@ -1,6 +1,6 @@
 package edu.carroll.eatAndShare.web.controller;
 
-import edu.carroll.eatAndShare.web.service.RecipeService;
+import edu.carroll.eatAndShare.backEnd.service.RecipeService;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

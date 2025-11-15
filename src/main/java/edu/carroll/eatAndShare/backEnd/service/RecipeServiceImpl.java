@@ -1,4 +1,4 @@
-package edu.carroll.eatAndShare.web.service;
+package edu.carroll.eatAndShare.backEnd.service;
 
 
 import edu.carroll.eatAndShare.backEnd.model.*;
@@ -16,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Arrays;
 
 
 /**

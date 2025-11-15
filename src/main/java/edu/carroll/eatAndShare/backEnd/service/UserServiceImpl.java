@@ -1,10 +1,10 @@
-package edu.carroll.eatAndShare.web.service;
+package edu.carroll.eatAndShare.backEnd.service;
 
 import java.util.List;
 
 import edu.carroll.eatAndShare.backEnd.model.User;
 import edu.carroll.eatAndShare.backEnd.repo.UserRepository;
-import edu.carroll.eatAndShare.web.form.UserForm;
+import edu.carroll.eatAndShare.backEnd.form.UserForm;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

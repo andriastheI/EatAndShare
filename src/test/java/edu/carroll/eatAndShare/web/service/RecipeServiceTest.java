@@ -1,6 +1,8 @@
 package edu.carroll.eatAndShare.web.service;
 
 import edu.carroll.eatAndShare.backEnd.model.User;
+import edu.carroll.eatAndShare.backEnd.service.RecipeService;
+import edu.carroll.eatAndShare.backEnd.service.UserService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

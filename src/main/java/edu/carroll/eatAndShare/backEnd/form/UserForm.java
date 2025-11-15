@@ -11,7 +11,7 @@
  * to the service layer for validation and authentication.
  */
 
-package edu.carroll.eatAndShare.web.form;
+package edu.carroll.eatAndShare.backEnd.form;
 
 /**
  * Represents a form containing login credentials entered by the user.

@@ -1,7 +1,7 @@
-package edu.carroll.eatAndShare.web.service;
+package edu.carroll.eatAndShare.backEnd.service;
 
 import edu.carroll.eatAndShare.backEnd.model.User;
-import edu.carroll.eatAndShare.web.form.UserForm;
+import edu.carroll.eatAndShare.backEnd.form.UserForm;
 
 /**
  * Service interface defining user-related operations for the EatAndShare application.

@@ -1,7 +1,7 @@
 package edu.carroll.eatAndShare.web.controller;
 
-import edu.carroll.eatAndShare.web.service.RecipeService;
-import edu.carroll.eatAndShare.web.service.UserService;
+import edu.carroll.eatAndShare.backEnd.service.RecipeService;
+import edu.carroll.eatAndShare.backEnd.service.UserService;
 import edu.carroll.eatAndShare.backEnd.model.User;
 import edu.carroll.eatAndShare.backEnd.model.Recipe;
 import jakarta.servlet.http.HttpSession;

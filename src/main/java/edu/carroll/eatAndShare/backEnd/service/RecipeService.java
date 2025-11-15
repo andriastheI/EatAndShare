@@ -1,4 +1,4 @@
-package edu.carroll.eatAndShare.web.service;
+package edu.carroll.eatAndShare.backEnd.service;
 
 import edu.carroll.eatAndShare.backEnd.model.Recipe;
 import edu.carroll.eatAndShare.backEnd.model.User;
