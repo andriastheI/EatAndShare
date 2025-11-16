@@ -231,7 +231,7 @@ public class RecipeServiceTest {
                 )
         );
 
-        assertTrue(exception.getMessage().contains("Recipe prepTime is too low"));
+        assertTrue(exception.getMessage().contains("Invalid prep or cook time"));
     }
 
     @Test
@@ -253,7 +253,7 @@ public class RecipeServiceTest {
                 )
         );
 
-        assertTrue(exception.getMessage().contains("Recipe cookTime is too low"));
+        assertTrue(exception.getMessage().contains("Invalid prep or cook time"));
     }
 
     @Test
@@ -275,7 +275,7 @@ public class RecipeServiceTest {
                 )
         );
 
-        assertTrue(exception.getMessage().contains("Recipe cook or prep time cannot be null"));
+        assertTrue(exception.getMessage().contains("Prep or cook time cannot be null"));
     }
 
 
@@ -320,7 +320,7 @@ public class RecipeServiceTest {
                 )
         );
 
-        assertTrue(exception.getMessage().contains("Invalid difficulty level"));
+        assertTrue(exception.getMessage().contains("Invalid difficulty"));
     }
 
 
@@ -344,7 +344,7 @@ public class RecipeServiceTest {
                 )
         );
 
-        assertTrue(exception.getMessage().contains("Recipe instructions is not provided"));
+        assertTrue(exception.getMessage().contains("Instructions cannot be empty"));
     }
 
     @Test
@@ -366,7 +366,7 @@ public class RecipeServiceTest {
                 )
         );
 
-        assertTrue(exception.getMessage().contains("Recipe instructions is blank"));
+        assertTrue(exception.getMessage().contains("Instructions cannot be empty"));
     }
 
     @Test
@@ -390,7 +390,7 @@ public class RecipeServiceTest {
                 )
         );
 
-        assertTrue(exception.getMessage().contains("Recipe instructions is too long"));
+        assertTrue(exception.getMessage().contains("Instructions too long"));
     }
 
 
@@ -414,7 +414,7 @@ public class RecipeServiceTest {
                 )
         );
 
-        assertTrue(exception.getMessage().contains("Recipe category name is null"));
+        assertTrue(exception.getMessage().contains("Recipe category name is invalid."));
     }
 
     @Test
@@ -436,7 +436,7 @@ public class RecipeServiceTest {
                 )
         );
 
-        assertTrue(exception.getMessage().contains("Recipe category name is Invalid"));
+        assertTrue(exception.getMessage().contains("Recipe category name is invalid."));
     }
 
 
@@ -482,7 +482,7 @@ public class RecipeServiceTest {
                 )
         );
 
-        assertTrue(exception.getMessage().contains("ingredient list sizes mismatch"));
+        assertTrue(exception.getMessage().contains("Ingredient list sizes mismatch"));
     }
 
     @Test
