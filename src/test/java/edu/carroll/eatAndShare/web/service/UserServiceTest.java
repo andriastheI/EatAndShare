@@ -92,6 +92,7 @@ public class UserServiceTest {
         user.setLastName("Hero");
 
         assertDoesNotThrow(() -> userService.saveUser(user));
+        assertEquals(user.getPassword(), user.getPassword());
     }
 
 

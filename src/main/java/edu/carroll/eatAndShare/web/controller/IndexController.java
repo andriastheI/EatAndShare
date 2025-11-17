@@ -18,34 +18,40 @@ import jakarta.servlet.http.HttpSession;
  * Filename: IndexController.java
  * Author: Andrias and Selin
  * Date: October 20, 2025
- *
+ * <p>
  * Description:
  * Main MVC controller responsible for:
  * - Homepage logic (with search + pagination support)
  * - User login and registration
  * - Session management (store & clear user info)
  * - Category pages and static pages (about/contact)
- *
+ * <p>
  * This controller acts as the primary entry point for public and authenticated
  * traffic in the EatAndShare application.
  */
 @Controller
 public class IndexController {
 
-    /** Logger for debugging and request lifecycle tracing. */
+    /**
+     * Logger for debugging and request lifecycle tracing.
+     */
     private static final Logger log = LoggerFactory.getLogger(IndexController.class);
 
-    /** Service for user authentication and data retrieval. */
+    /**
+     * Service for user authentication and data retrieval.
+     */
     private final UserService userService;
 
-    /** Service for retrieving recipe data for homepage & categories. */
+    /**
+     * Service for retrieving recipe data for homepage & categories.
+     */
     private final RecipeService recipeService;
 
     /**
      * Constructor-based injection of required services.
      *
-     * @param userService    the user service used for authentication + registration
-     * @param recipeService  the recipe service for listing and searching recipes
+     * @param userService   the user service used for authentication + registration
+     * @param recipeService the recipe service for listing and searching recipes
      */
     public IndexController(UserService userService, RecipeService recipeService) {
         this.userService = userService;
@@ -55,11 +61,11 @@ public class IndexController {
     /**
      * Displays the homepage with optional search functionality.
      *
-     * @param q        search query (optional)
-     * @param page     current page index
-     * @param size     number of elements per page
-     * @param model    MVC model for view rendering
-     * @param session  HTTP session used to persist login state
+     * @param q       search query (optional)
+     * @param page    current page index
+     * @param size    number of elements per page
+     * @param model   MVC model for view rendering
+     * @param session HTTP session used to persist login state
      * @return the index view
      */
     @GetMapping("/")
@@ -168,9 +174,9 @@ public class IndexController {
     /**
      * Registers a new user, validates uniqueness, and handles errors.
      *
-     * @param user   user data from registration form
-     * @param model  model for rendering view
-     * @param attrs  redirect flash attributes
+     * @param user  user data from registration form
+     * @param model model for rendering view
+     * @param attrs redirect flash attributes
      * @return redirect back to homepage
      */
     @PostMapping("/register")
@@ -302,7 +308,9 @@ public class IndexController {
         }
     }
 
-    /** Load recipes for Breakfast category. */
+    /**
+     * Load recipes for Breakfast category.
+     */
     @GetMapping("/breakfast")
     public String showBreakfast(Model model, HttpSession session) {
         populateSessionAttributes(model, session);
@@ -310,7 +318,9 @@ public class IndexController {
         return "breakfast";
     }
 
-    /** Load recipes for Lunch category. */
+    /**
+     * Load recipes for Lunch category.
+     */
     @GetMapping("/lunch")
     public String showLunch(Model model, HttpSession session) {
         populateSessionAttributes(model, session);
@@ -318,7 +328,9 @@ public class IndexController {
         return "lunch";
     }
 
-    /** Load recipes for Dinner category. */
+    /**
+     * Load recipes for Dinner category.
+     */
     @GetMapping("/dinner")
     public String showDinner(Model model, HttpSession session) {
         populateSessionAttributes(model, session);
@@ -326,7 +338,9 @@ public class IndexController {
         return "dinner";
     }
 
-    /** Load recipes for Salad category. */
+    /**
+     * Load recipes for Salad category.
+     */
     @GetMapping("/salad")
     public String showSalad(Model model, HttpSession session) {
         populateSessionAttributes(model, session);
@@ -334,7 +348,9 @@ public class IndexController {
         return "salad";
     }
 
-    /** Load recipes for Dessert category. */
+    /**
+     * Load recipes for Dessert category.
+     */
     @GetMapping("/dessert")
     public String showDessert(Model model, HttpSession session) {
         populateSessionAttributes(model, session);
