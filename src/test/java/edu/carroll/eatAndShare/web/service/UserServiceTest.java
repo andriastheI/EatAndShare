@@ -1,5 +1,6 @@
 package edu.carroll.eatAndShare.web.service;
 
+import ch.qos.logback.core.boolex.Matcher;
 import edu.carroll.eatAndShare.backEnd.model.User;
 import edu.carroll.eatAndShare.backEnd.service.UserService;
 import edu.carroll.eatAndShare.backEnd.form.UserForm;
@@ -8,6 +9,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * 💩 Crappy Path: Invalid inputs should throw exceptions
  * 🌀 Crazy Path: Edge cases that are weird but should still work
  */
-@Transactional
+
 @SpringBootTest
 public class UserServiceTest {
 
@@ -27,38 +33,39 @@ public class UserServiceTest {
     private UserService userService;
 
     private static final String USERNAME = "TestUser";
+    private static final String PASSWORD = "iamTesting";
+    private static final String EMAIL = "iamyouremail@gmail.com";
+    private static final String FIRSTNAME = "TestFirstName";
+    private static final String LASTNAME = "TestLastName";
 
-    @BeforeEach
-    public void setup() {
-        User user = new User();
-        user.setUsername(USERNAME);
-        user.setPassword("originalPassword");
-        user.setEmail("user@test.com");
-        user.setFirstName("Test");
-        user.setLastName("User");
+    private static final User testUser = new User();
+    private static final PasswordEncoder encoder =  new BCryptPasswordEncoder();
 
-        userService.saveUser(user);     // Password will be encoded here
-    }
     /*HAPPY PATH TESTS*/
 
     @Test
     public void savingValidUserTest() {
-        User user = new User();
-        user.setUsername("Lokkki");
-        user.setPassword("iamPassword");
-        user.setEmail("iamyouremail@gmail.com");
-        user.setFirstName("Loki");
-        user.setLastName("High");
+        testUser.setUsername(USERNAME);
+        testUser.setPassword(PASSWORD);
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName(FIRSTNAME);
+        testUser.setLastName(LASTNAME);
 
-        userService.saveUser(user);
-        User userCheck = userService.findByUsername("Lokkki");
+        assertDoesNotThrow(() -> userService.saveUser(testUser));
+        User saved = userService.findByUsername(USERNAME);
+        assertNotNull(saved);
 
-        assertNotNull(userCheck);
-        assertEquals(user.getUsername(), userCheck.getUsername());
+        assertEquals(USERNAME, saved.getUsername());
+        assertEquals(EMAIL, saved.getEmail());
+        assertEquals(FIRSTNAME, saved.getFirstName());
+        assertEquals(LASTNAME, saved.getLastName());
+        assertTrue(encoder.matches(PASSWORD, saved.getPassword()));
     }
 
     @Test
     public void savingTwoUsersTest() {
+        List<User> users = new ArrayList<>();
+
         User user1 = new User();
         user1.setUsername("Lokkki");
         user1.setPassword("iamPassword");
@@ -78,21 +85,28 @@ public class UserServiceTest {
             userService.saveUser(user2);
         });
 
-        assertNotNull(userService.findByUsername("Lokkki"));
-        assertNotNull(userService.findByUsername("Thooor"));
+        users.add(userService.findByUsername("Lokkki"));
+        users.add(userService.findByUsername("Thooor"));
+        // Check if there are two users that are saved
+        assertTrue(users.size()==2);
     }
 
     @Test
     public void savingValidUserWithSymbolsPasswordTest() {
-        User user = new User();
-        user.setUsername("SuperUser");
-        user.setPassword("P@s$W0rd!#*");
-        user.setEmail("super@hero.com");
-        user.setFirstName("Symbolic");
-        user.setLastName("Hero");
+        testUser.setUsername(USERNAME);
+        testUser.setPassword("II*(#@GGG");
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName(FIRSTNAME);
+        testUser.setLastName(LASTNAME);
 
-        assertDoesNotThrow(() -> userService.saveUser(user));
-        assertEquals(user.getPassword(), user.getPassword());
+        assertDoesNotThrow(() -> userService.saveUser(testUser));
+        User saved = userService.findByUsername(USERNAME);
+
+        assertEquals(USERNAME, saved.getUsername());
+        assertEquals(EMAIL, saved.getEmail());
+        assertEquals(FIRSTNAME, saved.getFirstName());
+        assertEquals(LASTNAME, saved.getLastName());
+        assertTrue(encoder.matches("II*(#@GGG", saved.getPassword()));
     }
 
 
@@ -100,154 +114,173 @@ public class UserServiceTest {
 
     @Test
     public void savingExistingUserTest() {
-        User user = new User();
-        user.setUsername("Lokkki");
-        user.setPassword("iamPassword");
-        user.setEmail("iamyouremail@gmail.com");
-        user.setFirstName("Loki");
-        user.setLastName("High");
+        List<User> users = new ArrayList<>();
+        testUser.setUsername(USERNAME);
+        testUser.setPassword(PASSWORD);
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName(FIRSTNAME);
+        testUser.setLastName(LASTNAME);
 
-        userService.saveUser(user);
+        userService.saveUser(testUser);
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> userService.saveUser(user)
+                () -> userService.saveUser(testUser)
         );
 
         assertTrue(exception.getMessage().contains("Username already exists"));
+        users.add(userService.findByUsername(testUser.getUsername()));
+        assertTrue(users.size()==1);
     }
 
     @Test
     public void savingInvalidPasswordLengthTest() {
-        User user = new User();
-        user.setUsername("Lokkki");
-        user.setPassword("short");
-        user.setEmail("email@gmail.com");
-        user.setFirstName("Loki");
-        user.setLastName("High");
+        testUser.setUsername(USERNAME);
+        testUser.setPassword("short");
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName(FIRSTNAME);
+        testUser.setLastName(LASTNAME);
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> userService.saveUser(user)
+                () -> userService.saveUser(testUser)
         );
 
         assertTrue(exception.getMessage().contains("Password cannot be less than 6 characters"));
+
+        assertNull(userService.findByUsername(testUser.getUsername()));
     }
 
     @Test
     public void savingInvalidPasswordTest() {
-        User user = new User();
-        user.setUsername("Lokkki");
-        user.setPassword("iam Pass");
-        user.setEmail("email@gmail.com");
-        user.setFirstName("Loki");
-        user.setLastName("High");
+        testUser.setUsername(USERNAME);
+        testUser.setPassword("sho   rt");
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName(FIRSTNAME);
+        testUser.setLastName(LASTNAME);
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> userService.saveUser(user)
+                () -> userService.saveUser(testUser)
         );
 
         assertTrue(exception.getMessage().contains("Password cannot contain a space"));
+        assertNull(userService.findByUsername(testUser.getUsername()));
     }
 
     @Test
     public void savingInvalidUsernameTest() {
-        User user = new User();
-        user.setUsername("Lo kki");
-        user.setPassword("iamPassword");
-        user.setEmail("email@gmail.com");
-        user.setFirstName("Loki");
-        user.setLastName("High");
+        testUser.setUsername("iam_ not correct");
+        testUser.setPassword(PASSWORD);
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName(FIRSTNAME);
+        testUser.setLastName(LASTNAME);
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> userService.saveUser(user)
+                () -> userService.saveUser(testUser)
         );
 
         assertTrue(exception.getMessage().contains("Username cannot contain a space"));
+
+        assertNull(userService.findByUsername(testUser.getUsername()));
     }
 
     @Test
     public void savingInvalidUsernameLengthTest() {
-        User user = new User();
-        user.setUsername("Loki");
-        user.setPassword("iamPassword");
-        user.setEmail("email@gmail.com");
-        user.setFirstName("Loki");
-        user.setLastName("High");
+        testUser.setUsername("iam_");
+        testUser.setPassword(PASSWORD);
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName(FIRSTNAME);
+        testUser.setLastName(LASTNAME);
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> userService.saveUser(user)
+                () -> userService.saveUser(testUser)
         );
 
         assertTrue(exception.getMessage().contains("Username cannot be less than 6 characters"));
+
+        assertNull(userService.findByUsername(testUser.getUsername()));
     }
 
     @Test
     public void savingInvalidFirstnameTest() {
-        User user = new User();
-        user.setUsername("Lokkki");
-        user.setPassword("iamPassword");
-        user.setEmail("email@gmail.com");
-        user.setFirstName("Lo ki");
-        user.setLastName("High");
+        testUser.setUsername(USERNAME);
+        testUser.setPassword(PASSWORD);
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName("user name");
+        testUser.setLastName(LASTNAME);
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> userService.saveUser(user)
+                () -> userService.saveUser(testUser)
         );
 
-        assertTrue(exception.getMessage().contains("Firstname cannot contain a space"));
+        assertTrue(exception.getMessage().contains("First name cannot contain a space"));
+        assertNull(userService.findByUsername(testUser.getUsername()));
     }
 
     @Test
     public void savingInvalidLastnameTest() {
-        User user = new User();
-        user.setUsername("Lokkki");
-        user.setPassword("iamPassword");
-        user.setEmail("email@gmail.com");
-        user.setFirstName("Loki");
-        user.setLastName("Hi gh");
+        testUser.setUsername(USERNAME);
+        testUser.setPassword(PASSWORD);
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName(USERNAME);
+        testUser.setLastName("last name");
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> userService.saveUser(user)
+                () -> userService.saveUser(testUser)
         );
 
-        assertTrue(exception.getMessage().contains("Lastname cannot contain a space"));
+        assertTrue(exception.getMessage().contains("Last name cannot contain a space"));
+        assertNull(userService.findByUsername(testUser.getUsername()));
     }
 
 
     /*CRAZY PATH TESTS*/
 
     @Test
-    public void savingCrazyLongUsernameValidTest() {
-        User user = new User();
-        user.setUsername("L" + "o".repeat(150));
-        user.setPassword("iamPassword");
-        user.setEmail("crazy@test.com");
-        user.setFirstName("Crazy");
-        user.setLastName("User");
+    public void savingCrazyLongUsernameInValidTest() {
+        testUser.setUsername("L" + "o".repeat(150));
+        testUser.setPassword(PASSWORD);
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName(FIRSTNAME);
+        testUser.setLastName(LASTNAME);
 
-        assertDoesNotThrow(() -> userService.saveUser(user));
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> userService.saveUser(testUser)
+        );
+
+        assertTrue(exception.getMessage().contains("Username cannot exceed 10 characters"));
+
+        assertNull(userService.findByUsername(testUser.getUsername()));
     }
 
     @Test
     public void savingEmojiInFirstnameTest() {
-        User user = new User();
-        user.setUsername("EmojiUser");
-        user.setPassword("iamPassword");
-        user.setEmail("emoji@test.com");
-        user.setFirstName("😎Cool");
-        user.setLastName("User");
+        testUser.setUsername(USERNAME);
+        testUser.setPassword(PASSWORD);
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName("😎Cool");
+        testUser.setLastName(LASTNAME);
 
-        assertDoesNotThrow(() -> userService.saveUser(user));
+        assertDoesNotThrow(() -> userService.saveUser(testUser));
+        User saved = userService.findByUsername(USERNAME);
+
+        assertEquals(USERNAME, saved.getUsername());
+        assertEquals(EMAIL, saved.getEmail());
+        assertEquals("😎Cool", saved.getFirstName());
+        assertEquals(LASTNAME, saved.getLastName());
+        assertTrue(encoder.matches(PASSWORD, saved.getPassword()));
+
     }
 
     @Test
     public void savingUsernameCaseSensitiveTest() {
+        List<User> users = new ArrayList<>();
         User user1 = new User();
         user1.setUsername("caseUser");
         user1.setPassword("Pass123!");
@@ -270,9 +303,10 @@ public class UserServiceTest {
         );
 
         assertTrue(exception.getMessage().contains("Username already exists"));
+        users.add(userService.findByUsername(user1.getUsername()));
+        assertTrue(users.size()==1);
     }
-
-
+    //TODO: Continue starting at this point
     /**
      * HAPPY PATH: correct username & correct password
      */

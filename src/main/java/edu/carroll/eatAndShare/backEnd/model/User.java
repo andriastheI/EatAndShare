@@ -32,7 +32,7 @@ public class User {
     private Integer id;
 
     /** Unique username associated with this user. */
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", nullable = false, unique = true, length = 10)
     private String username;
 
     /** User's password (stored as a hashed string). */

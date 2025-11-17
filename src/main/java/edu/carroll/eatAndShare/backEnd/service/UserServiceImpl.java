@@ -107,6 +107,8 @@ public class UserServiceImpl implements UserService {
 
         if (user.getUsername().length() < 6)
             throw new IllegalArgumentException("Username cannot be less than 6 characters");
+        if (user.getUsername().length() > 10)
+            throw new IllegalArgumentException("Username cannot exceed 10 characters");
 
         if (user.getEmail() == null || user.getEmail().isBlank())
             throw new IllegalArgumentException("Email cannot be empty");
