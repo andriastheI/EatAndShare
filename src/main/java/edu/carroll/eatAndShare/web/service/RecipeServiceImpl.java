@@ -25,8 +25,6 @@ import java.util.Arrays;
  */
 @Service
 @Transactional
-
-
 public class RecipeServiceImpl implements RecipeService {
 
 
@@ -60,7 +58,6 @@ public class RecipeServiceImpl implements RecipeService {
      * @param userRepo              repository for {@link User} entities
      * @param categoryRepo          repository for {@link Category} entities
      */
-
     public RecipeServiceImpl(RecipeRepository recipeRepo,
                              IngredientRepository ingredientRepo,
                              RecipeIngredientRepository recipeIngredientRepo,

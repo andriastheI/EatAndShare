@@ -2,6 +2,7 @@ package edu.carroll.eatAndShare.backEnd.model;
 
 import jakarta.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents an ingredient used in recipes within the EatAndShare application.
@@ -65,5 +66,17 @@ public class Ingredient {
     /** @param ingredientName sets the ingredient name */
     public void setIngredientName(String ingredientName) {
         this.ingredientName = ingredientName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Ingredient that = (Ingredient) o;
+        return Objects.equals(ingredientName, that.ingredientName) && Objects.equals(recipeIngredients, that.recipeIngredients);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ingredientName, recipeIngredients);
     }
 }
