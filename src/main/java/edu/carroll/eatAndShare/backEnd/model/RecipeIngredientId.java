@@ -5,24 +5,18 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
+ * Filename: RecipeIngredientId.java
+ * Author: Andrias
+ * Date: October 11, 2025
+ *
+ * Description:
  * Represents the composite primary key for the RecipeIngredient entity.
- *
- * <p>This class combines the IDs of both {@link Recipe} and {@link Ingredient}
- * to uniquely identify each record in the recipe-ingredient join table.</p>
- *
- * <p>Marked with {@link Embeddable} to indicate that it is not a standalone
- * entity but an embeddable key used by {@link RecipeIngredient}.</p>
- *
- * <p>Implements {@link Serializable} to allow to Hibernate to serialize key objects
- * when persisting or caching.</p>
- *
- * <p>The equals() and hashCode() methods are overridden to ensure correct
- * identity comparison when Hibernate looks up records by composite key.</p>
- *
- * @author Andrias
- * @version 1.0
- * @since 2025-10-11
+ * This key uniquely identifies a recipe-ingredient entry by combining
+ * both the recipe ID and the ingredient ID. Marked as @Embeddable
+ * because it is used inside RecipeIngredient rather than being a
+ * standalone entity.
  */
+
 @Embeddable
 public class RecipeIngredientId implements Serializable {
 
@@ -32,11 +26,11 @@ public class RecipeIngredientId implements Serializable {
     /** ID of the associated ingredient. */
     private Integer ingredientId;
 
-    /** Default constructor (required by JPA). */
+    /** Default constructor required by JPA. */
     public RecipeIngredientId() {}
 
     /**
-     * Parameterized constructor for creating a composite key.
+     * Constructs a composite key using the provided recipe and ingredient IDs.
      *
      * @param recId the recipe ID
      * @param ingredientId the ingredient ID
@@ -46,31 +40,48 @@ public class RecipeIngredientId implements Serializable {
         this.ingredientId = ingredientId;
     }
 
-    /** @return the recipe ID */
+    /**
+     * Returns the recipe ID.
+     *
+     * @return the recipe ID
+     */
     public Integer getRecId() {
         return recId;
     }
 
-    /** @param recId sets the recipe ID */
+    /**
+     * Sets the recipe ID.
+     *
+     * @param recId the recipe ID to assign
+     */
     public void setRecId(Integer recId) {
         this.recId = recId;
     }
 
-    /** @return the ingredient ID */
+    /**
+     * Returns the ingredient ID.
+     *
+     * @return the ingredient ID
+     */
     public Integer getIngredientId() {
         return ingredientId;
     }
 
-    /** @param ingredientId sets the ingredient ID */
+    /**
+     * Sets the ingredient ID.
+     *
+     * @param ingredientId the ingredient ID to assign
+     */
     public void setIngredientId(Integer ingredientId) {
         this.ingredientId = ingredientId;
     }
 
     /**
-     * Compares two RecipeIngredientId objects for equality based on both IDs.
+     * Compares this composite key to another object for equality.
+     * Two keys are equal if both the recipe ID and ingredient ID match.
      *
      * @param o the object to compare with
-     * @return true if both recipe and ingredient IDs match
+     * @return true if both IDs match; false otherwise
      */
     @Override
     public boolean equals(Object o) {
@@ -82,9 +93,10 @@ public class RecipeIngredientId implements Serializable {
     }
 
     /**
-     * Generates a hash code based on both recipe and ingredient IDs.
+     * Generates a hash code for this composite key based on
+     * the recipe ID and ingredient ID.
      *
-     * @return hash code for composite key
+     * @return the generated hash code
      */
     @Override
     public int hashCode() {

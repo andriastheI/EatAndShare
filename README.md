@@ -31,29 +31,32 @@ cd EatAndShare
 ### 4. Configure MySQL
 Make sure MySQL is running and configured with the correct database, username, and password.
 ```
+-- Create a data base with the name 'cookbook'
 CREATE DATABASE cookbook;
 
+-- Make sure the username is 'blackfe' and password 'iampassword'
 CREATE USER 'blackfe'@'localhost' IDENTIFIED BY 'iampassword';
-CREATE USER 'blackfe'@'%' IDENTIFIED BY 'iampassword';
 
 GRANT ALL PRIVILEGES ON cookbook.* TO 'blackfe'@'localhost' WITH GRANT OPTION;
-GRANT ALL PRIVILEGES ON cookbook.* TO 'blackfe'@'%' WITH GRANT OPTION;
 
 FLUSH PRIVILEGES;
 
+/* if you want a database with different name and credentials, make sure they match exactly
+ with the credentials in the src/main/resources/application.properties file.
+*/
 ```
 ### 5. Verify Application Configuration
 Check the file: src/main/resources/application.properties if it has the same configuration as the following
 ```
-spring.datasource.url=jdbc:mysql://localhost:3306/cookbook
-spring.datasource.username=blackfe
-spring.datasource.password=iampassword
+spring.datasource.url=jdbc:mysql://localhost:3306/cookbook # make sure this matches the database name
+spring.datasource.username=blackfe # make sure this matches your username
+spring.datasource.password=iampassword # make sure this matches your password
 
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
 
-"Image Upload Directory"
+#"Image Upload Directory"
 upload.dir=uploads
 ```
 Ensure it is properly configured for your local environment.

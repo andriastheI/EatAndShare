@@ -1,45 +1,34 @@
 package edu.carroll.eatAndShare.backEnd.model;
 
 import jakarta.persistence.*;
+import java.util.Objects;
 
 /**
- * Represents the join table entity between {@link Recipe} and {@link Ingredient}.
+ * Filename: RecipeIngredient.java
+ * Author: Andrias
+ * Date: October 11, 2025
  *
- * <p>This entity links recipes and ingredients together using a composite key,
- * allowing each recipe to specify the ingredients used, their quantity,
- * and the unit of measurement (e.g., "2 cups of flour").</p>
- *
- * <p>In database terms, this maps to the <strong>recipe_ingredient</strong> table,
- * which uses a composite primary key defined in {@link RecipeIngredientId}.</p>
- *
- * <p>Relationships:</p>
- * <ul>
- *   <li>{@link Recipe} – Many-to-One: each entry belongs to a single recipe.</li>
- *   <li>{@link Ingredient} – Many-to-One: each entry refers to a single ingredient.</li>
- * </ul>
- *
- * <p>Each row in this table describes a single ingredient used in a recipe,
- * including its quantity and unit of measurement.</p>
- *
- * @author Andrias
- * @version 1.0
- * @since 2025-10-11
+ * Description:
+ * This entity represents the join table between Recipe and Ingredient.
+ * Each instance describes a single ingredient used in a specific recipe,
+ * including quantity and measurement unit. It maps to the
+ * "recipe_ingredient" table using a composite key defined in
+ * RecipeIngredientId.
  */
+
 @Entity
 @Table(name = "recipe_ingredient")
 public class RecipeIngredient {
 
     /**
-     * Composite primary key for this entity, defined in {@link RecipeIngredientId}.
-     * Combines both recipe ID and ingredient ID into a single key.
+     * Composite primary key combining recipe ID and ingredient ID.
      */
     @EmbeddedId
     private RecipeIngredientId id = new RecipeIngredientId();
 
     /**
-     * Many-to-one relationship to the {@link Recipe} entity.
-     * The {@code @MapsId("recId")} annotation tells JPA that the recipe ID
-     * field inside {@link RecipeIngredientId} maps to this entity relationship.
+     * Many-to-one relationship with Recipe.
+     * Maps the recipe ID inside the composite key.
      */
     @ManyToOne
     @MapsId("recId")
@@ -47,68 +36,135 @@ public class RecipeIngredient {
     private Recipe recipe;
 
     /**
-     * Many-to-one relationship to the {@link Ingredient} entity.
-     * The {@code @MapsId("ingredientId")} annotation ensures that the
-     * ingredient ID field inside {@link RecipeIngredientId} maps correctly.
+     * Many-to-one relationship with Ingredient.
+     * Maps the ingredient ID inside the composite key.
      */
     @ManyToOne
     @MapsId("ingredientId")
     @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;
 
-    /** The quantity of the ingredient used (e.g., "2"). */
+    /** Quantity of the ingredient used (e.g., "2"). */
     private String quantity;
 
-    /** The measurement unit for the ingredient (e.g., "cups", "grams"). */
+    /** Unit of measurement for the ingredient (e.g., "cups", "grams"). */
     private String unit;
 
-    /** @return the composite key for this recipe-ingredient entry */
+    /**
+     * Returns the composite key for this recipe-ingredient entry.
+     *
+     * @return the composite primary key
+     */
     public RecipeIngredientId getId() {
         return id;
     }
 
-    /** @param id sets the composite key for this recipe-ingredient entry */
+    /**
+     * Sets the composite primary key for this entry.
+     *
+     * @param id the key to assign
+     */
     public void setId(RecipeIngredientId id) {
         this.id = id;
     }
 
-    /** @return the associated recipe */
+    /**
+     * Returns the associated recipe.
+     *
+     * @return the Recipe object
+     */
     public Recipe getRecipe() {
         return recipe;
     }
 
-    /** @param recipe sets the associated recipe */
+    /**
+     * Sets the associated recipe.
+     *
+     * @param recipe the recipe to assign
+     */
     public void setRecipe(Recipe recipe) {
         this.recipe = recipe;
     }
 
-    /** @return the associated ingredient */
+    /**
+     * Returns the associated ingredient.
+     *
+     * @return the Ingredient object
+     */
     public Ingredient getIngredient() {
         return ingredient;
     }
 
-    /** @param ingredient sets the associated ingredient */
+    /**
+     * Sets the associated ingredient.
+     *
+     * @param ingredient the ingredient to assign
+     */
     public void setIngredient(Ingredient ingredient) {
         this.ingredient = ingredient;
     }
 
-    /** @return the quantity of the ingredient used */
+    /**
+     * Returns the quantity used for this ingredient.
+     *
+     * @return the quantity value
+     */
     public String getQuantity() {
         return quantity;
     }
 
-    /** @param quantity sets the quantity of the ingredient used */
+    /**
+     * Sets the quantity used for this ingredient.
+     *
+     * @param quantity the quantity to assign
+     */
     public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 
-    /** @return the measurement unit for the ingredient */
+    /**
+     * Returns the measurement unit for this ingredient.
+     *
+     * @return the measurement unit
+     */
     public String getUnit() {
         return unit;
     }
 
-    /** @param unit sets the measurement unit for the ingredient */
+    /**
+     * Sets the measurement unit for this ingredient.
+     *
+     * @param unit the unit to assign
+     */
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    /**
+     * Compares this RecipeIngredient with another for equality.
+     * Equality is based on recipe, ingredient, quantity, and unit fields.
+     *
+     * @param o the object to compare with
+     * @return true if both entries are equal; false otherwise
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        RecipeIngredient that = (RecipeIngredient) o;
+        return Objects.equals(recipe, that.recipe) &&
+                Objects.equals(ingredient, that.ingredient) &&
+                Objects.equals(quantity, that.quantity) &&
+                Objects.equals(unit, that.unit);
+    }
+
+    /**
+     * Generates a hash code for this RecipeIngredient entry based on
+     * its recipe, ingredient, quantity, and measurement unit.
+     *
+     * @return the computed hash code
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(recipe, ingredient, quantity, unit);
     }
 }

@@ -4,60 +4,57 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 import java.io.File;
 import java.nio.file.Paths;
 
 /**
- * Web configuration class for handling static file resources in the EatAndShare application.
+ * Filename: WebConfig.java
+ * Author: Andrias, Selin
+ * Date: October 20, 2025
  *
- * <p>This configuration maps uploaded files (e.g., recipe images)
- * to a public web-accessible directory. It ensures that any file
- * saved under the configured upload directory can be served through
- * URLs starting with <strong>/uploads/</strong>.</p>
+ * Description:
+ * Web MVC configuration used to serve uploaded static resources such as
+ * recipe images. This class maps the local upload directory to the public
+ * URL path "/uploads/**", allowing images saved on the file system to be
+ * accessible through the browser.
  *
- * <p>For example, if a file is uploaded to:</p>
- * <pre>
- *     /home/dre/finalproject/uploads/recipe1.png
- * </pre>
- * it can be accessed through the browser at:
- * <pre>
- *     http://localhost:8080/uploads/recipe1.png
- * </pre>
- *
- * <p>The actual directory path is configurable via the
- * <strong>file.upload-dir</strong> property in
- * <code>application.properties</code> or <code>application.yml</code>.</p>
- *
- * @author Selin
- * @version 1.0
- * @since 2025-10-11
+ * The physical location of uploaded files is controlled through the
+ * "file.upload-dir" property in application.properties.
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
     /**
-     * The root directory for uploaded files, injected from application properties.
-     * <p>Example property in <code>application.properties</code>:</p>
-     * <pre>
-     *     file.upload-dir=uploads
-     * </pre>
+     * Directory where uploaded files are stored.
+     * Injected from application.properties using the key:
+     * file.upload-dir=uploads
      */
     @Value("${file.upload-dir}")
     private String uploadDir;
 
     /**
-     * Adds custom resource handlers to serve files from the local file system.
-     * <p>This method maps the virtual path <strong>/uploads/**</strong>
-     * to the physical directory specified by <code>file.upload-dir</code>.</p>
+     * Registers a resource handler so that files stored in the upload directory
+     * can be served statically via URLs beginning with "/uploads/**".
      *
-     * @param registry the {@link ResourceHandlerRegistry} used to register resource mappings
+     * Example:
+     * If an image is stored at:
+     *     uploads/cake.png
+     *
+     * It can be accessed at:
+     *     http://localhost:8080/uploads/cake.png
+     *
+     * @param registry the registry used to define resource mappings
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Resolve the absolute path of the upload directory
-        String absolutePath = Paths.get(uploadDir).toFile().getAbsolutePath() + File.separator;
 
-        // Map requests to /uploads/** to files stored in the upload directory
+        // Resolve absolute filesystem path to the upload directory
+        String absolutePath = Paths.get(uploadDir)
+                .toFile()
+                .getAbsolutePath() + File.separator;
+
+        // Map virtual "/uploads/**" URL requests to actual files
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:" + absolutePath);
     }
