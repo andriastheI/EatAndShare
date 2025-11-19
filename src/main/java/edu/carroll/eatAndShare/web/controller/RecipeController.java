@@ -1,15 +1,18 @@
 package edu.carroll.eatAndShare.web.controller;
 
+import edu.carroll.eatAndShare.backEnd.model.Recipe;
 import edu.carroll.eatAndShare.backEnd.service.RecipeService;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import edu.carroll.eatAndShare.backEnd.model.Recipe;
 
 import java.util.List;
 
@@ -35,10 +38,6 @@ public class RecipeController {
 
     /** Service responsible for recipe creation, storage, and retrieval. */
     private final RecipeService recipeService;
-
-    /** Upper-bound validation values for prep/cook durations. */
-    private static final int MAX_PREP_MINS = 600;   // 10 hours
-    private static final int MAX_COOK_MINS = 600;   // 10 hours
 
     /**
      * Constructor-based dependency injection.

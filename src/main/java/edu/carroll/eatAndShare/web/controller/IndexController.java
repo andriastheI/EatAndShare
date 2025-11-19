@@ -1,18 +1,21 @@
 package edu.carroll.eatAndShare.web.controller;
 
-import edu.carroll.eatAndShare.backEnd.service.RecipeService;
 import edu.carroll.eatAndShare.backEnd.model.User;
-import edu.carroll.eatAndShare.backEnd.form.UserForm;
+import edu.carroll.eatAndShare.backEnd.service.RecipeService;
 import edu.carroll.eatAndShare.backEnd.service.UserService;
+import edu.carroll.eatAndShare.backEnd.form.UserForm;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import jakarta.servlet.http.HttpSession;
 
 /**
  * Filename: IndexController.java
@@ -32,20 +35,26 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class IndexController {
 
-    /** Logger for debugging and request lifecycle tracing. */
+    /**
+     * Logger for debugging and request lifecycle tracing.
+     */
     private static final Logger log = LoggerFactory.getLogger(IndexController.class);
 
-    /** Service for user authentication and data retrieval. */
+    /**
+     * Service for user authentication and data retrieval.
+     */
     private final UserService userService;
 
-    /** Service for retrieving recipe data for homepage & categories. */
+    /**
+     * Service for retrieving recipe data for homepage & categories.
+     */
     private final RecipeService recipeService;
 
     /**
      * Constructor-based injection of required services.
      *
-     * @param userService    the user service used for authentication + registration
-     * @param recipeService  the recipe service for listing and searching recipes
+     * @param userService   the user service used for authentication + registration
+     * @param recipeService the recipe service for listing and searching recipes
      */
     public IndexController(UserService userService, RecipeService recipeService) {
         this.userService = userService;
@@ -55,11 +64,11 @@ public class IndexController {
     /**
      * Displays the homepage with optional search functionality.
      *
-     * @param q        search query (optional)
-     * @param page     current page index
-     * @param size     number of elements per page
-     * @param model    MVC model for view rendering
-     * @param session  HTTP session used to persist login state
+     * @param q       search query (optional)
+     * @param page    current page index
+     * @param size    number of elements per page
+     * @param model   MVC model for view rendering
+     * @param session HTTP session used to persist login state
      * @return the index view
      */
     @GetMapping("/")
@@ -77,12 +86,8 @@ public class IndexController {
             model.addAttribute("registerForm", new User());
         }
 
-        // Move session values → model (used by Thymeleaf header)
-        model.addAttribute("loggedIn", session.getAttribute("loggedIn"));
-        model.addAttribute("username", session.getAttribute("username"));
-        model.addAttribute("email", session.getAttribute("email"));
-        model.addAttribute("firstName", session.getAttribute("firstName"));
-        model.addAttribute("lastName", session.getAttribute("lastName"));
+        // Populate login/session data into model
+        populateLoginState(model, session);
 
         boolean searching = q != null && !q.isBlank();
         model.addAttribute("searching", searching);
@@ -106,7 +111,7 @@ public class IndexController {
                 page, size, org.springframework.data.domain.Sort.by("id").descending()
         );
 
-        // Perform search (case-insensitive)
+        // Perform search (case‐insensitive)
         var recipesPage = recipeService.searchRecipes(q.trim(), pageable);
 
         // Populate model for rendering
@@ -168,9 +173,9 @@ public class IndexController {
     /**
      * Registers a new user, validates uniqueness, and handles errors.
      *
-     * @param user   user data from registration form
-     * @param model  model for rendering view
-     * @param attrs  redirect flash attributes
+     * @param user  user data from registration form
+     * @param model model for rendering view
+     * @param attrs redirect flash attributes
      * @return redirect back to homepage
      */
     @PostMapping("/register")
@@ -221,42 +226,28 @@ public class IndexController {
     @GetMapping("/services")
     public String services(HttpSession session, Model model, RedirectAttributes attrs) {
 
-        Boolean loggedIn = (Boolean) session.getAttribute("loggedIn");
-
-        // Redirect unauthorized access to home with login modal
-        if (loggedIn == null || !loggedIn) {
+        Boolean logged = (Boolean) session.getAttribute("loggedIn");
+        if (logged == null || !logged) {
             attrs.addFlashAttribute("showLogin", true);
             return "redirect:/";
         }
 
-        // Load session info for rendering header
-        model.addAttribute("username", session.getAttribute("username"));
-        model.addAttribute("email", session.getAttribute("email"));
-        model.addAttribute("firstName", session.getAttribute("firstName"));
-        model.addAttribute("lastName", session.getAttribute("lastName"));
-        model.addAttribute("loggedIn", true);
-
+        // Populate login/session data into model
+        populateLoginState(model, session);
         return "services";
     }
 
     @GetMapping("/password")
     public String passwords(HttpSession session, Model model, RedirectAttributes attrs) {
 
-        Boolean loggedIn = (Boolean) session.getAttribute("loggedIn");
-
-        // Redirect unauthorized users
-        if (loggedIn == null || !loggedIn) {
+        Boolean logged = (Boolean) session.getAttribute("loggedIn");
+        if (logged == null || !logged) {
             attrs.addFlashAttribute("showLogin", true);
             return "redirect:/";
         }
 
-        // Populate header info
-        model.addAttribute("loggedIn", true);
-        model.addAttribute("username", session.getAttribute("username"));
-        model.addAttribute("email", session.getAttribute("email"));
-        model.addAttribute("firstName", session.getAttribute("firstName"));
-        model.addAttribute("lastName", session.getAttribute("lastName"));
-
+        // Populate login/session data into model
+        populateLoginState(model, session);
         return "password";
     }
 
@@ -273,8 +264,8 @@ public class IndexController {
 
         String username = (String) session.getAttribute("username");
 
-        Boolean loggedIn = (Boolean) session.getAttribute("loggedIn");
-        if (loggedIn == null || !loggedIn) {
+        Boolean logged = (Boolean) session.getAttribute("loggedIn");
+        if (logged == null || !logged) {
             attrs.addFlashAttribute("showLogin", true);
             return "redirect:/";
         }
@@ -287,7 +278,6 @@ public class IndexController {
 
         try {
             boolean updated = userService.updatePassword(username, oldPassword, newPassword);
-
             if (!updated) {
                 attrs.addFlashAttribute("error", "Old password is incorrect.");
                 return "redirect:/password";
@@ -302,51 +292,63 @@ public class IndexController {
         }
     }
 
-    /** Load recipes for Breakfast category. */
+    /**
+     * Load recipes for Breakfast category.
+     */
     @GetMapping("/breakfast")
     public String showBreakfast(Model model, HttpSession session) {
-        populateSessionAttributes(model, session);
+        populateLoginState(model, session);
         model.addAttribute("recipes", recipeService.findByCategoryName("Breakfast"));
         return "breakfast";
     }
 
-    /** Load recipes for Lunch category. */
+    /**
+     * Load recipes for Lunch category.
+     */
     @GetMapping("/lunch")
     public String showLunch(Model model, HttpSession session) {
-        populateSessionAttributes(model, session);
+        populateLoginState(model, session);
         model.addAttribute("recipes", recipeService.findByCategoryName("Lunch"));
         return "lunch";
     }
 
-    /** Load recipes for Dinner category. */
+    /**
+     * Load recipes for Dinner category.
+     */
     @GetMapping("/dinner")
     public String showDinner(Model model, HttpSession session) {
-        populateSessionAttributes(model, session);
+        populateLoginState(model, session);
         model.addAttribute("recipes", recipeService.findByCategoryName("Dinner"));
         return "dinner";
     }
 
-    /** Load recipes for Salad category. */
+    /**
+     * Load recipes for Salad category.
+     */
     @GetMapping("/salad")
     public String showSalad(Model model, HttpSession session) {
-        populateSessionAttributes(model, session);
+        populateLoginState(model, session);
         model.addAttribute("recipes", recipeService.findByCategoryName("Salad"));
         return "salad";
     }
 
-    /** Load recipes for Dessert category. */
+    /**
+     * Load recipes for Dessert category.
+     */
     @GetMapping("/dessert")
     public String showDessert(Model model, HttpSession session) {
-        populateSessionAttributes(model, session);
+        populateLoginState(model, session);
         model.addAttribute("recipes", recipeService.findByCategoryName("Dessert"));
         return "dessert";
     }
 
     /**
-     * Helper method to populate session → model attributes for category pages.
+     * Helper method to populate session → model attributes for every page.
      */
-    private void populateSessionAttributes(Model model, HttpSession session) {
-        model.addAttribute("loggedIn", session.getAttribute("loggedIn"));
+    private void populateLoginState(Model model, HttpSession session) {
+        Boolean logged = (Boolean) session.getAttribute("loggedIn");
+        boolean safeLogged = logged != null && logged;
+        model.addAttribute("loggedIn", safeLogged);
         model.addAttribute("username", session.getAttribute("username"));
         model.addAttribute("email", session.getAttribute("email"));
         model.addAttribute("firstName", session.getAttribute("firstName"));
@@ -359,8 +361,8 @@ public class IndexController {
     @GetMapping("/about")
     public String about(Model model, HttpSession session) {
         // Load login/user info into the model for header rendering
-        populateSessionAttributes(model, session);
-        return "about";  // Render about.html
+        populateLoginState(model, session);
+        return "about";
     }
 
     /**
@@ -369,8 +371,7 @@ public class IndexController {
     @GetMapping("/contact")
     public String contactPage(Model model, HttpSession session) {
         // Add session info (username, loggedIn, etc.) for the contact page header
-        populateSessionAttributes(model, session);
-        return "contact";  // Render contact.html
+        populateLoginState(model, session);
+        return "contact";
     }
-
 }

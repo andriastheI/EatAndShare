@@ -104,5 +104,5 @@ public interface RecipeService {
      * @param id   the recipe ID
      * @param user the owner requesting deletion
      */
-    void deleteRecipeByIdAndUser(Integer id, User user);
+    boolean deleteRecipeByIdAndUser(Integer id, User user);
 }

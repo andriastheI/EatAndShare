@@ -227,14 +227,31 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<Recipe> latestRecipes() {
         List<Recipe> recipes = recipeRepo.findAllByOrderByIdDesc();
+        if (recipes == null) {
+            return List.of();
+        }
         return recipes;
+
+
     }
+
+
 
     /**
      * Returns a paginated list of newest recipes.
      */
     @Override
     public Page<Recipe> latestRecipes(Pageable pageable) {
+        if (pageable == null) {
+            throw new IllegalArgumentException("Pageable cannot be null");
+        }
+        if (pageable.getPageNumber() < 0) {
+            throw new IllegalArgumentException("Page index cannot be negative");
+        }
+        if (pageable.getPageSize() <= 0) {
+            throw new IllegalArgumentException("Page size must be positive");
+        }
+
         return recipeRepo.findAllByOrderByIdDesc(pageable);
     }
 
@@ -255,12 +272,20 @@ public class RecipeServiceImpl implements RecipeService {
      */
     @Override
     public List<Recipe> findByCategoryName(String categoryName) {
-        if (categoryName == null) return List.of();
+        if (categoryName == null) {
+            return List.of();
+        }
 
         String normalized = categoryName.strip().replaceAll("\\s+", " ");
-        if (normalized.isEmpty()) return List.of();
+        if (normalized.isEmpty()) {
+            return List.of();
+        }
 
-        return recipeRepo.findByCategory_CategoryNameIgnoreCase(normalized);
+        List<Recipe> recipes = recipeRepo.findByCategory_CategoryNameIgnoreCase(normalized);
+        if (recipes == null) {
+            return List.of();
+        }
+        return recipes;
     }
 
     /**
@@ -268,9 +293,20 @@ public class RecipeServiceImpl implements RecipeService {
      */
     @Override
     public Page<Recipe> searchRecipes(String q, Pageable pageable) {
+        if (pageable == null) {
+            throw new IllegalArgumentException("Pageable cannot be null");
+        }
+        if (pageable.getPageNumber() < 0) {
+            throw new IllegalArgumentException("Page index cannot be negative");
+        }
+        if (pageable.getPageSize() <= 0) {
+            throw new IllegalArgumentException("Page size must be positive");
+        }
+
         if (q == null || q.trim().isEmpty()) {
             return latestRecipes(pageable);
         }
+
         return recipeRepo.search(q.trim(), pageable);
     }
 
@@ -279,22 +315,35 @@ public class RecipeServiceImpl implements RecipeService {
      */
     @Override
     public List<Recipe> findByUser(User user) {
-        if (user == null || user.getId() == null) return List.of();
-        return recipeRepo.findByUser(user);
+        if (user == null || user.getId() == null) {
+            return List.of();
+        }
+
+        List<Recipe> recipes = recipeRepo.findByUser(user);
+        if (recipes == null) {
+            return List.of();
+        }
+        return recipes;
     }
 
     /**
      * Deletes a recipe only if it belongs to the given user.
      */
     @Override
-    public void deleteRecipeByIdAndUser(Integer id, User user) {
-        if (id == null || user == null) return;
+    public boolean deleteRecipeByIdAndUser(Integer id, User user) {
+        // Invalid inputs → nothing deleted
+        if (id == null || user == null || user.getId() == null) {
+            return false;
+        }
 
-        recipeRepo.findById(id).ifPresent(recipe -> {
-            if (recipe.getUser().getId().equals(user.getId())) {
-                recipeRepo.delete(recipe);
-            }
-        });
+        return recipeRepo.findById(id)
+                .filter(recipe -> recipe.getUser() != null &&
+                        user.getId().equals(recipe.getUser().getId()))
+                .map(recipe -> {
+                    recipeRepo.delete(recipe);
+                    return true;
+                })
+                .orElse(false);
     }
 
 }

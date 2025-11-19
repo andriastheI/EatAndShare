@@ -1,13 +1,16 @@
 package edu.carroll.eatAndShare.web.controller;
 
+import edu.carroll.eatAndShare.backEnd.model.Recipe;
+import edu.carroll.eatAndShare.backEnd.model.User;
 import edu.carroll.eatAndShare.backEnd.service.RecipeService;
 import edu.carroll.eatAndShare.backEnd.service.UserService;
-import edu.carroll.eatAndShare.backEnd.model.User;
-import edu.carroll.eatAndShare.backEnd.model.Recipe;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
