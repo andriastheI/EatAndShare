@@ -2,14 +2,13 @@ package edu.carroll.eatAndShare.backEnd.service;
 
 import edu.carroll.eatAndShare.backEnd.model.*;
 import edu.carroll.eatAndShare.backEnd.repo.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,7 +27,6 @@ import java.util.List;
  * This class orchestrates interactions between repositories while ensuring
  * clean validation, logging, error handling, and ownership enforcement.
  */
-
 @Service
 public class RecipeServiceImpl implements RecipeService {
 
@@ -99,7 +97,7 @@ public class RecipeServiceImpl implements RecipeService {
                 throw new IllegalArgumentException("Recipe title cannot be empty.");
 
             if (recipeRepo.existsByUser_UsernameAndTitleIgnoreCase(username, trimmedTitle))
-                throw new IllegalArgumentException("You already have a recipe named \"" + trimmedTitle + "\".");
+                throw new IllegalArgumentException("You already have a recipe title saved");
 
             // ----- Category validation -----
             if (categoryName == null || categoryName.isBlank())

@@ -1,6 +1,7 @@
 package edu.carroll.eatAndShare.backEnd.model;
 
 import jakarta.persistence.*;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -18,7 +19,6 @@ import java.util.Objects;
  * a list of recipe-ingredient relationships that define the ingredients,
  * quantities, and measurement units required for the dish.
  */
-
 @Entity
 @Table(name = "recipe")
 public class Recipe {

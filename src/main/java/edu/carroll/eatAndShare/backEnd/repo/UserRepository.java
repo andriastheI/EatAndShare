@@ -1,8 +1,9 @@
 package edu.carroll.eatAndShare.backEnd.repo;
 
-import java.util.List;
 import edu.carroll.eatAndShare.backEnd.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 /**
  * Filename: UserRepository.java
@@ -15,7 +16,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * for looking up users by username or email, as well as for checking
  * uniqueness constraints during registration.
  */
-
 public interface UserRepository extends JpaRepository<User, Integer> {
 
     /**

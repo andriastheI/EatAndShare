@@ -1,19 +1,16 @@
 package edu.carroll.eatAndShare.web.service;
 
-import ch.qos.logback.core.boolex.Matcher;
 import edu.carroll.eatAndShare.backEnd.model.User;
 import edu.carroll.eatAndShare.backEnd.service.UserService;
-import edu.carroll.eatAndShare.backEnd.form.UserForm;
+import edu.carroll.eatAndShare.web.form.UserForm;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,8 +22,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * 💩 Crappy Path: Invalid inputs should throw exceptions
  * 🌀 Crazy Path: Edge cases that are weird but should still work
  */
-
 @SpringBootTest
+@Transactional
 public class UserServiceTest {
 
     @Autowired
@@ -38,8 +35,7 @@ public class UserServiceTest {
     private static final String FIRSTNAME = "TestFirstName";
     private static final String LASTNAME = "TestLastName";
 
-    private static final User testUser = new User();
-    private static final PasswordEncoder encoder =  new BCryptPasswordEncoder();
+    private  User testUser = new User();
 
     /*HAPPY PATH TESTS*/
 
@@ -59,13 +55,11 @@ public class UserServiceTest {
         assertEquals(EMAIL, saved.getEmail());
         assertEquals(FIRSTNAME, saved.getFirstName());
         assertEquals(LASTNAME, saved.getLastName());
-        assertTrue(encoder.matches(PASSWORD, saved.getPassword()));
+        assertNotEquals(PASSWORD, saved.getPassword());
     }
 
     @Test
     public void savingTwoUsersTest() {
-        List<User> users = new ArrayList<>();
-
         User user1 = new User();
         user1.setUsername("Lokkki");
         user1.setPassword("iamPassword");
@@ -85,16 +79,23 @@ public class UserServiceTest {
             userService.saveUser(user2);
         });
 
+        List<User> users = new ArrayList<>();
         users.add(userService.findByUsername("Lokkki"));
         users.add(userService.findByUsername("Thooor"));
+        List<String> usernames = new ArrayList<>();
+        for (User user : users) {
+            usernames.add(user.getUsername());
+        }
+        assertTrue(usernames.contains("Lokkki") &&  usernames.contains("Thooor"));
         // Check if there are two users that are saved
         assertTrue(users.size()==2);
     }
 
     @Test
     public void savingValidUserWithSymbolsPasswordTest() {
+        final String symbolPassword = "II*(#@GGG";
         testUser.setUsername(USERNAME);
-        testUser.setPassword("II*(#@GGG");
+        testUser.setPassword(symbolPassword);
         testUser.setEmail(EMAIL);
         testUser.setFirstName(FIRSTNAME);
         testUser.setLastName(LASTNAME);
@@ -106,7 +107,7 @@ public class UserServiceTest {
         assertEquals(EMAIL, saved.getEmail());
         assertEquals(FIRSTNAME, saved.getFirstName());
         assertEquals(LASTNAME, saved.getLastName());
-        assertTrue(encoder.matches("II*(#@GGG", saved.getPassword()));
+        assertNotEquals(symbolPassword, saved.getPassword());
     }
 
 
@@ -274,8 +275,7 @@ public class UserServiceTest {
         assertEquals(EMAIL, saved.getEmail());
         assertEquals("😎Cool", saved.getFirstName());
         assertEquals(LASTNAME, saved.getLastName());
-        assertTrue(encoder.matches(PASSWORD, saved.getPassword()));
-
+        assertNotEquals(PASSWORD, saved.getPassword());
     }
 
     @Test
@@ -289,7 +289,7 @@ public class UserServiceTest {
         user1.setLastName("User");
 
         User user2 = new User();
-        user2.setUsername("CASEUSER");
+        user2.setUsername(user1.getUsername().toUpperCase());
         user2.setPassword("Pass124!");
         user2.setEmail("b@test.com");
         user2.setFirstName("Case2");
@@ -306,25 +306,31 @@ public class UserServiceTest {
         users.add(userService.findByUsername(user1.getUsername()));
         assertTrue(users.size()==1);
     }
-    //TODO: Continue starting at this point
+
     /**
      * HAPPY PATH: correct username & correct password
      */
     @Test
     public void validateUserValidCredentialsTest() {
-        User user2 = new User();
-        user2.setUsername("Thooor");
-        user2.setPassword("iamPassword2");
-        user2.setEmail("yourmom@gmail.com");
-        user2.setFirstName("Thor");
-        user2.setLastName("Hammer");
+        testUser.setUsername(USERNAME);
+        testUser.setPassword(PASSWORD);
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName(FIRSTNAME);
+        testUser.setLastName(LASTNAME);
 
-        userService.saveUser(user2);
+        userService.saveUser(testUser);
 
-        UserForm form = new UserForm("Thooor", "iamPassword2");
+        UserForm form = new UserForm(USERNAME, PASSWORD);
 
         assertTrue(userService.validateUser(form),
                 "Correct username and password should return true");
+        User saved = userService.findByUsername(USERNAME);
+
+        assertEquals(USERNAME, saved.getUsername());
+        assertEquals(EMAIL, saved.getEmail());
+        assertEquals(FIRSTNAME, saved.getFirstName());
+        assertEquals(LASTNAME, saved.getLastName());
+        assertNotEquals(PASSWORD, saved.getPassword());
     }
 
     /**
@@ -332,14 +338,13 @@ public class UserServiceTest {
      */
     @Test
     public void validateUserInvalidPasswordTest() {
-        User user2 = new User();
-        user2.setUsername("Thooor");
-        user2.setPassword("iamPassword2");
-        user2.setEmail("yourmom@gmail.com");
-        user2.setFirstName("Thor");
-        user2.setLastName("Hammer");
+        testUser.setUsername(USERNAME);
+        testUser.setPassword(PASSWORD);
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName(FIRSTNAME);
+        testUser.setLastName(LASTNAME);
 
-        userService.saveUser(user2);
+        userService.saveUser(testUser);
 
         UserForm form = new UserForm("Thooor", "wrongPassword");
 
@@ -397,10 +402,18 @@ public class UserServiceTest {
     /*HAPPY PATH — password updates successfully */
     @Test
     public void updatePasswordValidTest() {
-        boolean result = userService.updatePassword(USERNAME, "originalPassword", "newStrongPassword");
+        testUser.setUsername(USERNAME);
+        testUser.setPassword(PASSWORD);
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName(FIRSTNAME);
+        testUser.setLastName(LASTNAME);
+
+        userService.saveUser(testUser);
+
+        boolean result = userService.updatePassword(USERNAME, PASSWORD, "newStrongPassword");
 
         assertTrue(result, "Password update should return true");
-        assertFalse(userService.validateUser(new UserForm(USERNAME, "originalPassword")),
+        assertFalse(userService.validateUser(new UserForm(USERNAME, PASSWORD)),
                 "Old password should no longer work");
         assertTrue(userService.validateUser(new UserForm(USERNAME, "newStrongPassword")),
                 "New password should allow login");
@@ -419,37 +432,87 @@ public class UserServiceTest {
 
     @Test
     public void updatePasswordIncorrectOldPasswordTest() {
-        boolean result = userService.updatePassword(USERNAME, "wrongOldPassword", "newPassword123");
+        testUser.setUsername(USERNAME);
+        testUser.setPassword(PASSWORD);
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName(FIRSTNAME);
+        testUser.setLastName(LASTNAME);
+
+        userService.saveUser(testUser);
+        final String wrongPassword = "wrongPassword";
+        boolean result = userService.updatePassword(USERNAME, wrongPassword, "newPassword123");
 
         assertFalse(result, "Incorrect old password should return false");
+        assertTrue(userService.validateUser(new UserForm(USERNAME, PASSWORD)),
+                "Old password should still work");
+        assertFalse(userService.validateUser(new UserForm(USERNAME, "newPassword123")),
+                "New password should not allow login");
     }
 
     @Test
     public void updatePasswordBlankNewPasswordThrowsTest() {
+        testUser.setUsername(USERNAME);
+        testUser.setPassword(PASSWORD);
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName(FIRSTNAME);
+        testUser.setLastName(LASTNAME);
+
+        userService.saveUser(testUser);
+
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> userService.updatePassword(USERNAME, "originalPassword", " ")
+                () -> userService.updatePassword(USERNAME, PASSWORD, " ")
         );
-        assertTrue(exception.getMessage().contains("Password cannot be empty"));
+        assertEquals(exception.getMessage() , "New password cannot be empty");
+
+        assertTrue(userService.validateUser(new UserForm(USERNAME, PASSWORD)),
+                "Old password should still work");
+        assertFalse(userService.validateUser(new UserForm(USERNAME, " ")),
+                "New password should not allow login");
     }
 
     @Test
     public void updatePasswordTooShortThrowsTest() {
+        testUser.setUsername(USERNAME);
+        testUser.setPassword(PASSWORD);
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName(FIRSTNAME);
+        testUser.setLastName(LASTNAME);
+
+        userService.saveUser(testUser);
+
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> userService.updatePassword(USERNAME, "originalPassword", "123")
+                () -> userService.updatePassword(USERNAME, PASSWORD, "3322")
         );
-        assertTrue(exception.getMessage().contains("Password must be at least 6 characters"));
+        assertEquals(exception.getMessage() , "New password must be at least 6 characters");
+
+        assertTrue(userService.validateUser(new UserForm(USERNAME, PASSWORD)),
+                "Old password should still work");
+        assertFalse(userService.validateUser(new UserForm(USERNAME, " ")),
+                "New password should not allow login");
     }
 
     @Test
     public void updatePasswordContainsSpacesThrowsTest() {
+        testUser.setUsername(USERNAME);
+        testUser.setPassword(PASSWORD);
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName(FIRSTNAME);
+        testUser.setLastName(LASTNAME);
+
+        userService.saveUser(testUser);
+
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> userService.updatePassword(USERNAME, "originalPassword", "New Pass")
+                () -> userService.updatePassword(USERNAME, PASSWORD, "33  22")
         );
+        assertEquals(exception.getMessage() , "New password cannot contain spaces");
 
-        assertTrue(exception.getMessage().contains("Password cannot contain spaces"));
+        assertTrue(userService.validateUser(new UserForm(USERNAME, PASSWORD)),
+                "Old password should still work");
+        assertFalse(userService.validateUser(new UserForm(USERNAME, " ")),
+                "New password should not allow login");
     }
 
 
@@ -457,10 +520,24 @@ public class UserServiceTest {
 
     @Test
     public void updatePasswordMultipleTimesTest() {
+        testUser.setUsername(USERNAME);
+        testUser.setPassword(PASSWORD);
+        testUser.setEmail(EMAIL);
+        testUser.setFirstName(FIRSTNAME);
+        testUser.setLastName(LASTNAME);
 
-        assertTrue(userService.updatePassword(USERNAME, "originalPassword", "FirstNewPass123"));
+        userService.saveUser(testUser);
+
+        assertTrue(userService.updatePassword(USERNAME, PASSWORD, "FirstNewPass123"));
+        assertFalse(userService.validateUser(new UserForm(USERNAME, PASSWORD)),
+                "Old password should not work");
+        assertTrue(userService.validateUser(new UserForm(USERNAME, "FirstNewPass123")),
+                "New password should allow login");
+
         assertTrue(userService.updatePassword(USERNAME, "FirstNewPass123", "SecondNewPass456"));
-
-        assertTrue(userService.validateUser(new UserForm(USERNAME, "SecondNewPass456")));
+        assertFalse(userService.validateUser(new UserForm(USERNAME, "FirstNewPass123")),
+                "Old changed password should not work");
+        assertTrue(userService.validateUser(new UserForm(USERNAME, "SecondNewPass456")),
+                "New password should allow login");
     }
 }

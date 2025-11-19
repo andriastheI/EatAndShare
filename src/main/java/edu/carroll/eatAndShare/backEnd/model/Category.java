@@ -1,6 +1,7 @@
 package edu.carroll.eatAndShare.backEnd.model;
 
 import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -18,7 +19,6 @@ import java.util.Objects;
  * The class maps to the "category" table and includes an auto-generated
  * primary key along with a unique category name.
  */
-
 @Entity
 @Table(name = "category")
 public class Category {

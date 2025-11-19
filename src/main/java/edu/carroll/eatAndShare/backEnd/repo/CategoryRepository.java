@@ -3,6 +3,7 @@ package edu.carroll.eatAndShare.backEnd.repo;
 import edu.carroll.eatAndShare.backEnd.model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 import java.util.Optional;
 
 /**
@@ -16,7 +17,6 @@ import java.util.Optional;
  * such as save, findById, findAll, and delete. Also includes custom
  * derived query methods for looking up categories by name.
  */
-
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 

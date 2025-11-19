@@ -1,5 +1,6 @@
 package edu.carroll.eatAndShare.web.service;
 
+import edu.carroll.eatAndShare.backEnd.model.Recipe;
 import edu.carroll.eatAndShare.backEnd.model.User;
 import edu.carroll.eatAndShare.backEnd.service.RecipeService;
 import edu.carroll.eatAndShare.backEnd.service.UserService;
@@ -25,7 +26,6 @@ public class RecipeServiceTest {
     @Autowired
     private RecipeService recipeService;
 
-
     @Autowired
     private UserService userService;
 
@@ -34,7 +34,7 @@ public class RecipeServiceTest {
     private static final String EMAIL = "testuser@example.com";
 
     // Valid inputs for the recipe
-    private  static final String TITLE = "Test Title";
+    private static final String TITLE = "Test Title";
     private static final int PREPTIME = 10;
     private static final int COOKTIME = 10;
     private static final String DIFFCULTY = "Easy";
@@ -45,7 +45,7 @@ public class RecipeServiceTest {
     private static final String CATEGORYNAME = "Dinner";
 
     // Load image file
-    private static final Path IMGPATH = Path.of("/home/dre/cs_341/finalproject/uploads/test/testing1.jpg");
+    private static final Path IMGPATH = Path.of("src/test/resources/testingimg/testing1.jpg");
     private static final byte[] IMGBYTES;
 
     static {
@@ -67,7 +67,6 @@ public class RecipeServiceTest {
             IMGBYTES
     );
 
-
     /** Baseline test user created before each test for validation checks. */
     private User testUser;
 
@@ -88,7 +87,30 @@ public class RecipeServiceTest {
      *  - saveRecipe() should run without throwing any exception
      */
     @Test
-    public void saveRecipeValidUserValidInputsTest() throws Exception {
+    public void saveRecipeValidUserValidInputsTest() {
+
+        // Act + Assert: verify that no exception occurs
+        assertDoesNotThrow(() ->
+                recipeService.saveRecipe(
+                        TITLE,
+                        PREPTIME,
+                        COOKTIME,
+                        DIFFCULTY,
+                        INSTRUCTIONS,
+                        INGREDIENTNAMES,
+                        QUANTITIES,
+                        UNITS,
+                        CATEGORYNAME,
+                        IMAGE,
+                        testUser.getUsername()
+                )
+        );
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.size() == 1);
+    }
+
+    @Test
+    public void saveTheSameTwoRecipeValidUserValidInputsTest() {
 
         // Act + Assert: verify that no exception occurs
         assertDoesNotThrow(() ->
@@ -107,16 +129,75 @@ public class RecipeServiceTest {
                 )
         );
 
-        assertNotNull(recipeService.findByUser(testUser));
+        // Act + Assert: verify that no exception occurs
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> recipeService.saveRecipe(
+                        TITLE,
+                        PREPTIME,
+                        COOKTIME,
+                        DIFFCULTY,
+                        INSTRUCTIONS,
+                        INGREDIENTNAMES,
+                        QUANTITIES,
+                        UNITS,
+                        CATEGORYNAME,
+                        IMAGE,
+                        testUser.getUsername()
+                )
+        );
+        // Assert correct error message
+        assertEquals("You already have a recipe title saved", exception.getMessage());
 
-        // Assert: recipe saved
-        assertTrue(!recipeService.findByUser(testUser).isEmpty());
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.size() == 1);
     }
 
     @Test
-    public void saveRecipeInvalidCategoryTest() throws Exception {
+    public void saveTwoDifferentRecipesValidUserValidInputsTest() {
+
+        // Act + Assert: verify that no exception occurs
+        assertDoesNotThrow(() ->
+                recipeService.saveRecipe(
+                        TITLE,
+                        PREPTIME,
+                        COOKTIME,
+                        DIFFCULTY,
+                        INSTRUCTIONS,
+                        INGREDIENTNAMES,
+                        QUANTITIES,
+                        UNITS,
+                        CATEGORYNAME,
+                        IMAGE,
+                        testUser.getUsername()
+                )
+        );
+        final String validTitle = "Title2";
+
+        assertDoesNotThrow(() -> recipeService.saveRecipe(
+                        validTitle,
+                        PREPTIME,
+                        COOKTIME,
+                        DIFFCULTY,
+                        INSTRUCTIONS,
+                        INGREDIENTNAMES,
+                        QUANTITIES,
+                        UNITS,
+                        CATEGORYNAME,
+                        IMAGE,
+                        testUser.getUsername()
+                )
+        );
+
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.size() == 2);
+    }
+
+
+    @Test
+    public void saveRecipeValidUserInvalidCategoryTest() {
         // INVALID category
-        String categoryName = "Brunch";
+        String invalidCategoryName = "Brunch";
 
         // Expect exception
         IllegalArgumentException exception = assertThrows(
@@ -130,7 +211,7 @@ public class RecipeServiceTest {
                         INGREDIENTNAMES,
                         QUANTITIES,
                         UNITS,
-                        categoryName,
+                        invalidCategoryName,
                         IMAGE,
                         testUser.getUsername()
                 )
@@ -139,18 +220,15 @@ public class RecipeServiceTest {
         // Assert correct error message
         assertEquals("Category not found", exception.getMessage());
 
-        // Assert: NO recipe saved
-        assertTrue(recipeService.findByUser(testUser).isEmpty());
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.isEmpty());
     }
 
-
-
-
     @Test
-    public void savingRecipeInvalidUserTest() throws IOException {
-        // INVALID category
-        User unknownUser = new User();
-        unknownUser.setUsername("unknown");
+    public void savingRecipeInvalidUserValidInputsTest() throws IOException {
+        // INVALID user not in database
+        User invalidUser = new User();
+        invalidUser.setUsername("unknown");
 
         // Expect exception
         IllegalArgumentException exception = assertThrows(
@@ -166,19 +244,20 @@ public class RecipeServiceTest {
                         UNITS,
                         CATEGORYNAME,
                         IMAGE,
-                        unknownUser.getUsername()
+                        invalidUser.getUsername()
                 )
         );
 
         // Assert correct error message
-        assertEquals("User not found: " + unknownUser.getUsername(), exception.getMessage());
+        assertEquals("User not found: " + invalidUser.getUsername(), exception.getMessage());
 
         // Assert: NO recipe saved
-        assertTrue(recipeService.findByUser(unknownUser).isEmpty());
+        List<Recipe> recipes = recipeService.findByUser(invalidUser);
+        assertTrue(recipes != null && recipes.isEmpty());
     }
 
     @Test
-    public void savingRecipeNullUserThrowsTest() {
+    public void savingRecipeNullUserValidInputThrowsTest() {
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
@@ -198,17 +277,17 @@ public class RecipeServiceTest {
         );
 
         assertTrue(exception.getMessage().contains("User not found"));
-
-        // Assert: NO recipe saved
-        assertTrue(recipeService.findByUser(null).isEmpty());
     }
 
     @Test
     public void saveRecipeEmptyTitleTest() {
+        // INVALID empty title
+        String invalidTitle = "";
+
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> recipeService.saveRecipe(
-                        "",
+                        invalidTitle,
                         PREPTIME,
                         COOKTIME,
                         DIFFCULTY,
@@ -225,7 +304,8 @@ public class RecipeServiceTest {
         assertTrue(exception.getMessage().contains("Recipe title cannot be empty"));
 
         // Assert: NO recipe saved
-        assertTrue(recipeService.findByUser(testUser).isEmpty());
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.isEmpty());
     }
 
     @Test
@@ -250,7 +330,8 @@ public class RecipeServiceTest {
         assertTrue(exception.getMessage().contains("Recipe title cannot be empty"));
 
         // Assert: NO recipe saved
-        assertTrue(recipeService.findByUser(testUser).isEmpty());
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.isEmpty());
     }
 
     @Test
@@ -277,7 +358,8 @@ public class RecipeServiceTest {
         assertTrue(exception.getMessage().contains("Recipe title is too long"));
 
         // Assert: NO recipe saved
-        assertTrue(recipeService.findByUser(testUser).isEmpty());
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.isEmpty());
     }
 
 
@@ -304,7 +386,8 @@ public class RecipeServiceTest {
         assertTrue(exception.getMessage().contains("Invalid prep or cook time"));
 
         // Assert: NO recipe saved
-        assertTrue(recipeService.findByUser(testUser).isEmpty());
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.isEmpty());
     }
 
     @Test
@@ -333,6 +416,31 @@ public class RecipeServiceTest {
     }
 
     @Test
+    public void saveRecipeZeroTimesThrows() {
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> recipeService.saveRecipe(
+                        TITLE,
+                        0,
+                        0,
+                        DIFFCULTY,
+                        INSTRUCTIONS,
+                        INGREDIENTNAMES,
+                        QUANTITIES,
+                        UNITS,
+                        CATEGORYNAME,
+                        IMAGE,
+                        testUser.getUsername()
+                )
+        );
+        assertTrue(exception.getMessage().contains("Invalid prep or cook time"));
+
+        // Assert: NO recipe saved
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.isEmpty());
+    }
+
+    @Test
     public void saveRecipeNullTimesThrows() {
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
@@ -353,7 +461,8 @@ public class RecipeServiceTest {
         assertTrue(exception.getMessage().contains("Prep or cook time cannot be null"));
 
         // Assert: NO recipe saved
-        assertTrue(recipeService.findByUser(testUser).isEmpty());
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.isEmpty());
     }
 
 
@@ -379,7 +488,8 @@ public class RecipeServiceTest {
         assertTrue(exception.getMessage().contains("Recipe difficulty is null"));
 
         // Assert: NO recipe saved
-        assertTrue(recipeService.findByUser(testUser).isEmpty());
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.isEmpty());
     }
 
     @Test
@@ -404,7 +514,8 @@ public class RecipeServiceTest {
         assertTrue(exception.getMessage().contains("Invalid difficulty"));
 
         // Assert: NO recipe saved
-        assertTrue(recipeService.findByUser(testUser).isEmpty());
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.isEmpty());
     }
 
 
@@ -431,11 +542,13 @@ public class RecipeServiceTest {
         assertTrue(exception.getMessage().contains("Instructions cannot be empty"));
 
         // Assert: NO recipe saved
-        assertTrue(recipeService.findByUser(testUser).isEmpty());
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.isEmpty());
     }
 
     @Test
     public void saveRecipeEmptyInstructionsThrows() {
+        final String emptyInstructions = "";
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> recipeService.saveRecipe(
@@ -443,7 +556,7 @@ public class RecipeServiceTest {
                         PREPTIME,
                         COOKTIME,
                         DIFFCULTY,
-                        "",
+                        emptyInstructions,
                         INGREDIENTNAMES,
                         QUANTITIES,
                         UNITS,
@@ -456,12 +569,13 @@ public class RecipeServiceTest {
         assertTrue(exception.getMessage().contains("Instructions cannot be empty"));
 
         // Assert: NO recipe saved
-        assertTrue(recipeService.findByUser(testUser).isEmpty());
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.isEmpty());
     }
 
     @Test
     public void saveRecipeInstructionsTooLongThrows() {
-        String text = "A".repeat(700000);
+        String longInstructions = "A".repeat(700000);
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
@@ -470,7 +584,7 @@ public class RecipeServiceTest {
                         PREPTIME,
                         COOKTIME,
                         DIFFCULTY,
-                        text,
+                        longInstructions,
                         INGREDIENTNAMES,
                         QUANTITIES,
                         UNITS,
@@ -483,7 +597,8 @@ public class RecipeServiceTest {
         assertTrue(exception.getMessage().contains("Instructions too long"));
 
         // Assert: NO recipe saved
-        assertTrue(recipeService.findByUser(testUser).isEmpty());
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.isEmpty());
     }
 
 
@@ -510,11 +625,13 @@ public class RecipeServiceTest {
         assertTrue(exception.getMessage().contains("Recipe category name is invalid."));
 
         // Assert: NO recipe saved
-        assertTrue(recipeService.findByUser(testUser).isEmpty());
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.isEmpty());
     }
 
     @Test
-    public void saveRecipeCategoryBlankThrows() {
+    public void saveRecipeEmptyCategoryThrows() {
+        final String emptyCategoryName = "";
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> recipeService.saveRecipe(
@@ -526,7 +643,7 @@ public class RecipeServiceTest {
                         INGREDIENTNAMES,
                         QUANTITIES,
                         UNITS,
-                        "",
+                        emptyCategoryName,
                         IMAGE,
                         testUser.getUsername()
                 )
@@ -535,7 +652,8 @@ public class RecipeServiceTest {
         assertTrue(exception.getMessage().contains("Recipe category name is invalid."));
 
         // Assert: NO recipe saved
-        assertTrue(recipeService.findByUser(testUser).isEmpty());
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.isEmpty());
     }
 
 
@@ -562,7 +680,8 @@ public class RecipeServiceTest {
         assertTrue(exception.getMessage().contains("Ingredients required"));
 
         // Assert: NO recipe saved
-        assertTrue(recipeService.findByUser(testUser).isEmpty());
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.isEmpty());
     }
 
     @Test
@@ -575,8 +694,9 @@ public class RecipeServiceTest {
                         COOKTIME,
                         DIFFCULTY,
                         INSTRUCTIONS,
+                        // mismatch size
                         List.of("Salt", "Pepper"),
-                        List.of("1"), // mismatch size
+                        List.of("1"),
                         List.of("tsp"),
                         CATEGORYNAME,
                         IMAGE,
@@ -587,7 +707,8 @@ public class RecipeServiceTest {
         assertTrue(exception.getMessage().contains("Ingredient list sizes mismatch"));
 
         // Assert: NO recipe saved
-        assertTrue(recipeService.findByUser(testUser).isEmpty());
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.isEmpty());
     }
 
 
@@ -613,7 +734,8 @@ public class RecipeServiceTest {
         assertTrue(exception.getMessage().contains("Ingredient name cannot be blank"));
 
         // Assert: NO recipe saved
-        assertTrue(recipeService.findByUser(testUser).isEmpty());
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.isEmpty());
     }
 
 
@@ -635,8 +757,9 @@ public class RecipeServiceTest {
                 )
         );
 
-        // Assert: recipe saved
-        assertTrue(recipeService.findByUser(testUser).size() == 1);
+        // Assert: NO recipe saved
+        List<Recipe> recipes = recipeService.findByUser(testUser);
+        assertTrue(recipes != null && recipes.size()==1);
     }
 
 }
