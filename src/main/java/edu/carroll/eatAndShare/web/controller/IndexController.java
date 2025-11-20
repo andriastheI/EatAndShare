@@ -62,14 +62,19 @@ public class IndexController {
     }
 
     /**
-     * Displays the homepage with optional search functionality.
+     * Handles requests for the homepage and search functionality.
      *
-     * @param q       search query (optional)
-     * @param page    current page index
-     * @param size    number of elements per page
-     * @param model   MVC model for view rendering
-     * @param session HTTP session used to persist login state
-     * @return the index view
+     * <p>If a non-blank search query {@code q} is provided, this method performs a
+     * paginated search for recipes and populates the model with the results. If no
+     * query is provided, it renders the homepage in an "empty" state with no
+     * recipes, but still initializes login/registration forms and session data.</p>
+     *
+     * @param q       optional search query string (e.g. "/?q=pasta")
+     * @param page    zero-based page number for search results (defaults to 0)
+     * @param size    number of recipes per page (defaults to 12)
+     * @param model   Spring MVC model used to pass data to the view
+     * @param session HTTP session used to inspect the current login state
+     * @return the name of the Thymeleaf view to render ("index")
      */
     @GetMapping("/")
     public String index(@RequestParam(value = "q", required = false) String q,
@@ -78,7 +83,9 @@ public class IndexController {
                         Model model,
                         HttpSession session) {
 
-        // Create login/registration forms on initial load
+        // Ensure the login and registration form objects are present in the model.
+        // If they already exist (e.g., after a failed submission with errors),
+        // we do NOT overwrite them.
         if (!model.containsAttribute("userForm")) {
             model.addAttribute("userForm", new UserForm());
         }
@@ -86,14 +93,19 @@ public class IndexController {
             model.addAttribute("registerForm", new User());
         }
 
-        // Populate login/session data into model
+        // Add login/session-related data to the model (e.g., "loggedIn", "username").
+        // This helper method centralizes how we expose authentication state to views.
         populateLoginState(model, session);
 
+        // Determine whether this request is performing a search
+        // (non-null and not just whitespace).
         boolean searching = q != null && !q.isBlank();
         model.addAttribute("searching", searching);
         model.addAttribute("q", q);
 
-        // If no search → show empty state (homepage only)
+        // If there is no search query, render the homepage with an "empty results"
+        // state. We still provide all the pagination-related attributes so the
+        // template can render safely without null checks.
         if (!searching) {
             model.addAttribute("recipes", java.util.Collections.emptyList());
             model.addAttribute("resultCount", 0L);
@@ -103,18 +115,26 @@ public class IndexController {
             return "index";
         }
 
-        // Build pageable (validated for proper bounds)
-        if (page < 0) page = 0;
-        if (size < 1 || size > 60) size = 12;
-
+        // Sanitize pagination parameters to avoid invalid or abusive values.
+        if (page < 0) {
+            page = 0;
+        }
+        if (size < 1 || size > 60) {
+            // fall back to a safe default page size
+            size = 12;
+        }
+        // Create a PageRequest that requests the given page and size,
+        // sorted by recipe ID in descending order (newest first).
         var pageable = org.springframework.data.domain.PageRequest.of(
                 page, size, org.springframework.data.domain.Sort.by("id").descending()
         );
 
-        // Perform search (case‐insensitive)
+        // Execute a (likely case-insensitive) search for recipes that match the query.
+        // q.trim() removes leading/trailing whitespace.
         var recipesPage = recipeService.searchRecipes(q.trim(), pageable);
 
-        // Populate model for rendering
+        // Populate the model with both the Page object and its most-used properties.
+        // This gives the view everything it needs to render the results and controls.
         model.addAttribute("recipesPage", recipesPage);
         model.addAttribute("recipes", recipesPage.getContent());
         model.addAttribute("resultCount", recipesPage.getTotalElements());
@@ -122,6 +142,7 @@ public class IndexController {
         model.addAttribute("totalPages", recipesPage.getTotalPages());
         model.addAttribute("size", recipesPage.getSize());
 
+        // Render the index view (now in "search results" mode)
         return "index";
     }
 
