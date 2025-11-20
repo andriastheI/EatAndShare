@@ -48,9 +48,9 @@ FLUSH PRIVILEGES;
 ### 5. Verify Application Configuration
 Check the file: src/main/resources/application.properties if it has the same configuration as the following
 ```
-spring.datasource.url=jdbc:mysql://localhost:3306/cookbook # make sure this matches the database name
-spring.datasource.username=blackfe # make sure this matches your username
-spring.datasource.password=iampassword # make sure this matches your password
+spring.datasource.url=jdbc:mysql://localhost:3306/cookbook # make sure "cookbook" matches the database name
+spring.datasource.username=blackfe # make sure "blackfe" matches your username
+spring.datasource.password=iampassword # make sure "iampassword" matches your password
 
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
