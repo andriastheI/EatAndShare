@@ -1,8 +1,9 @@
 package edu.carroll.eatAndShare.backEnd.model;
 
+import jakarta.persistence.*;
+
 import java.util.List;
 import java.util.Objects;
-import jakarta.persistence.*;
 
 /**
  * Filename: User.java
@@ -17,7 +18,6 @@ import jakarta.persistence.*;
  * This entity maps to the "user" table in the database and defines a
  * one-to-many relationship with Recipe.
  */
-
 @Entity
 @Table(name = "user")
 public class User {
@@ -32,7 +32,7 @@ public class User {
     private Integer id;
 
     /** Unique username associated with this user. */
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", nullable = false, unique = true, length = 10)
     private String username;
 
     /** User's password (stored as a hashed string). */

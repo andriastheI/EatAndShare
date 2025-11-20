@@ -1,7 +1,7 @@
 package edu.carroll.eatAndShare.backEnd.service;
 
 import edu.carroll.eatAndShare.backEnd.model.User;
-import edu.carroll.eatAndShare.backEnd.form.UserForm;
+import edu.carroll.eatAndShare.web.form.UserForm;
 
 /**
  * Filename: UserService.java
@@ -51,4 +51,5 @@ public interface UserService {
      * @throws IllegalArgumentException if the user does not exist
      */
     boolean updatePassword(String username, String oldPassword, String newPassword);
+
 }

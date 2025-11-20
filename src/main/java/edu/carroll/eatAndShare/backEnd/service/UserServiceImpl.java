@@ -1,15 +1,15 @@
 package edu.carroll.eatAndShare.backEnd.service;
 
-import java.util.List;
-
 import edu.carroll.eatAndShare.backEnd.model.User;
 import edu.carroll.eatAndShare.backEnd.repo.UserRepository;
-import edu.carroll.eatAndShare.backEnd.form.UserForm;
+import edu.carroll.eatAndShare.web.form.UserForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * Filename: UserServiceImpl.java
@@ -107,6 +107,8 @@ public class UserServiceImpl implements UserService {
 
         if (user.getUsername().length() < 6)
             throw new IllegalArgumentException("Username cannot be less than 6 characters");
+        if (user.getUsername().length() > 10)
+            throw new IllegalArgumentException("Username cannot exceed 10 characters");
 
         if (user.getEmail() == null || user.getEmail().isBlank())
             throw new IllegalArgumentException("Email cannot be empty");

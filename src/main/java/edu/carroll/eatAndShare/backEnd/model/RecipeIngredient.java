@@ -1,6 +1,7 @@
 package edu.carroll.eatAndShare.backEnd.model;
 
 import jakarta.persistence.*;
+
 import java.util.Objects;
 
 /**
@@ -15,7 +16,6 @@ import java.util.Objects;
  * "recipe_ingredient" table using a composite key defined in
  * RecipeIngredientId.
  */
-
 @Entity
 @Table(name = "recipe_ingredient")
 public class RecipeIngredient {

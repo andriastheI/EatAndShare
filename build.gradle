@@ -3,6 +3,11 @@
 // Defines project setup, dependencies, and build settings
 // ============================================================
 
+import org.gradle.api.tasks.testing.Test
+import org.gradle.api.tasks.testing.TestListener
+import org.gradle.api.tasks.testing.TestDescriptor
+import org.gradle.api.tasks.testing.TestResult
+
 plugins {
     // Core Java project support
     id 'java'
@@ -79,3 +84,48 @@ test {
         logger.lifecycle("Running test: ${descriptor}")
     }
 }
+
+tasks.withType(Test).configureEach {
+
+    // Enable color output + show console logs
+    systemProperty "spring.output.ansi.enabled", "ALWAYS"
+    jvmArgs "-Djansi.force=true"
+
+    testLogging {
+        showStandardStreams = true
+    }
+
+    // === COLORS ===
+    def GREEN = "\u001b[32m"
+    def RED = "\u001b[31m"
+    def YELLOW = "\u001b[33m"
+    def RESET = "\u001b[0m"
+
+    // === Custom Listener to print PASS/FAIL in color ===
+    addTestListener(new TestListener() {
+
+        @Override
+        void afterTest(TestDescriptor descriptor, TestResult result) {
+            def name = descriptor.name
+
+            switch (result.resultType) {
+                case TestResult.ResultType.SUCCESS:
+                    println "${GREEN}✔ PASSED${RESET}  ${name}()"
+                    break
+
+                case TestResult.ResultType.FAILURE:
+                    println "${RED}✘ FAILED${RESET}  ${name}()"
+                    break
+
+                case TestResult.ResultType.SKIPPED:
+                    println "${YELLOW}⚠ SKIPPED${RESET} ${name}()"
+                    break
+            }
+        }
+
+        @Override void beforeSuite(TestDescriptor d) {}
+        @Override void afterSuite(TestDescriptor d, TestResult r) {}
+        @Override void beforeTest(TestDescriptor d) {}
+    })
+}
+

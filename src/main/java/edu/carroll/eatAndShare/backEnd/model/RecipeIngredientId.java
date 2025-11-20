@@ -1,6 +1,7 @@
 package edu.carroll.eatAndShare.backEnd.model;
 
 import jakarta.persistence.Embeddable;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -16,7 +17,6 @@ import java.util.Objects;
  * because it is used inside RecipeIngredient rather than being a
  * standalone entity.
  */
-
 @Embeddable
 public class RecipeIngredientId implements Serializable {
 

@@ -2,14 +2,13 @@ package edu.carroll.eatAndShare.backEnd.service;
 
 import edu.carroll.eatAndShare.backEnd.model.*;
 import edu.carroll.eatAndShare.backEnd.repo.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,9 +27,7 @@ import java.util.List;
  * This class orchestrates interactions between repositories while ensuring
  * clean validation, logging, error handling, and ownership enforcement.
  */
-
 @Service
-@Transactional
 public class RecipeServiceImpl implements RecipeService {
 
     private static final Logger log = LoggerFactory.getLogger(RecipeServiceImpl.class);
@@ -83,24 +80,26 @@ public class RecipeServiceImpl implements RecipeService {
         log.info("➡️ saveRecipe START — user='{}', title='{}', category='{}'", username, title, categoryName);
 
         try {
-            // ----------------------------------------------
+            // ==========================================================
             // 1. USER RESOLUTION
-            // ----------------------------------------------
+            // ==========================================================
             User user = userRepo.findByUsername(username);
             if (user == null) {
                 log.warn("❌ User '{}' not found", username);
                 throw new IllegalArgumentException("User not found: " + username);
             }
 
-            // ----------------------------------------------
-            // 2. BASIC FIELD VALIDATION
-            // ----------------------------------------------
-            String trimmed = title == null ? "" : title.trim().replaceAll("\\s+", " ");
-            if (trimmed.isEmpty()) throw new IllegalArgumentException("Recipe title cannot be empty.");
-            if (recipeRepo.existsByUser_UsernameAndTitleIgnoreCase(username, trimmed))
-                throw new IllegalArgumentException("You already have a recipe named \"" + trimmed + "\".");
+            // ==========================================================
+            // 2. BASIC FIELD VALIDATION (title, category, difficulty, time, instructions)
+            // ==========================================================
+            String trimmedTitle = title == null ? "" : title.trim().replaceAll("\\s+", " ");
+            if (trimmedTitle.isEmpty())
+                throw new IllegalArgumentException("Recipe title cannot be empty.");
 
-            // Category validation
+            if (recipeRepo.existsByUser_UsernameAndTitleIgnoreCase(username, trimmedTitle))
+                throw new IllegalArgumentException("You already have a recipe title saved");
+
+            // ----- Category validation -----
             if (categoryName == null || categoryName.isBlank())
                 throw new IllegalArgumentException("Recipe category name is invalid.");
 
@@ -108,38 +107,50 @@ public class RecipeServiceImpl implements RecipeService {
             if (!allowedCategories.contains(categoryName))
                 throw new IllegalArgumentException("Category not found");
 
-            // Difficulty validation
-            if (difficulty == null) throw new IllegalArgumentException("Recipe difficulty is null");
+            // ----- Difficulty -----
+            if (difficulty == null)
+                throw new IllegalArgumentException("Recipe difficulty is null");
             List<String> validDifficulties = List.of("Easy", "Medium", "Hard");
             if (!validDifficulties.contains(difficulty))
                 throw new IllegalArgumentException("Invalid difficulty");
 
-            // Title validation
-            if (title.length() >= 100) throw new IllegalArgumentException("Recipe title is too long");
+            // ----- Title length -----
+            if (title.length() >= 100)
+                throw new IllegalArgumentException("Recipe title is too long");
 
-            // Time validations
+            // ----- Time validations -----
             if (prepTime == null || cookTime == null)
                 throw new IllegalArgumentException("Prep or cook time cannot be null");
             if (prepTime <= 0 || cookTime <= 0)
                 throw new IllegalArgumentException("Invalid prep or cook time");
 
-            // Instructions validation
+            // ----- Instructions -----
             if (instructions == null || instructions.isBlank())
                 throw new IllegalArgumentException("Instructions cannot be empty");
             if (instructions.length() > 500000)
                 throw new IllegalArgumentException("Instructions too long");
 
-            // Ingredient validation
+            // ==========================================================
+            // 3. INGREDIENT LIST VALIDATION (SIZE + CONTENT)
+            // ==========================================================
             if (ingredientNames == null || quantities == null || units == null)
                 throw new IllegalArgumentException("Ingredients required");
+
             if (!(ingredientNames.size() == quantities.size() && ingredientNames.size() == units.size()))
                 throw new IllegalArgumentException("Ingredient list sizes mismatch");
 
-            // ----------------------------------------------
-            // 3. CATEGORY NORMALIZATION + CREATION
-            // ----------------------------------------------
-            String normalizedCategory = categoryName.substring(0, 1).toUpperCase()
-                    + categoryName.substring(1).toLowerCase();
+            // STRICT INGREDIENT VALIDATION BEFORE SAVING ANYTHING
+            for (String ingName : ingredientNames) {
+                if (ingName == null || ingName.trim().isEmpty())
+                    throw new IllegalArgumentException("Ingredient name cannot be blank");
+            }
+
+            // ==========================================================
+            // 4. CATEGORY LOOKUP OR CREATION
+            // ==========================================================
+            String normalizedCategory =
+                    categoryName.substring(0, 1).toUpperCase() +
+                            categoryName.substring(1).toLowerCase();
 
             Category category = categoryRepo.findByCategoryNameIgnoreCase(normalizedCategory)
                     .orElseGet(() -> {
@@ -148,21 +159,20 @@ public class RecipeServiceImpl implements RecipeService {
                         return categoryRepo.save(newCat);
                     });
 
-            // ----------------------------------------------
-            // 4. ENSURE IMAGE DIRECTORY EXISTS
-            // ----------------------------------------------
+            // ==========================================================
+            // 5. IMAGE UPLOAD HANDLING
+            // ==========================================================
+            String imageUrl = null;
             String baseDir = System.getProperty("user.dir");
             Path uploadPath = Paths.get(baseDir, uploadDir);
 
+            // Create directory if not exist
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
                 log.info("📁 Created upload directory: {}", uploadPath);
             }
 
-            // ----------------------------------------------
-            // 5. IMAGE UPLOAD HANDLING
-            // ----------------------------------------------
-            String imageUrl = null;
+            // Save image if provided
             if (image != null && !image.isEmpty()) {
                 String safeName = Paths.get(image.getOriginalFilename()).getFileName().toString();
                 String fileName = System.currentTimeMillis() + "_" + safeName;
@@ -174,9 +184,9 @@ public class RecipeServiceImpl implements RecipeService {
                 log.debug("📷 Image uploaded: {}", imageUrl);
             }
 
-            // ----------------------------------------------
-            // 6. CREATE AND SAVE MAIN RECIPE
-            // ----------------------------------------------
+            // ==========================================================
+            // 6. CREATE AND SAVE MAIN RECIPE (AFTER ALL VALIDATION)
+            // ==========================================================
             Recipe recipe = new Recipe();
             recipe.setTitle(title);
             recipe.setPrepTimeMins(prepTime);
@@ -187,22 +197,24 @@ public class RecipeServiceImpl implements RecipeService {
             recipe.setUser(user);
             recipe.setImgURL(imageUrl);
 
+            // SAVE RECIPE FIRST — ensures recipe ID exists
             recipeRepo.save(recipe);
 
-            // ----------------------------------------------
+            // ==========================================================
             // 7. INGREDIENT PROCESSING + LINK CREATION
-            // ----------------------------------------------
+            // ==========================================================
             for (int i = 0; i < ingredientNames.size(); i++) {
-                String ingName = ingredientNames.get(i);
-                if (ingName == null || ingName.trim().isEmpty()) continue;
+                String ingName = ingredientNames.get(i).trim();
 
-                Ingredient ingredient = ingredientRepo.findByIngredientNameIgnoreCase(ingName.trim())
+                // Find or create ingredient
+                Ingredient ingredient = ingredientRepo.findByIngredientNameIgnoreCase(ingName)
                         .orElseGet(() -> {
                             Ingredient newIng = new Ingredient();
-                            newIng.setIngredientName(ingName.trim());
+                            newIng.setIngredientName(ingName);
                             return ingredientRepo.save(newIng);
                         });
 
+                // Create RecipeIngredient link
                 RecipeIngredient link = new RecipeIngredient();
                 link.setRecipe(recipe);
                 link.setIngredient(ingredient);

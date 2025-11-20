@@ -3,6 +3,7 @@ package edu.carroll.eatAndShare.backEnd.repo;
 import edu.carroll.eatAndShare.backEnd.model.Ingredient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 import java.util.Optional;
 
 /**
@@ -17,7 +18,6 @@ import java.util.Optional;
  * Includes a custom query method to find ingredients by name while
  * ignoring case sensitivity.
  */
-
 @Repository
 public interface IngredientRepository extends JpaRepository<Ingredient, Integer> {
 

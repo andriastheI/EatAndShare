@@ -17,7 +17,6 @@ import org.springframework.stereotype.Repository;
  * for saving, retrieving, and deleting entries based on the composite
  * primary key defined in RecipeIngredientId.
  */
-
 @Repository
 public interface RecipeIngredientRepository
         extends JpaRepository<RecipeIngredient, RecipeIngredientId> {}
