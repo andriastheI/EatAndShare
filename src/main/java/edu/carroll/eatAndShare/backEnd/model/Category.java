@@ -8,8 +8,6 @@ import java.util.Objects;
 
 /**
  * Filename: Category.java
- * Author: Andrias
- * Date: October 11, 2025
  *
  * Description:
  * This entity represents a recipe category in the EatAndShare application.

@@ -258,6 +258,26 @@ public class IndexController {
         return "services";
     }
 
+    /**
+     * Handles requests for the password management page.
+     * <p>
+     * This endpoint is only accessible to logged-in users. If the user is not
+     * logged in, a flash attribute is set to trigger the login modal on the home
+     * page, and the user is redirected to {@code "/"}.
+     * When the user <em>is</em> logged in, this method:
+     * <ul>
+     *     <li>Populates common login/session state into the model via
+     *         {@code populateLoginState(...)}.</li>
+     *     <li>Returns the {@code "password"} view, which should render the
+     *         password-change form.</li>
+     * </ul>
+     *
+     * @param session the current HTTP session used to check the {@code "loggedIn"} flag
+     * @param model   Spring MVC model used to expose login/session data to the view
+     * @param attrs   redirect attributes used to add flash attributes when redirecting
+     * @return {@code "password"} if the user is logged in; otherwise {@code "redirect:/"}
+     *         to send the user back to the home page with a login prompt
+     */
     @GetMapping("/password")
     public String passwords(HttpSession session, Model model, RedirectAttributes attrs) {
 
